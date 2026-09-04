@@ -23,7 +23,7 @@ public class CodecListField<T, V> extends AbstractCollectionField<T, List<V>> {
 	
 	public CodecListField(ToBooleanFunction<T> has, Function<T, List<V>> get, StreamCodec<V> codec, int maxValues) {
 		super(has, get);
-		this.codec = Objects.requireNonNull(codec);
+		this.codec = Objects.requireNonNull(codec, "codec");
 		this.maxValues = maxValues;
 	}
 

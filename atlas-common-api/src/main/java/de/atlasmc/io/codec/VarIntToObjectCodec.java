@@ -15,9 +15,9 @@ final class VarIntToObjectCodec<T> implements StreamCodec<T> {
 	private final IntFunction<T> toObject;
 	
 	public VarIntToObjectCodec(Class<T> clazz, IntFunction<T> toObject, ToIntFunction<T> toInt) {
-		this.clazz = Objects.requireNonNull(clazz);
-		this.toObject = Objects.requireNonNull(toObject);
-		this.toInt = Objects.requireNonNull(toInt);
+		this.clazz = Objects.requireNonNull(clazz, "class");
+		this.toObject = Objects.requireNonNull(toObject, "toObject");
+		this.toInt = Objects.requireNonNull(toInt, "toInt");
 	}
 	
 	@Override

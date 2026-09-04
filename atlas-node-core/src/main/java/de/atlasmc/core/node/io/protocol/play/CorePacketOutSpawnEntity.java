@@ -21,7 +21,7 @@ public class CorePacketOutSpawnEntity implements PacketCodec<PacketOutSpawnEntit
 		long most = in.readLong();
 		long least = in.readLong();
 		packet.uuid = new UUID(most, least);
-		packet.type = EntityType.getByID(readVarInt(in));
+		packet.type = EntityType.REGISTRY_KEY.getValue(readVarInt(in));
 		packet.x = in.readDouble();
 		packet.y = in.readDouble();
 		packet.z = in.readDouble();

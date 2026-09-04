@@ -77,10 +77,10 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 	List<TagType> getTags();
 	
 	/**
-	 * Whether or not a given value may be used for deserialization
-	 * @return
+	 * Whether or not the type may be updated by the codec
+	 * @return true if can update
 	 */
-	default boolean isReuseValue() {
+	default boolean canUpdate() {
 		return false;
 	}
 	

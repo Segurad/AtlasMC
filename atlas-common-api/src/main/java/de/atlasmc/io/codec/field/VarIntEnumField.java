@@ -17,7 +17,7 @@ public class VarIntEnumField<T, V extends Enum<V> & IDHolder> extends AbstractOb
 	
 	public VarIntEnumField(Function<T, V> get, BiConsumer<T, V> set, Class<V> clazz) {
 		super(get, set);
-		this.clazz = Objects.requireNonNull(clazz);
+		this.clazz = Objects.requireNonNull(clazz, "class");
 	}
 
 	@Override

@@ -15,8 +15,8 @@ public class VarIntField<T> extends StreamField<T> {
 	private final ObjIntConsumer<T> set;
 	
 	public VarIntField(ToIntFunction<T> get, ObjIntConsumer<T> set) {
-		this.get = Objects.requireNonNull(get);
-		this.set = Objects.requireNonNull(set);
+		this.get = Objects.requireNonNull(get, "get");
+		this.set = Objects.requireNonNull(set, "set");
 	}
 	
 	@Override

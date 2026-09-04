@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.util.annotation.NotNull;
@@ -20,15 +21,12 @@ public interface PocketHolder {
 	boolean hasPocketItems();
 	
 	default void addPocketItem(ItemStack item) {
-		if (item == null)
-			throw new IllegalArgumentException("Item can not be null!");
+		Objects.requireNonNull(item, "item");
 		getPocketItems().add(item);
 	}
 	
 	default void removePocketItem(ItemStack item) {
-		if (item == null)
-			return;
-		if (!hasPocketItems())
+		if (item == null || !hasPocketItems())
 			return;
 		getPocketItems().remove(item);
 	}

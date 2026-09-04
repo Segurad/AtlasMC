@@ -9,7 +9,7 @@ import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
-import de.atlasmc.node.entity.Bee;
+import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.UnsafeAPI;
 
@@ -43,9 +43,9 @@ public interface Beehive extends TileEntity {
 	 */
 	List<Occupant> getBees();
 	
-	void removeBee(Bee bee);
+	void removeBee(LivingEntity bee);
 	
-	void addBee(Bee bee);
+	void addBee(LivingEntity bee);
 	
 	int getBeeCount();
 	
@@ -64,7 +64,7 @@ public interface Beehive extends TileEntity {
 		NBT_CODEC = NBTCodec
 						.builder(Occupant.class)
 						.defaultConstructor(Occupant::new)
-						.codec("entity_data", Occupant::getBee, Occupant::setBee, Bee.NBT_CODEC)
+						.codec("entity_data", Occupant::getBee, Occupant::setBee, LivingEntity.NBT_CODEC)
 						.intField("min_ticks_in_hive", Occupant::getMinTicksInHive, Occupant::setMinTicksInHive, 0)
 						.intField("ticks_in_hive", Occupant::getTicksInHive, Occupant::setTicksInHive, 0)
 						.build();
@@ -74,12 +74,12 @@ public interface Beehive extends TileEntity {
 		STREAM_CODEC = StreamCodec
 						.builder(Occupant.class)
 						.defaultConstructor(Occupant::new)
-						.codec(Occupant::getBee, Occupant::setBee, Bee.NBT_CODEC)
+						.codec(Occupant::getBee, Occupant::setBee, LivingEntity.NBT_CODEC)
 						.varInt(Occupant::getTicksInHive, Occupant::setTicksInHive)
 						.varInt(Occupant::getMinTicksInHive, Occupant::setMinTicksInHive)
 						.build();
 		
-		private Bee bee;
+		private LivingEntity bee;
 		private int minTicksInHive;
 		private int ticksInHive;
 		
@@ -87,21 +87,21 @@ public interface Beehive extends TileEntity {
 			// internal
 		}
 		
-		public Occupant(Bee bee) {
+		public Occupant(LivingEntity bee) {
 			this(bee, 0, 0);
 		}
 		
-		public Occupant(Bee bee, int minTicksInHive, int ticksInHive) {
+		public Occupant(LivingEntity bee, int minTicksInHive, int ticksInHive) {
 			this.bee = bee;
 			this.minTicksInHive = minTicksInHive;
 			this.ticksInHive = ticksInHive;
 		}
 
-		public Bee getBee() {
+		public LivingEntity getBee() {
 			return bee;
 		}
 		
-		public void setBee(Bee bee) {
+		public void setBee(LivingEntity bee) {
 			this.bee = bee;
 		}
 		

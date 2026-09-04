@@ -17,13 +17,13 @@ import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.map.key.CharKey;
 
-public class TypeCollectionInnerSearchKeyField<T, V extends NBTSerializable, C extends Namespaced> extends AbstractCollectionField<T, Collection<V>, BiFunction<T, C, V>> {
+public class CodecCollectionInnerSearchKeyField<T, V extends NBTSerializable, C extends Namespaced> extends AbstractUpdatingField<T, Collection<V>, BiFunction<T, C, V>> {
 
 	private final CharKey keyField;
 	private final Function<V, C> keyReverse;
 	private final Function<NamespacedKey, C> keySupplier;
 	
-	public TypeCollectionInnerSearchKeyField(TypeCollectionInnerSearchKeyFieldBuilder<T, V, C> builder) {
+	public CodecCollectionInnerSearchKeyField(CodecCollectionInnerSearchKeyFieldBuilder<T, V, C> builder) {
 		super(builder);
 		this.keyField = CharKey.literal(builder.getKeyField());
 		this.keyReverse = Objects.requireNonNull(builder.getKeyReverse());

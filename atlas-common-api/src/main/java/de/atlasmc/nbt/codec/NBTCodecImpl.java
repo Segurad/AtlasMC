@@ -99,6 +99,11 @@ public class NBTCodecImpl<T> implements NBTCodec<T> {
 		return type;
 	}
 	
+	@Override
+	public boolean canUpdate() {
+		return true;
+	}
+	
 	void addToBuilder(NBTCodecBuilder<T> builder) {
 		if (constructor != null)
 			builder.setConstructor(constructor);

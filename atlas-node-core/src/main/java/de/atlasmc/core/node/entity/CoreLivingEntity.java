@@ -75,7 +75,7 @@ public class CoreLivingEntity extends CoreEntity implements LivingEntity {
 	META_DISPLAY_ARROWS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+5, 0, EntityMetaTypes.VAR_INT);
 	protected static final MetaDataField<Integer>
 	META_DISPLAY_BEE_STINGERS = new MetaDataField<>(CoreEntity.LAST_META_INDEX+6, 0, EntityMetaTypes.VAR_INT);
-	protected static final MetaDataField<Long>
+	protected static final MetaDataField<Vector3i>
 	META_OCCUPIED_BED_POSITION = new MetaDataField<>(CoreEntity.LAST_META_INDEX+7, null, EntityMetaTypes.OPT_POSITION);
 	
 	protected static final int LAST_META_INDEX = CoreEntity.LAST_META_INDEX+7;

@@ -10,8 +10,8 @@ public abstract class AbstractObjectField<T, V> extends StreamField<T> {
 	protected final BiConsumer<T, V> set;
 	
 	public AbstractObjectField(Function<T, V> get, BiConsumer<T, V> set) {
-		this.get = Objects.requireNonNull(get);
-		this.set = Objects.requireNonNull(set);
+		this.get = Objects.requireNonNull(get, "get");
+		this.set = Objects.requireNonNull(set, "set");
 	}
 
 }

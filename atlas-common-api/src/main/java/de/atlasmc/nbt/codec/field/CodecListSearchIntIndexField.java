@@ -12,11 +12,11 @@ import de.atlasmc.util.map.key.CharKey;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap.Entry;
 
-public class TypeListSearchIntIndexField<T, V> extends AbstractCollectionField<T, Int2ObjectMap<V>, NBTCodec<V>> {
+public class CodecListSearchIntIndexField<T, V> extends AbstractUpdatingField<T, Int2ObjectMap<V>, NBTCodec<V>> {
 
 	private final CharKey indexKey;
 	
-	public TypeListSearchIntIndexField(TypeListSearchIntIndexFieldBuilder<T, V> builder) {
+	public CodecListSearchIntIndexField(CodecListSearchIntIndexFieldBuilder<T, V> builder) {
 		super(builder);
 		if (fieldType.isField())
 			throw new IllegalArgumentException("NBTCodec must not be a field!");

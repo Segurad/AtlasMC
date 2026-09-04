@@ -7,7 +7,7 @@ import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.nbt.codec.NBTCodec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
-public class TypeListSearchIntIndexFieldBuilder<T, V> extends AbstractCollectionFieldBuilder<T, Int2ObjectMap<V>, NBTCodec<V>, TypeListSearchIntIndexFieldBuilder<T, V>> {
+public class CodecListSearchIntIndexFieldBuilder<T, V> extends AbstractUpdatingFieldBuilder<T, Int2ObjectMap<V>, NBTCodec<V>, CodecListSearchIntIndexFieldBuilder<T, V>> {
 
 	private CharSequence indexKey;
 	
@@ -15,14 +15,14 @@ public class TypeListSearchIntIndexFieldBuilder<T, V> extends AbstractCollection
 		return indexKey;
 	}
 	
-	public TypeListSearchIntIndexFieldBuilder<T, V> setIndexKey(CharSequence indexKey) {
+	public CodecListSearchIntIndexFieldBuilder<T, V> setIndexKey(CharSequence indexKey) {
 		this.indexKey = indexKey;
 		return this;
 	}
 	
 	@Override
 	public NBTField<T> build() {
-		return new TypeListSearchIntIndexField<>(this);
+		return new CodecListSearchIntIndexField<>(this);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class TypeListSearchIntIndexFieldBuilder<T, V> extends AbstractCollection
 	}
 
 	@Override
-	protected TypeListSearchIntIndexFieldBuilder<T, V> getThis() {
+	protected CodecListSearchIntIndexFieldBuilder<T, V> getThis() {
 		return this;
 	}
 

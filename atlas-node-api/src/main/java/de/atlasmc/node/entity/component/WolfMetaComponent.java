@@ -58,6 +58,7 @@ public class WolfMetaComponent extends AbstractHolderBoundComponent<Entity> impl
 		container.set(META_COLAR_COLOR);
 		container.set(META_ANGER_TIME);
 		container.set(META_WOLF_VARIANT);
+		container.set(META_WOLF_SOUND_VARIANT);
 	}
 
 	@Override
@@ -115,49 +116,39 @@ public class WolfMetaComponent extends AbstractHolderBoundComponent<Entity> impl
 		NBT_CODEC = NBTCodec
 						.builder(WolfVariant.class)
 						.defaultConstructor(WolfVariant::new)
-						.beginComponent("assets")
-						.codec("angry", WolfVariant::getAngryTexture, WolfVariant::setAngryTexture, NamespacedKey.NBT_CODEC)
-						.codec("wild", WolfVariant::getWildTexture, WolfVariant::setWildTexture, NamespacedKey.NBT_CODEC)
-						.codec("tame", WolfVariant::getTameTexture, WolfVariant::setTameTexture, NamespacedKey.NBT_CODEC)
-						.endComponent()
+						.codec("assets", WolfVariant::getAssets, WolfVariant::setAssets, WolfAssets.NBT_CODEC)
+						.codec("baby_assets", WolfVariant::getBabyAssets, WolfVariant::setBabyAssets, WolfAssets.NBT_CODEC)
 						.build();
 		
-		private NamespacedKey
-		wildTexture,
-		tameTexture,
-		angryTexture;
+		private WolfAssets
+		assets,
+		babyAssets;
 		
-		private WolfVariant() {}
+		private WolfVariant() {
+			super();
+			// for construction via codec
+		}
 		
-		public WolfVariant(NamespacedKey key, int id, NamespacedKey wildTexture, NamespacedKey tameTexture, NamespacedKey angryTexture) {
+		public WolfVariant(NamespacedKey key, int id, WolfAssets assets, WolfAssets babyAssets) {
 			super(key, id);
-			this.wildTexture = Objects.requireNonNull(wildTexture, "wildTexture");
-			this.tameTexture = Objects.requireNonNull(tameTexture, "tameTexture");
-			this.angryTexture = Objects.requireNonNull(angryTexture, "angryTexture");
-		}
-	
-		public NamespacedKey getAngryTexture() {
-			return angryTexture;
+			this.assets = Objects.requireNonNull(assets, "assets");
+			this.babyAssets = Objects.requireNonNull(babyAssets, "babyAssets");
 		}
 		
-		private void setAngryTexture(NamespacedKey angryTexture) {
-			this.angryTexture = angryTexture;
+		public WolfAssets getAssets() {
+			return assets;
 		}
 		
-		public NamespacedKey getWildTexture() {
-			return wildTexture;
+		private void setAssets(WolfAssets assets) {
+			this.assets = assets;
 		}
 		
-		private void setWildTexture(NamespacedKey wildTexture) {
-			this.wildTexture = wildTexture;
+		public WolfAssets getBabyAssets() {
+			return babyAssets;
 		}
 		
-		public NamespacedKey getTameTexture() {
-			return tameTexture;
-		}
-		
-		private void setTameTexture(NamespacedKey tameTexture) {
-			this.tameTexture = tameTexture;
+		private void setBabyAssets(WolfAssets babyAssets) {
+			this.babyAssets = babyAssets;
 		}
 		
 		public static ProtocolRegistry<WolfVariant> getRegistry() {
@@ -172,6 +163,52 @@ public class WolfMetaComponent extends AbstractHolderBoundComponent<Entity> impl
 		@Override
 		public boolean hasNBT() {
 			return true;
+		}
+		
+	}
+	
+	public static class WolfAssets implements NBTSerializable {
+		
+		public static final NBTCodec<WolfAssets>
+		NBT_CODEC = NBTCodec
+						.builder(WolfAssets.class)
+						.codec("angry", WolfAssets::getAngryTexture, WolfAssets::setAngryTexture, NamespacedKey.NBT_CODEC)
+						.codec("wild", WolfAssets::getWildTexture, WolfAssets::setWildTexture, NamespacedKey.NBT_CODEC)
+						.codec("tame", WolfAssets::getTameTexture, WolfAssets::setTameTexture, NamespacedKey.NBT_CODEC)
+						.build();
+
+		private NamespacedKey
+		wildTexture,
+		tameTexture,
+		angryTexture;
+	
+		public NamespacedKey getAngryTexture() {
+			return angryTexture;
+		}
+		
+		public void setAngryTexture(NamespacedKey angryTexture) {
+			this.angryTexture = angryTexture;
+		}
+		
+		public NamespacedKey getWildTexture() {
+			return wildTexture;
+		}
+		
+		public void setWildTexture(NamespacedKey wildTexture) {
+			this.wildTexture = wildTexture;
+		}
+		
+		public NamespacedKey getTameTexture() {
+			return tameTexture;
+		}
+		
+		public void setTameTexture(NamespacedKey tameTexture) {
+			this.tameTexture = tameTexture;
+		}
+		
+		@Override
+		public NBTCodec<? extends NBTSerializable> getNBTCodec() {
+			return NBT_CODEC;
 		}
 		
 	}
@@ -201,8 +238,8 @@ public class WolfMetaComponent extends AbstractHolderBoundComponent<Entity> impl
 		
 		public WolfSoundVariant(NamespacedKey key, int id, WolfSounds adult, WolfSounds baby) {
 			super(key, id);
-			this.adult = Objects.requireNonNull(adult, "adult");
-			this.baby = Objects.requireNonNull(baby, "baby");
+			this.adult = adult;
+			this.baby = baby;
 		}
 	
 		public WolfSounds getAdult() {

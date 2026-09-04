@@ -1,6 +1,7 @@
 package de.atlasmc.nbt.codec.constructor;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.function.Function;
 
 import de.atlasmc.NamespacedKey;
@@ -21,7 +22,7 @@ public class SearchFieldRegistryConstructor<T, K extends Namespaced> extends Abs
 	public SearchFieldRegistryConstructor(CharSequence keyField, RegistryKey<K> registry, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
 		super(registry, constructor);
 		this.keyField = CharKey.literal(keyField);
-		this.keyReverseSupplier = keyReverseSupplier;
+		this.keyReverseSupplier = Objects.requireNonNull(keyReverseSupplier, "keyReverseSupplier");
 	}
 
 	@Override

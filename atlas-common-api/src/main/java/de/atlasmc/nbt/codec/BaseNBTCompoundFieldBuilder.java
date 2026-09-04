@@ -22,11 +22,11 @@ import de.atlasmc.nbt.codec.field.NBTFieldBuilder;
 import de.atlasmc.nbt.codec.field.CodecFieldBuilder;
 import de.atlasmc.nbt.codec.field.CodecListFieldBuilder;
 import de.atlasmc.nbt.codec.field.PrimitiveFieldBuilder;
-import de.atlasmc.nbt.codec.field.CodecCollectionFieldBuilder;
+import de.atlasmc.nbt.codec.field.UpdatingCodecFieldBuilder;
 import de.atlasmc.nbt.codec.field.CodecArraySearchByteIndexFieldBuilder;
-import de.atlasmc.nbt.codec.field.TypeCollectionFieldBuilder;
-import de.atlasmc.nbt.codec.field.TypeCollectionInnerSearchKeyFieldBuilder;
-import de.atlasmc.nbt.codec.field.TypeListSearchIntIndexFieldBuilder;
+import de.atlasmc.nbt.codec.field.CodecCollectionFieldBuilder;
+import de.atlasmc.nbt.codec.field.CodecCollectionInnerSearchKeyFieldBuilder;
+import de.atlasmc.nbt.codec.field.CodecListSearchIntIndexFieldBuilder;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumUtil;
 import de.atlasmc.util.function.ObjBooleanConsumer;
@@ -39,7 +39,7 @@ import de.atlasmc.util.map.Multimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
-public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoundFieldBuilder<T, B>> {
+public interface BaseNBTCompoundFieldBuilder<T, B extends BaseNBTCompoundFieldBuilder<T, B>> {
 	
 	public static final int TYPE_COUNT = EnumUtil.getValues(TagType.class).size() - 1; // tag end (0) is not used
 	
@@ -106,7 +106,7 @@ public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoun
 	}
 	
 	default <V> B codecCollection(CharSequence key, ToBooleanFunction<T> has, Function<T, V> get, NBTCodec<V> codec) {
-		return addField(codecCollectionBuilder(key, has, get, codec));
+		return addField(updatingCodecBuilder(key, has, get, codec));
 	}
 	
 	default <V> B codec(@NotNull CharSequence key, Function<T, V> get, BiConsumer<T, V> set, NBTCodec<? extends V> codec) {
@@ -117,12 +117,12 @@ public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoun
 		return addField(objectBuilder(key, get, set, codec).setDefaultValue(defaultValue));
 	}
 	
-	default <V> B innerTypeCompoundField(CharSequence key, Function<T, ? super V> get, NBTCodec<V> codec) {
+	default <V> B innerCodecCompoundField(CharSequence key, Function<T, ? super V> get, NBTCodec<V> codec) {
 		return addField(new InnerCodecField<>(key, get, codec, false));
 	}
 	
 	default <V extends Namespaced> B mapNamespacedToInt(CharSequence key, ToBooleanFunction<T> has, Function<T, Object2IntMap<V>> get, Function<String, V> keySupplier) {
-		return addField(codecCollectionBuilder(key, has, get, new MapNamespacedToInt<>(keySupplier)));
+		return addField(updatingCodecBuilder(key, has, get, new MapNamespacedToInt<>(keySupplier)));
 	}
 	
 	default <V> B codecList(CharSequence key, ToBooleanFunction<T> has, Function<T, List<V>> getList, NBTCodec<V> handler) {
@@ -134,23 +134,23 @@ public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoun
 	}
 	
 	default <K, V> B mapTypeToCodec(CharSequence key, ToBooleanFunction<T> has, Function<T, Map<K, V>> get, NBTCodec<V> codec, Function<V, K> getKey) {
-		return addField(codecCollectionBuilder(key, has, get, new MapTypeToCodec<>(codec, getKey)));
+		return addField(updatingCodecBuilder(key, has, get, new MapTypeToCodec<>(codec, getKey)));
 	}
 	
 	default <K extends Namespaced, V> B multimapTypeToCodec(@NotNull CharSequence key, ToBooleanFunction<T> has, Function<T, Multimap<K, V>> get, NBTCodec<V> codec, CharSequence keyField, Function<NamespacedKey, K> keySupplier) {
-		return addField(codecCollectionBuilder(key, has, get, new MultimapTypeToCodec<>(keyField, keySupplier, codec)));
+		return addField(updatingCodecBuilder(key, has, get, new MultimapTypeToCodec<>(keyField, keySupplier, codec)));
 	}
 	
 	default <V> B mapFieldNameToCodec(@NotNull CharSequence key, ToBooleanFunction<T> has, Function<T, Map<String, V>> get, NBTCodec<V> codec) {
-		return addField(codecCollectionBuilder(key, has, get, new MapFieldNameToCodec<>(codec)));
+		return addField(updatingCodecBuilder(key, has, get, new MapFieldNameToCodec<>(codec)));
 	}
 	
-	default <V> B typeCollection(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<V>> get, BiConsumer<T, V> set, NBTCodec<V> codec) {
-		return addField(new TypeCollectionFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setSetter(set).setFieldType(codec));
+	default <V> B codecCollection(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<V>> get, BiConsumer<T, V> set, NBTCodec<V> codec) {
+		return addField(new CodecCollectionFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setSetter(set).setFieldType(codec));
 	}
 	
-	default <K extends NBTSerializable, C extends Namespaced> B typeCollectionInnerSearchKey(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, CharSequence keyField, Function<NamespacedKey, C> keySupplier, BiFunction<T, C, K> constructor, Function<K, C> keyReverse) {
-		return addField(new TypeCollectionInnerSearchKeyFieldBuilder<T, K, C>()
+	default <K extends NBTSerializable, C extends Namespaced> B codecCollectionInnerSearchKey(CharSequence key, ToBooleanFunction<T> has, Function<T, Collection<K>> get, CharSequence keyField, Function<NamespacedKey, C> keySupplier, BiFunction<T, C, K> constructor, Function<K, C> keyReverse) {
+		return addField(new CodecCollectionInnerSearchKeyFieldBuilder<T, K, C>()
 				.setKey(key)
 				.setHasData(has)
 				.setGetter(get)
@@ -160,8 +160,8 @@ public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoun
 				.setKeyReverse(keyReverse));
 	}
 	
-	default <V> B typeListSearchIntIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, Int2ObjectMap<V>> get, NBTCodec<V> codec) {
-		return addField(new TypeListSearchIntIndexFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setFieldType(codec).setIndexKey(indexKey));
+	default <V> B codecListSearchIntIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, Int2ObjectMap<V>> get, NBTCodec<V> codec) {
+		return addField(new CodecListSearchIntIndexFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setFieldType(codec).setIndexKey(indexKey));
 	}
 	
 	default <V> B codecArraySearchByteIndexField(CharSequence key, CharSequence indexKey, ToBooleanFunction<T> has, Function<T, V[]> get, NBTCodec<V> codec) {
@@ -176,8 +176,8 @@ public interface AbstractNBTCompoundFieldBuilder<T, B extends AbstractNBTCompoun
 		return new PrimitiveFieldBuilder<T, G, S>().setKey(key).setType(type).setGetter(get).setSetter(set);
 	}
 	
-	default <V> CodecCollectionFieldBuilder<T, V> codecCollectionBuilder(CharSequence key, ToBooleanFunction<T> has, Function<T, V> get, NBTCodec<V> type) {
-		return new CodecCollectionFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setFieldType(type);
+	default <V> UpdatingCodecFieldBuilder<T, V> updatingCodecBuilder(CharSequence key, ToBooleanFunction<T> has, Function<T, V> get, NBTCodec<V> type) {
+		return new UpdatingCodecFieldBuilder<T, V>().setKey(key).setHasData(has).setGetter(get).setFieldType(type);
 	}
 	
 	default B beginComponent(CharSequence key) {

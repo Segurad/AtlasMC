@@ -11,7 +11,7 @@ import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.nbt.codec.NBTSerializable;
 
-public class TypeCollectionInnerSearchKeyFieldBuilder<T, V extends NBTSerializable, C extends Namespaced> extends AbstractCollectionFieldBuilder<T, Collection<V>, BiFunction<T, C, V>, TypeCollectionInnerSearchKeyFieldBuilder<T,V,C>> {
+public class CodecCollectionInnerSearchKeyFieldBuilder<T, V extends NBTSerializable, C extends Namespaced> extends AbstractUpdatingFieldBuilder<T, Collection<V>, BiFunction<T, C, V>, CodecCollectionInnerSearchKeyFieldBuilder<T,V,C>> {
 
 	private CharSequence keyField;
 	private Function<NamespacedKey, C> keySupplier;
@@ -21,7 +21,7 @@ public class TypeCollectionInnerSearchKeyFieldBuilder<T, V extends NBTSerializab
 		return keyField;
 	}
 	
-	public TypeCollectionInnerSearchKeyFieldBuilder<T, V, C> setKeyField(CharSequence keyField) {
+	public CodecCollectionInnerSearchKeyFieldBuilder<T, V, C> setKeyField(CharSequence keyField) {
 		this.keyField = keyField;
 		return this;
 	}
@@ -30,7 +30,7 @@ public class TypeCollectionInnerSearchKeyFieldBuilder<T, V extends NBTSerializab
 		return keyReverse;
 	}
 	
-	public TypeCollectionInnerSearchKeyFieldBuilder<T, V, C> setKeyReverse(Function<V, C> keyReverse) {
+	public CodecCollectionInnerSearchKeyFieldBuilder<T, V, C> setKeyReverse(Function<V, C> keyReverse) {
 		this.keyReverse = keyReverse;
 		return this;
 	}
@@ -39,14 +39,14 @@ public class TypeCollectionInnerSearchKeyFieldBuilder<T, V extends NBTSerializab
 		return keySupplier;
 	}
 	
-	public TypeCollectionInnerSearchKeyFieldBuilder<T, V, C> setKeySupplier(Function<NamespacedKey, C> keySupplier) {
+	public CodecCollectionInnerSearchKeyFieldBuilder<T, V, C> setKeySupplier(Function<NamespacedKey, C> keySupplier) {
 		this.keySupplier = keySupplier;
 		return this;
 	}
 	
 	@Override
 	public NBTField<T> build() {
-		return new TypeCollectionInnerSearchKeyField<>(this);
+		return new CodecCollectionInnerSearchKeyField<>(this);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class TypeCollectionInnerSearchKeyFieldBuilder<T, V extends NBTSerializab
 	}
 
 	@Override
-	protected TypeCollectionInnerSearchKeyFieldBuilder<T, V, C> getThis() {
+	protected CodecCollectionInnerSearchKeyFieldBuilder<T, V, C> getThis() {
 		return this;
 	}
 

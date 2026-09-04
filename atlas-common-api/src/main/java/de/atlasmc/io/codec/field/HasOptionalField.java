@@ -14,8 +14,8 @@ public class HasOptionalField<T> extends StreamField<T> {
 	private final StreamField<T> field;
 	
 	public HasOptionalField(ToBooleanFunction<T> has, StreamField<T> field) {
-		this.has = Objects.requireNonNull(has);
-		this.field = Objects.requireNonNull(field);
+		this.has = Objects.requireNonNull(has, "has");
+		this.field = Objects.requireNonNull(field, "field");
 	}
 	
 	@Override

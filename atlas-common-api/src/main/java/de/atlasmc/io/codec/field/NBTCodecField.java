@@ -19,7 +19,7 @@ public class NBTCodecField<T, V> extends AbstractObjectField<T, V> {
 	
 	public NBTCodecField(Function<T, V> get, BiConsumer<T, V> set, NBTCodec<V> codec) {
 		super(get, set);
-		this.codec = Objects.requireNonNull(codec);
+		this.codec = Objects.requireNonNull(codec, "codec");
 	}
 
 	@Override

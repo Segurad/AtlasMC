@@ -13,8 +13,8 @@ public class BooleanField<T> extends StreamField<T> {
 	private final ObjBooleanConsumer<T> set;
 	
 	public BooleanField(ToBooleanFunction<T> get, ObjBooleanConsumer<T> set) {
-		this.get = Objects.requireNonNull(get);
-		this.set = Objects.requireNonNull(set);
+		this.get = Objects.requireNonNull(get, "get");
+		this.set = Objects.requireNonNull(set, "set");
 	}
 	
 	@Override

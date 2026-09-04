@@ -14,8 +14,8 @@ public class DoubleField<T> extends StreamField<T> {
 	private final ObjDoubleConsumer<T> set;
 	
 	public DoubleField(ToDoubleFunction<T> get, ObjDoubleConsumer<T> set) {
-		this.get = Objects.requireNonNull(get);
-		this.set = Objects.requireNonNull(set);
+		this.get = Objects.requireNonNull(get, "get");
+		this.set = Objects.requireNonNull(set, "set");
 	}
 	
 	@Override

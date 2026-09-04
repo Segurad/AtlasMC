@@ -20,8 +20,8 @@ public class MultimapTypeToCodecField<T, K extends IDHolder, V> extends Abstract
 	
 	public MultimapTypeToCodecField(ToBooleanFunction<T> has, Function<T, Multimap<K, V>> get, IntFunction<K> keySupplier, StreamCodec<V> codec) {
 		super(has, get);
-		this.keySupplier = Objects.requireNonNull(keySupplier);
-		this.codec = Objects.requireNonNull(codec);
+		this.keySupplier = Objects.requireNonNull(keySupplier, "keySupplier");
+		this.codec = Objects.requireNonNull(codec, "codec");
 	}
 
 	@Override

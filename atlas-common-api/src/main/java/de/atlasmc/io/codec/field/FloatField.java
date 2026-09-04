@@ -7,24 +7,28 @@ import de.atlasmc.util.function.ObjFloatConsumer;
 import de.atlasmc.util.function.ToFloatFunction;
 import io.netty.buffer.ByteBuf;
 
-public class FloatField<T> extends StreamField<T> {
+/**
+ * Field implementation for primitive floats
+ * @param <T>
+ */
+public final class FloatField<T> extends StreamField<T> {
 
 	private final ToFloatFunction<T> get;
 	private final ObjFloatConsumer<T> set;
 	
 	public FloatField(ToFloatFunction<T> get, ObjFloatConsumer<T> set) {
-		this.get = Objects.requireNonNull(get);
-		this.set = Objects.requireNonNull(set);
+		this.get = Objects.requireNonNull(get, "get");
+		this.set = Objects.requireNonNull(set, "set");
 	}
 	
 	@Override
-	public boolean serialize(T type, ByteBuf buf, CodecContext context) throws IOException {
+	public final boolean serialize(T type, ByteBuf buf, CodecContext context) throws IOException {
 		buf.writeFloat(get.applyAsFloat(type));
 		return true;
 	}
 
 	@Override
-	public void deserialize(T type, ByteBuf buf, CodecContext context) throws IOException {
+	public final void deserialize(T type, ByteBuf buf, CodecContext context) throws IOException {
 		set.accept(type, buf.readFloat());
 	}
 

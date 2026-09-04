@@ -18,7 +18,7 @@ public class MapRegistryValueToVarIntField<T, K extends IDHolder> extends Abstra
 	
 	public MapRegistryValueToVarIntField(ToBooleanFunction<T> has, Function<T, Object2IntMap<K>> get, RegistryKey<K> registry) {
 		super(has, get);
-		this.registry = Objects.requireNonNull(registry);
+		this.registry = Objects.requireNonNull(registry, "registry");
 	}
 
 	@Override

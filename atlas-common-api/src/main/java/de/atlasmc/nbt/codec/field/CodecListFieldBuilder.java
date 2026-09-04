@@ -6,7 +6,7 @@ import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.nbt.codec.NBTCodec;
 
-public class CodecListFieldBuilder<T, V> extends AbstractCollectionFieldBuilder<T, List<V>, NBTCodec<V>, CodecListFieldBuilder<T, V>> {
+public class CodecListFieldBuilder<T, V> extends AbstractUpdatingFieldBuilder<T, List<V>, NBTCodec<V>, CodecListFieldBuilder<T, V>> {
 
 	private boolean optional = true;
 	

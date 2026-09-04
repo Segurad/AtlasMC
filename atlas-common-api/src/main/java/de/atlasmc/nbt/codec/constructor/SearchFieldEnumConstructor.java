@@ -1,6 +1,7 @@
 package de.atlasmc.nbt.codec.constructor;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.function.Function;
 
 import de.atlasmc.nbt.NBTException;
@@ -20,10 +21,10 @@ public class SearchFieldEnumConstructor<T, K extends Enum<K> & EnumName> impleme
 	private final CharKey keyField;
 	
 	public SearchFieldEnumConstructor(CharSequence keyField, Class<K> clazz, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
-		this.clazz = clazz;
-		this.constructor = constructor;
+		this.clazz = Objects.requireNonNull(clazz, "class");
+		this.constructor = Objects.requireNonNull(constructor, "constructor");
 		this.keyField = CharKey.literal(keyField);
-		this.keyReverseSupplier = keyReverseSupplier;
+		this.keyReverseSupplier = Objects.requireNonNull(keyReverseSupplier, "keyReverseSupplier");
 	}
 
 	@Override

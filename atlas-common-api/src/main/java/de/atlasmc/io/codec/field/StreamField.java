@@ -5,6 +5,10 @@ import java.io.IOException;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Representation of a field of an object.
+ * @param <T>
+ */
 public abstract class StreamField<T> {
 
 	/**

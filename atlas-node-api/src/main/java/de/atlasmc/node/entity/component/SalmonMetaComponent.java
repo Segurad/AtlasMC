@@ -57,6 +57,9 @@ public class SalmonMetaComponent extends AbstractHolderBoundComponent<Entity> im
 		
 		SMALL,
 		MEDIUM,
+		/**
+		 * Size 2 Fish
+		 */
 		LARGE;
 
 		private final String name;

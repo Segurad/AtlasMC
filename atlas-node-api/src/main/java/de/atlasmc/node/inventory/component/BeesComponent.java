@@ -5,7 +5,7 @@ import java.util.List;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.tile.Beehive.Occupant;
-import de.atlasmc.node.entity.Bee;
+import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface BeesComponent extends ItemComponent {
@@ -32,14 +32,14 @@ public interface BeesComponent extends ItemComponent {
 	boolean hasBees();
 	
 	/**
-	 * Returns a List containing all {@link Bee}s currently in this hive
+	 * Returns a List containing all Entities currently in this hive
 	 * @return list of Bees
 	 */
 	List<Occupant> getBees();
 	
-	void removeBee(Bee bee);
+	void removeBee(LivingEntity bee);
 	
-	void addBee(Bee bee);
+	void addBee(LivingEntity bee);
 	
 	int getBeeCount();
 	

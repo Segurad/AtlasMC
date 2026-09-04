@@ -15,7 +15,7 @@ public class CodecCollectionField<T, V> extends AbstractCollectionField<T, V> {
 	
 	public CodecCollectionField(ToBooleanFunction<T> has, Function<T, V> get, StreamCodec<V> codec) {
 		super(has, get);
-		this.codec = Objects.requireNonNull(codec);
+		this.codec = Objects.requireNonNull(codec, "codec");
 	}
 
 	@Override

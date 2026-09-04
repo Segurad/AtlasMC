@@ -32,6 +32,7 @@ public class CoreEntityTracker implements EntityTracker {
 	private final Map<UUID, Entity> entityByUUID;
 	
 	// ticking entities as double buffered implementation 
+	// the persistent array is used for ticking while the ticking array is modified and copied on the next tick
 	private CoreTrackedEntity<?>[] tickingEntities; // currently modified version of persistent ticking entities
 	private int tickingEntitiesSize; // number of entities in tickingEntitites
 	private boolean tickingEntitiesChanged; // if ticking entities has changed

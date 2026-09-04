@@ -34,6 +34,8 @@ import de.atlasmc.node.entity.component.FrogMetaComponent;
 import de.atlasmc.node.entity.component.PaintingMetaComponent;
 import de.atlasmc.node.entity.component.PandaMetaComponent;
 import de.atlasmc.node.entity.component.SnifferMetaComponent;
+import de.atlasmc.node.entity.component.PigMetaComponent.PigSoundVariant;
+import de.atlasmc.node.entity.component.PigMetaComponent.PigVariant;
 import de.atlasmc.node.entity.component.WolfMetaComponent.WolfSoundVariant;
 import de.atlasmc.node.entity.component.WolfMetaComponent.WolfVariant;
 import de.atlasmc.node.inventory.ItemStack;
@@ -71,7 +73,8 @@ public class EntityMetaTypes {
 	TYPE_ID_WOLF_VARIANT = 23,
 	TYPE_ID_WOLF_SOUND_VARIANT = 24,
 	TYPE_ID_FROG_VARIANT = 25,
-	TYPE_ID_PIG_VARIANT = 26,
+	TYPE_ID_PIG_VARIANT = 28,
+	TYPE_ID_PIG_SOUND_VARIANT = 29,
 	TYPE_ID_CHICKEN_VARIANT = 27,
 	TYPE_ID_OPT_GLOBAL_POSITION = 28,
 	TYPE_ID_PAINTING_VARIANT = 29,
@@ -144,6 +147,10 @@ public class EntityMetaTypes {
 	public static final MetaDataType<WolfVariant> WOLF_VARIANT = new RegistryValueMetaType<>(TYPE_ID_WOLF_VARIANT, WolfVariant.class, WolfVariant.REGISTRY_KEY);
 	
 	public static final MetaDataType<WolfSoundVariant> WOLF_SOUND_VARIANT = new RegistryValueMetaType<>(TYPE_ID_WOLF_SOUND_VARIANT, WolfSoundVariant.class, WolfSoundVariant.REGISTRY_KEY);
+	
+	public static final MetaDataType<PigVariant> PIG_VARIANT = new RegistryValueMetaType<>(TYPE_ID_PIG_VARIANT, PigVariant.class, PigVariant.REGISTRY_KEY);
+	
+	public static final MetaDataType<PigSoundVariant> PIG_SOUND_VARIANT = new RegistryValueMetaType<>(TYPE_ID_PIG_SOUND_VARIANT, PigSoundVariant.class, PigSoundVariant.REGISTRY_KEY);
 	
 	public static final MetaDataType<DyeColor> VAR_INT_COLOR = new VarIntEnumMetaType<>(TYPE_ID_VAR_INT, DyeColor.class);
 	

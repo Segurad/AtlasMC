@@ -1,5 +1,6 @@
 package de.atlasmc.io.codec.constructor;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import de.atlasmc.registry.ProtocolRegistryValue;
@@ -11,7 +12,7 @@ public class RegistryVarIntConstructor<T, K extends ProtocolRegistryValue> exten
 	
 	public RegistryVarIntConstructor(RegistryKey<K> registry, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
 		super(constructor, keyReverseSupplier);
-		this.registry = registry;
+		this.registry = Objects.requireNonNull(registry, "registry");
 	}
 
 	@Override

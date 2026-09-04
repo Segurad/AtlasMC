@@ -5,6 +5,7 @@ import static de.atlasmc.io.PacketUtil.writeVarInt;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -114,25 +115,24 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 	};
 	
 	private int amount;
-	private ItemType type;
+	private final ItemType type;
 	private Map<ComponentType, ItemComponent> components;
 	private Set<ComponentType> ignoredComponents;
 
 	/**
-	 * Creates a ItemStack of the Type {@link Material#AIR} with amount of 1
+	 * Creates a ItemStack of the Type {@link ItemType#AIR} with amount of 1
 	 */
 	public ItemStack() {
 		this(ItemType.AIR.get(), 1);
 	}
 	
-	public ItemStack(ItemType material) {
-		this(material, 1);
+	public ItemStack(ItemType type) {
+		this(type, 1);
 	}
 
-	public ItemStack(ItemType material, int amount) {
-		if (material == null) 
-			throw new IllegalArgumentException("Material can not be null!");
-		type = material;
+	public ItemStack(ItemType type, int amount) {
+		Objects.requireNonNull(type, "type");
+		this.type = type;
 		setAmount(amount);
 	}
 	
@@ -203,8 +203,7 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 	 * @param type
 	 */
 	public void addIgnoredComponent(ComponentType type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
+		Objects.requireNonNull(type, "type");
 		getIgnoredComponents().add(type);
 	}
 	
@@ -213,8 +212,7 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 	 * @param type
 	 */
 	public void removeIgnoredComponent(ComponentType type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
+		Objects.requireNonNull(type, "type");
 		if (ignoredComponents == null)
 			return;
 		ignoredComponents.remove(type);
@@ -296,7 +294,6 @@ public class ItemStack implements NBTSerializable, StreamSerializable, ItemCompo
 	 * Compares a ItemStack with this ItemStack a returns whether or not it is similar
 	 * @param item the ItemStack that should be compared
 	 * @param ignoreAmount whether or not the amount should be ignored in this comparison
-	 * @param ignoreDamage whether or not the damage values should be ignored in this comparison
 	 * @return true if similar
 	 */
 	public boolean isSimilar(ItemStack item, boolean ignoreAmount) {

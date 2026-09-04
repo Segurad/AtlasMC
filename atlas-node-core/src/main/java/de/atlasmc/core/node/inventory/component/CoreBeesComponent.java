@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlasmc.node.block.tile.Beehive.Occupant;
-import de.atlasmc.node.entity.Bee;
+import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.node.inventory.component.AbstractItemComponent;
 import de.atlasmc.node.inventory.component.BeesComponent;
 import de.atlasmc.node.inventory.component.ComponentType;
@@ -40,7 +40,7 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 	}
 
 	@Override
-	public void removeBee(Bee bee) {
+	public void removeBee(LivingEntity bee) {
 		if (!hasBees())
 			return;
 		final List<Occupant> list = bees;
@@ -55,7 +55,7 @@ public class CoreBeesComponent extends AbstractItemComponent implements BeesComp
 	}
 
 	@Override
-	public void addBee(Bee bee) {
+	public void addBee(LivingEntity bee) {
 		getBees().add(new Occupant(bee));
 	}
 

@@ -31,7 +31,7 @@ public class EntityTypeTest {
 			checks.add(() -> {
 				EntityType type = null;
 				try {
-					type = EntityType.getByName(name);
+					type = EntityType.REGISTRY_KEY.getValue(name);
 				} catch(Exception e) {
 					Assertions.fail("Error while fetching entity type: " + name + "(" + protocolID + ")", e);
 				}

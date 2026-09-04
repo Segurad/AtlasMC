@@ -53,7 +53,7 @@ final class MapFieldNameToCodec<V> implements NBTCodec<Map<String, V>> {
 	}
 	
 	@Override
-	public boolean isReuseValue() {
+	public boolean canUpdate() {
 		return true;
 	}
 

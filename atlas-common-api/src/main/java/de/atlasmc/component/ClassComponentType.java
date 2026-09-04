@@ -3,6 +3,7 @@ package de.atlasmc.component;
 import java.lang.reflect.Constructor;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.factory.ClassFactory;
 
 public class ClassComponentType extends ComponentType {
 
@@ -10,6 +11,7 @@ public class ClassComponentType extends ComponentType {
 	
 	protected ClassComponentType(ConfigurationSection cfg) {
 		super(cfg);
+		this.constructor = ClassFactory.getConstructor(cfg.getString("class"), ComponentType.class);
 	}
 
 	@Override

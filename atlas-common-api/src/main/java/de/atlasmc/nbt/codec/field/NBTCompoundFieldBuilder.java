@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.atlasmc.nbt.TagType;
-import de.atlasmc.nbt.codec.AbstractNBTCompoundFieldBuilder;
+import de.atlasmc.nbt.codec.BaseNBTCompoundFieldBuilder;
 import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.util.Builder;
 import de.atlasmc.util.function.ToBooleanFunction;
@@ -17,10 +17,10 @@ import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 
-public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFieldBuilder<T>> implements AbstractNBTCompoundFieldBuilder<T, NBTCompoundFieldBuilder<T>> {
+public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFieldBuilder<T>> implements BaseNBTCompoundFieldBuilder<T, NBTCompoundFieldBuilder<T>> {
 
 	private final List<NBTField<T>> fieldOrder = new ArrayList<>();
-	private final List<Map<CharKey, NBTField<T>>> typeFields = new ArrayList<>(AbstractNBTCompoundFieldBuilder.TYPE_COUNT);
+	private final List<Map<CharKey, NBTField<T>>> typeFields = new ArrayList<>(BaseNBTCompoundFieldBuilder.TYPE_COUNT);
 	private final Object2IntMap<NBTField<T>> refCounts = new Object2IntLinkedOpenCustomHashMap<>(IdentityStrategy.getInstance());
 	public ToBooleanFunction<T> has;
 	public final NBTCompoundFieldBuilder<T> parent;
@@ -33,7 +33,7 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 	private NBTCompoundFieldBuilder(NBTCompoundFieldBuilder<T> parent, CharSequence key) {
 		setKey(key);
 		this.parent = parent;
-		for (int i = 0; i < AbstractNBTCompoundFieldBuilder.TYPE_COUNT; i++) {
+		for (int i = 0; i < BaseNBTCompoundFieldBuilder.TYPE_COUNT; i++) {
 			typeFields.add(i, null);
 		}
 	}

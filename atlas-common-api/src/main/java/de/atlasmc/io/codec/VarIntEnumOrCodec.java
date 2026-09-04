@@ -22,7 +22,7 @@ final class VarIntEnumOrCodec<T, E extends Enum<E> & IDHolder> implements Stream
 		if (!typeClass.isAssignableFrom(clazz))
 			throw new IllegalArgumentException("Enum class: " + clazz + " must be assignable from: " + typeClass);
 		this.clazz = clazz;
-		this.codec = (StreamCodec<T>) Objects.requireNonNull(codec);
+		this.codec = (StreamCodec<T>) Objects.requireNonNull(codec, "codec");
 	}
 	
 	@Override

@@ -21,8 +21,8 @@ public class VarIntRegistryOrCodecField<T, V extends ProtocolRegistryValue> exte
 	@SuppressWarnings("unchecked")
 	public VarIntRegistryOrCodecField(Function<T, V> get, BiConsumer<T, V> set, RegistryKey<V> registry, StreamCodec<? extends V> codec) {
 		super(get, set);
-		this.registry = Objects.requireNonNull(registry);
-		this.codec = (StreamCodec<V>) Objects.requireNonNull(codec);
+		this.registry = Objects.requireNonNull(registry, "registry");
+		this.codec = (StreamCodec<V>) Objects.requireNonNull(codec, "codec");
 	}
 
 	@Override

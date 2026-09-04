@@ -12,7 +12,8 @@ public final class EntityComponentTypes {
 	}
 	
 	public static final RegistryValueKey<ComponentType>
-	HANGING_META = ofLiteral(REGISTRY_KEY, "atlas:entity/hanging_meta")
+	HANGING_META = ofLiteral(REGISTRY_KEY, "atlas:entity/hanging_meta"),
+	LLAMA_META = ofLiteral(REGISTRY_KEY, "atlas:entity/llama_meta")
 	;
 
 }

@@ -20,8 +20,8 @@ public class VarIntEnumOrCodecField<T, V, E extends Enum<E> & IDHolder> extends 
 	@SuppressWarnings("unchecked")
 	public VarIntEnumOrCodecField(Function<T, V> get, BiConsumer<T, V> set, Class<E> clazz, StreamCodec<? extends V> codec) {
 		super(get, set);
-		this.clazz = Objects.requireNonNull(clazz);
-		this.codec = (StreamCodec<V>) Objects.requireNonNull(codec);
+		this.clazz = Objects.requireNonNull(clazz, "class");
+		this.codec = (StreamCodec<V>) Objects.requireNonNull(codec, "codec");
 	}
 
 	@Override

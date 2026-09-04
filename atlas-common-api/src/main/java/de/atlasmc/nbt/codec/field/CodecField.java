@@ -10,6 +10,11 @@ import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 
+/**
+ * Field that is represented by another {@link NBTCodec}
+ * @param <T>
+ * @param <V>
+ */
 public class CodecField<T, V> extends NBTField<T>{
 
 	protected final Function<T, V> getter;
@@ -44,7 +49,7 @@ public class CodecField<T, V> extends NBTField<T>{
 			return; // do not deserialize fields send by client that are server only
 		final NBTCodec<V> codec = this.codec;
 		V value = null;
-		if (codec.isReuseValue())
+		if (codec.canUpdate())
 			value = getter.apply(type);
 		setter.accept(type, codec.deserialize(value, reader, context));
 	}

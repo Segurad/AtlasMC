@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.util.annotation.UnsafeAPI;
 
 public interface EntityEquipment {
 	
@@ -62,6 +63,30 @@ public interface EntityEquipment {
 
 	void setSaddle(ItemStack item);
 	
+	@UnsafeAPI
+	void setBootsUnsafe(ItemStack item);
+
+	@UnsafeAPI
+	void setLeggingsUnsafe(ItemStack item);
+
+	@UnsafeAPI
+	void setChestplateUnsafe(ItemStack item);
+
+	@UnsafeAPI
+	void setHelmetUnsafe(ItemStack item);
+
+	@UnsafeAPI
+	void setMainHandUnsafe(ItemStack item);
+
+	@UnsafeAPI
+	void setOffHandUnsafe(ItemStack item);
+	
+	@UnsafeAPI
+	void setBodyUnsafe(ItemStack item);
+
+	@UnsafeAPI
+	void setSaddleUnsafe(ItemStack item);
+	
 	boolean hasArmorDropChance();
 
 	boolean hasArmor();
@@ -86,14 +111,6 @@ public interface EntityEquipment {
 	
 	ItemStack getHelmet();
 	
-	float getMainHandDropChance();
-	
-	float getOffHandDropChance();
-	
-	float getBodyDropChance();
-	
-	float getSaddleDropChance();
-	
 	ItemStack getMainHand();
 	
 	ItemStack getOffHand();
@@ -101,5 +118,37 @@ public interface EntityEquipment {
 	ItemStack getBody();
 	
 	ItemStack getSaddle();
+	
+	@UnsafeAPI
+	ItemStack getBootsUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getLeggingsUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getChestplateUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getHelmetUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getMainHandUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getOffHandUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getBodyUnsafe();
+	
+	@UnsafeAPI
+	ItemStack getSaddleUnsafe();
+	
+	float getMainHandDropChance();
+	
+	float getOffHandDropChance();
+	
+	float getBodyDropChance();
+	
+	float getSaddleDropChance();
 
 }

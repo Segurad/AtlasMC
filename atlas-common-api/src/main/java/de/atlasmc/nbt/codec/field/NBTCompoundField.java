@@ -12,6 +12,10 @@ import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.map.key.CharKey;
 
+/**
+ * Field that represents multiple {@link NBTField}s as a {@link TagType#COMPOUND}
+ * @param <T>
+ */
 public class NBTCompoundField<T> extends NBTField<T> {
 	
 	private final int count;
@@ -83,6 +87,10 @@ public class NBTCompoundField<T> extends NBTField<T> {
 		return List.of(fields);
 	}
 	
+	/**
+	 * Converts this field to a builder
+	 * @param builder
+	 */
 	void builder(NBTCompoundFieldBuilder<T> builder) {
 		builder
 		.setKey(key)

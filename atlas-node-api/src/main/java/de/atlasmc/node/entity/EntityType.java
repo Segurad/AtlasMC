@@ -1,23 +1,24 @@
 package de.atlasmc.node.entity;
 
+import static de.atlasmc.registry.RegistryValueKey.ofLiteral;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.world.World;
-import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
+import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.registry.RegistryValueKey;
-import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.factory.ClassFactory;
 import de.atlasmc.util.factory.FactoryException;
-import static de.atlasmc.registry.RegistryValueKey.ofLiteral;
 
 @RegistryHolder(key="atlas:entity_type", target = Target.PROTOCOL)
 public class EntityType extends ProtocolRegistryValueBase implements ProtocolRegistryValue {
@@ -188,9 +189,7 @@ public class EntityType extends ProtocolRegistryValueBase implements ProtocolReg
 	 */
 	public EntityType(NamespacedKey key, int id, Class<? extends Entity> clazz) {
 		super(key, id);
-		if (clazz == null) 
-			throw new IllegalArgumentException("Class can not be null!");
-		this.clazz = clazz;
+		this.clazz = Objects.requireNonNull(clazz, "class");
 		this.constructor = ClassFactory.getConstructor(clazz, EntityType.class);
 	}
 	
@@ -216,25 +215,6 @@ public class EntityType extends ProtocolRegistryValueBase implements ProtocolReg
 				| InvocationTargetException e) {
 			throw new FactoryException("Error while creating Entity", e);
 		}
-	}
-	
-	public static EntityType getByID(int id) {
-		return getRegistry().getByID(id);
-	}
-	
-	public static EntityType getByName(String name) {
-		EntityType ent = REGISTRY_KEY.getValue(name);
-		if (ent == null)
-			throw new IllegalArgumentException("No value found with name: " + name);
-		return ent;
-	}
-	
-	public static EntityType get(NamespacedKey key) {
-		return REGISTRY_KEY.getValue(key);
-	}
-	
-	public static ProtocolRegistry<EntityType> getRegistry() {
-		return REGISTRY_KEY.getRegistry();
 	}
 
 }

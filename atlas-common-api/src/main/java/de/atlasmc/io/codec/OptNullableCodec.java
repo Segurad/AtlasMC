@@ -11,7 +11,7 @@ final class OptNullableCodec<T> implements StreamCodec<T> {
 	private final StreamCodec<T> codec;
 	
 	public OptNullableCodec(StreamCodec<T> codec) {
-		this.codec = Objects.requireNonNull(codec);
+		this.codec = Objects.requireNonNull(codec, "codec");
 	}
 	
 	@Override

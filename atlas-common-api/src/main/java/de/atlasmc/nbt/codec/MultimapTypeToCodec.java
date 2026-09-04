@@ -88,7 +88,7 @@ final class MultimapTypeToCodec<K extends Namespaced, V> implements NBTCodec<Mul
 	}
 	
 	@Override
-	public boolean isReuseValue() {
+	public boolean canUpdate() {
 		return true;
 	}
 

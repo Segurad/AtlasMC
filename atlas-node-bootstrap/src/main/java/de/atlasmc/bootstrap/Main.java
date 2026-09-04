@@ -435,7 +435,7 @@ public class Main {
 		if (repoMeta.exists()) {
 			try {
 				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(repoMeta);
-				List<ConfigurationSection> repos = cfg.getConfigurationList("repositories");
+				List<ConfigurationSection> repos = cfg.getConfigurationList("repositories", List.of());
 				for (ConfigurationSection repoCfg : repos) {
 					String name = repoCfg.getString("name");
 					UUID uuid = UUID.fromString(repoCfg.getString("uuid"));
@@ -449,6 +449,8 @@ public class Main {
 				logger.error("Error while loading repositories! (using defaults)", e);
 			}
 			return repoHandler;
+		} else {
+			logger.warn("Found repository reference for non existing repository: {}", repoMeta.getAbsolutePath());
 		}
 		String repoPath = "data/";
 		CoreLocalRepository repo = new CoreLocalRepository("localdata", UUID.randomUUID(), new File(workDir, repoPath));

@@ -350,7 +350,7 @@ public class Commands {
 		builder.setCommand(cmd);
 		builder.setRawCommand(command);
 		CommandArg currentArg = cmd;
-		while (currentArg != null) {
+		do {
 			reader.skipWhitespaces();
 			if (!reader.canRead())
 				break; // end of command
@@ -397,9 +397,10 @@ public class Commands {
 					continue;
 				}
 			}
-			// TODO implement redirects
-			throw new CommandException(rawCommand, "Failed to parse command!");
-		}
+			currentArg = null;
+		} while (currentArg != null);
+		if (reader.canRead())
+			throw new CommandException(rawCommand, "Failed to parse command fully: " + reader.getRemaining());
 		return builder.build();
 	}
 	

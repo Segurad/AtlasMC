@@ -7,7 +7,7 @@ import org.joml.Vector3i;
 
 import de.atlasmc.node.block.BlockType;
 import de.atlasmc.node.block.tile.Beehive;
-import de.atlasmc.node.entity.Bee;
+import de.atlasmc.node.entity.LivingEntity;
 
 public class CoreBeehive extends CoreTileEntity implements Beehive {
 	
@@ -27,7 +27,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 	}
 
 	@Override
-	public void removeBee(Bee bee) {
+	public void removeBee(LivingEntity bee) {
 		if (!hasBees())
 			return;
 		final List<Occupant> list = bees;
@@ -42,7 +42,7 @@ public class CoreBeehive extends CoreTileEntity implements Beehive {
 	}
 
 	@Override
-	public void addBee(Bee bee) {
+	public void addBee(LivingEntity bee) {
 		if (bees == null) 
 			bees = new ArrayList<>();
 		bees.add(new Occupant(bee));

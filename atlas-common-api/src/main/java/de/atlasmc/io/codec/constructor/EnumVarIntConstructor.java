@@ -1,5 +1,6 @@
 package de.atlasmc.io.codec.constructor;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import de.atlasmc.IDHolder;
@@ -11,7 +12,7 @@ public class EnumVarIntConstructor<T, K extends Enum<K> & IDHolder> extends Abst
 	
 	public EnumVarIntConstructor(Class<K> clazz, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
 		super(constructor, keyReverseSupplier);
-		this.clazz = clazz;
+		this.clazz = Objects.requireNonNull(clazz, "class");
 	}
 
 	@Override

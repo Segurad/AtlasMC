@@ -10,7 +10,7 @@ import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.map.key.CharKey;
 
-public class CodecArraySearchByteIndexField<T, V> extends AbstractCollectionField<T, V[], NBTCodec<V>> {
+public class CodecArraySearchByteIndexField<T, V> extends AbstractUpdatingField<T, V[], NBTCodec<V>> {
 
 	private final CharKey indexKey;
 	

@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import de.atlasmc.util.function.ToBooleanFunction;
 
-public abstract class AbstractCollectionFieldBuilder<T, C, V, B extends AbstractCollectionFieldBuilder<T, C, V, B>> extends NBTFieldBuilder<T, B> {
+public abstract class AbstractUpdatingFieldBuilder<T, C, V, B extends AbstractUpdatingFieldBuilder<T, C, V, B>> extends NBTFieldBuilder<T, B> {
 
 	private ToBooleanFunction<T> hasData;
 	private Function<T, C> getter;

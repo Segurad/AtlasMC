@@ -45,7 +45,7 @@ final class MapTypeToCodec<K, V> implements NBTCodec<Map<K, V>> {
 	}
 	
 	@Override
-	public boolean isReuseValue() {
+	public boolean canUpdate() {
 		return true;
 	}
 	

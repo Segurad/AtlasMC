@@ -15,8 +15,8 @@ public abstract class AbstractVarIntConstructor<T, K extends IDHolder> implement
 	protected final Function<T, K> keyReverseSupplier;
 
 	public AbstractVarIntConstructor(Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
-		this.constructor = Objects.requireNonNull(constructor);
-		this.keyReverseSupplier = Objects.requireNonNull(keyReverseSupplier);
+		this.constructor = Objects.requireNonNull(constructor, "constructor");
+		this.keyReverseSupplier = Objects.requireNonNull(keyReverseSupplier, "keyReverseSupplier");
 	}
 	
 	protected abstract K getKey(int id);

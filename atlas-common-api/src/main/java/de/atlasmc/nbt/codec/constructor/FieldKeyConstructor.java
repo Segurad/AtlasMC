@@ -13,7 +13,7 @@ public class FieldKeyConstructor<T> implements Constructor<T> {
 	private final Function<String, T> constructor;
 	
 	public FieldKeyConstructor(Function<String, T> constructor) {
-		this.constructor = Objects.requireNonNull(constructor);
+		this.constructor = Objects.requireNonNull(constructor, "constructor");
 	}
 	
 	@Override

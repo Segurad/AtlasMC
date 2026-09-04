@@ -10,7 +10,7 @@ import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 
-public class CodecListField<T, V> extends AbstractCollectionField<T, List<V>, NBTCodec<V>> {
+public class CodecListField<T, V> extends AbstractUpdatingField<T, List<V>, NBTCodec<V>> {
 
 	private final List<TagType> types;
 	private final boolean optional;

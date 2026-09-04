@@ -18,7 +18,7 @@ import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.function.ToBooleanFunction;
 
-public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NBTCodecBuilder<T>>, Builder<NBTCodec<T>> {
+public class NBTCodecBuilder<T> implements BaseNBTCompoundFieldBuilder<T, NBTCodecBuilder<T>>, Builder<NBTCodec<T>> {
 	
 	private final Class<T> clazz;
 	private Constructor<T> constructor;

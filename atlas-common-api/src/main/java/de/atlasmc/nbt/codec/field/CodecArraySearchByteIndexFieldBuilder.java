@@ -6,7 +6,7 @@ import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.nbt.codec.NBTCodec;
 
-public class CodecArraySearchByteIndexFieldBuilder<T, V> extends AbstractCollectionFieldBuilder<T, V[], NBTCodec<V>, CodecArraySearchByteIndexFieldBuilder<T, V>> {
+public class CodecArraySearchByteIndexFieldBuilder<T, V> extends AbstractUpdatingFieldBuilder<T, V[], NBTCodec<V>, CodecArraySearchByteIndexFieldBuilder<T, V>> {
 
 	private CharSequence indexKey;
 	

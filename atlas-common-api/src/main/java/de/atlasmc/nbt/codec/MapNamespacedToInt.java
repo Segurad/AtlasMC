@@ -52,7 +52,7 @@ final class MapNamespacedToInt<K extends Namespaced> implements NBTCodec<Object2
 	}
 	
 	@Override
-	public boolean isReuseValue() {
+	public boolean canUpdate() {
 		return true;
 	}
 
