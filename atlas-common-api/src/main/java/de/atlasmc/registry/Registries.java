@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.gson.stream.JsonReader;
 
@@ -18,10 +19,13 @@ import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Singleton;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
+import de.atlasmc.util.configuration.file.JsonConfigurationFactory;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 import de.atlasmc.util.factory.FactoryException;
 
 public class Registries {
@@ -95,16 +99,15 @@ public class Registries {
 	}
 	
 	public static void loadRegistries(Plugin plugin) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
+		Objects.requireNonNull(plugin, "plugin");
 		InputStream in = plugin.getResourceAsStream("/META-INF/atlas/registries.yml");
 		if (in == null)
 			return;
 		Log logger = plugin.getLogger();
 		logger.info("Loading registries...");
-		YamlConfiguration registryConfig = null;
+		YamlConfiguration registryConfig;
 		try {
-			registryConfig = YamlConfiguration.loadConfiguration(in);
+			registryConfig = YamlConfigurationFactory.INSTANCE.load(in);
 		} catch(IOException e) {
 			logger.error("Error while loading registries", e);
 			return;
@@ -113,16 +116,15 @@ public class Registries {
 	}
 
 	public static void loadRegistryEntries(Plugin plugin) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
+		Objects.requireNonNull(plugin, "plugin");
 		InputStream in = plugin.getResourceAsStream("/META-INF/atlas/registry-entries.yml");
 		if (in == null)
 			return;
 		Log logger = plugin.getLogger();
 		logger.info("Loading registry entries...");
-		YamlConfiguration registryEntryConfig = null;
+		YamlConfiguration registryEntryConfig;
 		try {
-			registryEntryConfig = YamlConfiguration.loadConfiguration(in);
+			registryEntryConfig = YamlConfigurationFactory.INSTANCE.load(in);
 		} catch(IOException e) {
 			logger.error("Error while loading registry entries!", e);
 			return;
@@ -131,10 +133,8 @@ public class Registries {
 	}
 
 	public static void loadRegistries(Plugin plugin, ConfigurationSection config) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
-		if (config == null)
-			throw new IllegalArgumentException("Configuration can not be null!");
+		Objects.requireNonNull(plugin, "plugin");
+		Objects.requireNonNull(config, "config");
 		Log logger = plugin.getPlugin().getLogger();
 		for (String key : config.getKeys()) {
 			ConfigurationSection regCfg = config.getConfigurationSection(key);
@@ -152,10 +152,8 @@ public class Registries {
 	}
 
 	public static void loadRegistryEntries(PluginHandle plugin, ConfigurationSection config) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
-		if (config == null)
-			throw new IllegalArgumentException("Configuration can not be null!");
+		Objects.requireNonNull(plugin, "plugin");
+		Objects.requireNonNull(config, "config");
 		Log logger = plugin.getPlugin().getLogger();
 		for (String key : config.getKeys()) {
 			Registry<Object> registry = getRegistry(key);
@@ -186,6 +184,28 @@ public class Registries {
 								| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 							logger.error("Unable to create instance of registry entry using configuration: " + entryClass.getName(), e);
 						}
+					} else if (entryClass.getDeclaredAnnotation(Singleton.class) != null) {
+						try {
+							var m = entryClass.getDeclaredMethod("getInstance");
+							try {
+								entryValue = m.invoke(null);
+							} catch (IllegalAccessException | InvocationTargetException e) {
+								logger.error("Unable to fetch singleton instance using getInstance: " + entryClass.getName(), e);
+							}
+						} catch (NoSuchMethodException e) {
+							try {
+								var f = entryClass.getField("INSTANCE");
+								try {
+									entryValue = f.get(null);
+								} catch (IllegalArgumentException | IllegalAccessException e1) {
+									logger.error("Unable to fetch singleton instance using INSTANCE: " + entryClass.getName(), e);
+								}
+							} catch (NoSuchFieldException e1) {
+								// no instance field
+							}
+						}
+						if (entryValue == null)
+							logger.warn("Failed to fetch singleton instance: {}", entryClass.getName());
 					} else {
 						try {
 							entryValue = entryClass.getConstructor().newInstance();
@@ -208,17 +228,15 @@ public class Registries {
 	}
 	
 	public static void loadBulkRegistryEntries(PluginHandle plugin, String resource) throws IOException {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugincan not be null!");
-		if (resource == null)
-			throw new IllegalArgumentException("Resource can not be null!");
+		Objects.requireNonNull(plugin, "plugin");
+		Objects.requireNonNull(resource, "resource");
 		InputStream in = plugin.getPlugin().getResourceAsStream(resource);
 		if (in == null)
 			throw new IllegalArgumentException("No resource found: " + resource);
 		JsonReader reader = new JsonReader(new InputStreamReader(in));
 		reader.beginArray();
 		while (reader.hasNext()) {
-			JsonConfiguration config = JsonConfiguration.loadConfiguration(reader);
+			JsonConfiguration config = JsonConfigurationFactory.INSTANCE.load(reader);
 			String key = config.getString("registry");
 			if (key == null)
 				throw new FactoryException("No registry key defined in resource: " + resource);
@@ -275,14 +293,10 @@ public class Registries {
 	}
 	
 	@InternalAPI
-	public static void init(RegistryHandler handler) {
+	public static synchronized void init(RegistryHandler handler) {
 		if (HANDLER != null)
 			throw new IllegalStateException("Already initialized!");
-		synchronized (Registries.class) {
-			if (HANDLER != null)
-				throw new IllegalStateException("Already initialized!");
-			HANDLER = handler;
-		}
+		HANDLER = handler;
 	}
 
 }

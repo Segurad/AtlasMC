@@ -44,6 +44,11 @@ public abstract class ProtocolRegistryValueBase implements ProtocolRegistryValue
 	}
 	
 	@Override
+	public String toString() {
+		return getClass().getName() + "(" + getNamespacedKey() + ")";
+	}
+	
+	@Override
 	public NamespacedKey getNamespacedKey() {
 		return key;
 	}

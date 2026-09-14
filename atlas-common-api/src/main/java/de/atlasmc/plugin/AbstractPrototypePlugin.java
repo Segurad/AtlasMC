@@ -79,4 +79,9 @@ public abstract class AbstractPrototypePlugin implements PrototypePlugin {
 		return softRequiredFeatures;
 	}
 
+	@Override
+	public String toString() {
+		return getName() + " " + getVersion();
+	}
+	
 }

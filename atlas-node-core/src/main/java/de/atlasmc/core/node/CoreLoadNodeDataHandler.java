@@ -36,7 +36,9 @@ import de.atlasmc.registry.Registries;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
+import de.atlasmc.util.configuration.file.JsonConfigurationFactory;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 
 @StartupHandlerRegister({ StartupContext.LOAD_NODE_DATA })
 class CoreLoadNodeDataHandler implements StartupStageHandler {
@@ -59,7 +61,7 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		}
 		YamlConfiguration config;
 		try {
-			config = YamlConfiguration.loadConfiguration(nodeCfgFile);
+			config = YamlConfigurationFactory.INSTANCE.load(nodeCfgFile);
 		} catch (IOException e) {
 			log.error("Error while loading node.yml!", e);
 			context.fail();
@@ -116,7 +118,7 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			log.debug("No data index found");
 		JsonConfiguration index;
 		try {
-			index = JsonConfiguration.loadConfiguration(indexStream);
+			index = JsonConfigurationFactory.INSTANCE.load(indexStream);
 		} catch (IOException e) {
 			log.error("Error while loading data index!", e);
 			return;

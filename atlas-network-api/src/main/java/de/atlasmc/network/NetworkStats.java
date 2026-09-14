@@ -7,8 +7,6 @@ public interface NetworkStats {
 	
 	int getOnlinePlayers();
 	
-	int getProxies();
-	
 	int getServers();
 	
 	int getMaxPlayers();

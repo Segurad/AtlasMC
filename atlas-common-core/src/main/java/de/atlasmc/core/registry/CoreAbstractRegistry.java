@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -27,12 +28,8 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	protected final Lock modifyLock = new ReentrantLock();
 	
 	public CoreAbstractRegistry(NamespacedKey key, Class<?> type) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		this.key = key;
-		this.type = type;
+		this.key = Objects.requireNonNull(key, "key");
+		this.type = Objects.requireNonNull(type, "type");
 		this.entries = new ConcurrentHashMap<>();
 		this.pluginEntries = new ConcurrentHashMap<>();
 	}
@@ -59,24 +56,19 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	
 	@Override
 	public T getOrDefault(CharSequence key, T defaultValue) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
+		Objects.requireNonNull(key, "key");
 		RegistryEntry<T> value = entries.get(key.toString());
 		return value != null ? value.value() : defaultValue;
 	}
 
 	@Override
 	public RegistryEntry<T> register(PluginHandle plugin, CharSequence key, T value) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
 		return internalRegister(plugin, key.toString(), value);
 	}
 	
 	protected RegistryEntry<T> internalRegister(PluginHandle plugin, String key, T value) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
-		if (value == null)
-			throw new IllegalArgumentException("Value can not be null!");
+		Objects.requireNonNull(plugin, "plugin");
+		Objects.requireNonNull(value, "value");
 		validateEntry(value);
 		RegistryEntry<T> entry = createEntry(plugin, key, value);
 		RegistryEntry<T> old;
@@ -160,8 +152,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	
 	@Override
 	public RegistryEntry<T> remove(CharSequence key) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
+		Objects.requireNonNull(key, "key");
 		modifyLock.lock();
 		RegistryEntry<T> entry = entries.remove(key);
 		if (entry == null) {
@@ -197,8 +188,7 @@ public abstract class CoreAbstractRegistry<T> implements Registry<T> {
 	
 	@Override
 	public boolean removePluginEntries(PluginHandle plugin) {
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
+		Objects.requireNonNull(plugin, "plugin");
 		modifyLock.lock();
 		Collection<RegistryEntry<T>> entries = this.pluginEntries.remove(plugin);
 		if (entries == null) {

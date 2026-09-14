@@ -42,10 +42,5 @@ final class CorePrototypeJavaPlugin extends AbstractPrototypePlugin {
 	public CoreJavaPluginLoader getLoader() {
 		return loader;
 	}
-	
-	@Override
-	public String toString() {
-		return getName() + " " + getVersion();
-	}
 
 }

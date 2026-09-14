@@ -2,30 +2,34 @@ package de.atlasmc.node.schematic;
 
 import java.util.List;
 
-import de.atlasmc.node.Location;
+import org.joml.Vector3i;
+
+import de.atlasmc.util.annotation.NotNull;
 
 public interface Schematic {
 	
-	public SchematicSection getSection(int x, int y, int z);
+	SchematicSection getSection(int x, int y, int z);
 	
-	public int getHight();
+	int getHight();
 	
-	public int getLengthX();
+	int getLengthX();
 	
-	public int getLengthZ();
+	int getLengthZ();
 
-	public Location getOffset();
+	@NotNull
+	Vector3i getOffset();
 	
-	public Location getOffset(Location loc);
+	@NotNull
+	Vector3i getOffset(Vector3i loc);
 	
-	public void setOffset(Location loc);
+	void setOffset(Vector3i loc);
 	
 	/**
 	 * Returns a List containing all Schematics linked in this Schematic
 	 * @return list of schematic accesses
 	 */
-	public List<SchematicAccess> getSchematics();
+	List<SchematicAccess> getSchematics();
 	
-	public SchematicAccess addSchematic(Schematic schematic, int offX, int offY, int offZ, float rotation, boolean visible);
+	SchematicAccess addSchematic(Schematic schematic, int offX, int offY, int offZ, float rotation, boolean visible);
 
 }

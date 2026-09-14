@@ -16,23 +16,34 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializable;
+import de.atlasmc.util.configuration.ConfigurationSettings;
 import de.atlasmc.util.configuration.ListConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 
 public abstract class FileConfiguration extends MemoryConfiguration {
 	
-	public FileConfiguration() {}
+	public FileConfiguration() {
+		super(null, null);
+	}
 	
-	public FileConfiguration(ConfigurationSection configuration) {
-		super(configuration);
+	public FileConfiguration(ConfigurationSettings settings) {
+		super(settings, null);
+	}
+	
+	public FileConfiguration(ConfigurationSection config) {
+		super(null, config);
+	}
+	
+	public FileConfiguration(ConfigurationSettings settings, ConfigurationSection config) {
+		super(settings, config);
 	}
 	
 	public void save(File file) throws IOException {
-		if (file == null)
-			throw new IllegalArgumentException("File can not be null!");
+		Objects.requireNonNull(file, "file");
 		file.getParentFile().mkdirs();
 		FileWriter writer = new FileWriter(file, Charset.forName("UTF-8"));
 		save(writer);
@@ -95,7 +106,7 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 		};
 		if (root || !getSettings().isAutoSerialize())
 			return section;
-		String clazz = section.getString("==");
+		String clazz = section.getString(ConfigurationSerializable.DEFAULT_TYPE_KEY);
 		if (clazz == null)
 			return section;
 		return ConfigurationSerializable.deserialize(section, clazz, getSettings().getLaoder());

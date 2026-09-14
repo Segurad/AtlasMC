@@ -21,16 +21,15 @@ public class CoreProtocolRegistry<T extends ProtocolRegistryValue> extends CoreI
 	
 	@Override
 	public RegistryEntry<T> register(PluginHandle plugin, CharSequence key, T value) {
-		if (value == null)
-			throw new IllegalArgumentException("Value can not be null!");
-		if (value.getID() == -1)
-			throw new IllegalArgumentException("Values has invalid id: " + value.getID());
 		return super.register(plugin, key, value);
 	}
 	
 	@Override
 	protected void onAdd(RegistryEntry<T> entry) {
-		ENTRY_BY_ID.remove(entry.value().getID(), entry);
+		var id = entry.value().getID();
+		if (id == -1)
+			return;
+		ENTRY_BY_ID.put(id, entry);
 	}
 	
 	@Override

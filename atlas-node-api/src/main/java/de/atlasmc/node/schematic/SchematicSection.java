@@ -7,10 +7,13 @@ import de.atlasmc.node.block.data.BlockData;
  */
 public interface SchematicSection {
 	
-	public short[] getMappings();
-	public short[] getMappings(short[] buffer);
-	public short[] getMappings(short[] buffer, int offset);
-	public void setMappings(short[] mappings);
+	short[] getMappings();
+	
+	short[] getMappings(short[] buffer);
+	
+	short[] getMappings(short[] buffer, int offset);
+	
+	void setMappings(short[] mappings);
 	
 	/**
 	 * 
@@ -19,7 +22,7 @@ public interface SchematicSection {
 	 * @param z 0-15
 	 * @return the value
 	 */
-	public short getValue(int x, int y, int z);
+	short getValue(int x, int y, int z);
 	
 	/**
 	 * 
@@ -29,10 +32,12 @@ public interface SchematicSection {
 	 * @param z 0-15
 	 * @return the previous value
 	 */
-	public short setValue(short value, int x, int y, int z);
-	public void setBlock(BlockData data, int x, int y, int z);
-	public BlockData getBlock(int x, int y, int z);
-	public void set(BlockData data);
+	short setValue(short value, int x, int y, int z);
 	
+	void setBlock(BlockData data, int x, int y, int z);
+	
+	BlockData getBlock(int x, int y, int z);
+	
+	void set(BlockData data);
 
 }

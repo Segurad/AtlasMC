@@ -26,6 +26,7 @@ import de.atlasmc.util.concurrent.future.CompleteFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 import de.atlasmc.util.reference.WeakReference1;
 
 public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository implements LocalRepository, CacheHolder {
@@ -60,7 +61,7 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 		// load existing namespaces
 		if (namespaceFile.exists()) {
 			try {
-				namespacesConfig = YamlConfiguration.loadConfiguration(namespaceFile);
+				namespacesConfig = YamlConfigurationFactory.INSTANCE.load(namespaceFile);
 			} catch (IOException e) {
 				throw new IllegalStateException("Error while loading namespaces.yml", e);
 			}

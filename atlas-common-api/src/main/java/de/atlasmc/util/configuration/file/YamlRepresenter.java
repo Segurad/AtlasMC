@@ -32,7 +32,7 @@ public class YamlRepresenter extends Representer {
 		public Node representData(Object data) {
 			ConfigurationSerializable value = (ConfigurationSerializable) data;
 			Configuration cfg = new MemoryConfiguration();
-			cfg.set("type", value.getClass().getName());
+			cfg.set(ConfigurationSerializable.DEFAULT_TYPE_KEY, value.getClass().getName());
 			value.toConfiguration(cfg.createSection("configuration"));
 			return super.representData(cfg.asMap());
 		}

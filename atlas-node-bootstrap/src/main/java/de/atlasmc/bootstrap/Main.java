@@ -55,6 +55,7 @@ import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfigurationSection;
 import de.atlasmc.util.configuration.file.FileConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 
 public class Main {
 	
@@ -167,7 +168,7 @@ public class Main {
 		File modulDir = new File(workDir, "modules/");
 		
 		try (InputStream in = Atlas.getSystem().getResourceAsStream("/core-setup.yml")) {
-			ConfigurationSection setup = YamlConfiguration.loadConfiguration(in);
+			ConfigurationSection setup = YamlConfigurationFactory.INSTANCE.load(in);
 			FileUtils.runSetupConfiguration(workDir, setup, Atlas.getSystem());
 		} catch (Exception e) {
 			log.error("Error while running setup!", e);
@@ -240,7 +241,7 @@ public class Main {
 		logger.info("Loading startup handlers...");
 		YamlConfiguration cfg;
 		try {
-			cfg = YamlConfiguration.loadConfiguration(in);
+			cfg = YamlConfigurationFactory.INSTANCE.load(in);
 		} catch (IOException e) {
 			logger.error("Error while loading startup-handler.yml!", e);
 			System.exit(1);
@@ -365,7 +366,7 @@ public class Main {
 
 	private static FileConfiguration loadConfig(File workDir) throws IOException {
 		File nodeConfigFile = FileUtils.extractResource(new File(workDir, "bootstrap.yml"), "/bootstrap.yml", FileUtils.CONFIG_OVERRIDE, Main.class);
-		return YamlConfiguration.loadConfiguration(nodeConfigFile);
+		return YamlConfigurationFactory.INSTANCE.load(nodeConfigFile);
 	}
 	
 	private static Map<String, String> getJVMArgs(String[] args) {
@@ -434,7 +435,7 @@ public class Main {
 		File repoMeta = new File(workDir, "data/repositories.yml");
 		if (repoMeta.exists()) {
 			try {
-				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(repoMeta);
+				YamlConfiguration cfg = YamlConfigurationFactory.INSTANCE.load(repoMeta);
 				List<ConfigurationSection> repos = cfg.getConfigurationList("repositories");
 				for (ConfigurationSection repoCfg : repos) {
 					String name = repoCfg.getString("name");

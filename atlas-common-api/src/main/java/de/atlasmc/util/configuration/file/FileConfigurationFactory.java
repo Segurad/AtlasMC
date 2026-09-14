@@ -8,17 +8,33 @@ import java.io.Reader;
 
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.configuration.ConfigurationSettings;
 
 @RegistryHolder(key="atlas:factory/file_configuration")
 public interface FileConfigurationFactory {
 	
 	@NotNull
-	FileConfiguration load(File file) throws FileNotFoundException, IOException;
+	default FileConfiguration load(File file) throws FileNotFoundException, IOException {
+		return load(null, file);
+	}
 	
 	@NotNull
-	FileConfiguration load(InputStream input) throws IOException;
+	default FileConfiguration load(InputStream input) throws IOException {
+		return load(null, input);
+	}
 	
 	@NotNull
-	FileConfiguration load(Reader reader) throws IOException;
+	default FileConfiguration load(Reader reader) throws IOException {
+		return load(null , reader);
+	}
+	
+	@NotNull
+	FileConfiguration load(ConfigurationSettings settings, File file) throws FileNotFoundException, IOException;
+	
+	@NotNull
+	FileConfiguration load(ConfigurationSettings settings, InputStream input) throws IOException;
+	
+	@NotNull
+	FileConfiguration load(ConfigurationSettings settings, Reader reader) throws IOException;
 
 }

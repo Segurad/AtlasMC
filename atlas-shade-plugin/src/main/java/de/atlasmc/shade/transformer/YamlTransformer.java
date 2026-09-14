@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 
 public class YamlTransformer implements ReproducibleResourceTransformer {
 	
@@ -42,7 +43,7 @@ public class YamlTransformer implements ReproducibleResourceTransformer {
 	@Override
 	public void processResource(String resource, InputStream is, List<Relocator> relocators, long time) throws IOException {
 		log.debug("Processing resource: {}", resource);
-		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(is);
+		YamlConfiguration cfg = YamlConfigurationFactory.INSTANCE.load(is);
 		ResourceFile presentCfg = resources.get(resource);
 		if (presentCfg == null) {
 			resources.put(resource, new ResourceFile(cfg, time));

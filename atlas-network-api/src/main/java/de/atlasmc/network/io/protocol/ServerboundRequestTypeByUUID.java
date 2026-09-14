@@ -6,8 +6,16 @@ import de.atlasmc.io.DefaultPacketID;
 
 @DefaultPacketID(packetID = AtlasPacket.SERVER_REQUEST_TYPE_BY_UUID, definition = "request_by_uuid")
 public class ServerboundRequestTypeByUUID extends AbstractPacketRequestType implements AtlasPacketServerbound {
-
+	
 	public UUID uuid;
+	
+	public ServerboundRequestTypeByUUID() {
+		this(null);
+	}
+	
+	public ServerboundRequestTypeByUUID(UUID uuid) {
+		this.uuid = uuid;
+	}
 	
 	@Override
 	public int getDefaultID() {

@@ -33,6 +33,7 @@ import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfigurationSection;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
+import de.atlasmc.util.configuration.file.JsonConfigurationFactory;
 
 /**
  *  A namespace of a local data repository
@@ -64,7 +65,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 	}
 
 	protected ConfigurationSection loadEntry(NamespacedKey key) throws IOException {
-		return JsonConfiguration.loadConfiguration(new File(metaDir, key.key()));
+		return JsonConfigurationFactory.INSTANCE.load(new File(metaDir, key.key()));
 	}
 
 	@Override
@@ -148,7 +149,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 				continue;
 			if (!meta.getName().endsWith(".json"))
 				continue;
-			JsonConfiguration cfg = JsonConfiguration.loadConfiguration(meta);
+			JsonConfiguration cfg = JsonConfigurationFactory.INSTANCE.load(meta);
 			NamespacedKey key = NamespacedKey.of(cfg.getString("key"));
 			CoreRepositoryEntry entry = repo.createEntry(key, cfg);
 			roots.add(path.resolve(entry.getRoot()));
@@ -171,7 +172,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 		File metaFile = new File(metaDir, key + ".json");
 		if (!metaFile.exists())
 			return false;
-		JsonConfiguration config = JsonConfiguration.loadConfiguration(metaFile);
+		JsonConfiguration config = JsonConfigurationFactory.INSTANCE.load(metaFile);
 		Path fileRoot = path.resolve(config.getString("root"));
 		FileUtils.deleteDir(fileRoot);
 		return true;
@@ -334,7 +335,7 @@ class CoreLocalNamespace implements RepositoryNamespace {
 			NamespacedKey key = NamespacedKey.of(namespace, fileName.replace(".json", ""));
 			CoreRepositoryEntry entry = repo.getCachedEntry(key);
 			if (entry == null) {
-				JsonConfiguration cfg = JsonConfiguration.loadConfiguration(meta);
+				JsonConfiguration cfg = JsonConfigurationFactory.INSTANCE.load(meta);
 				entry = repo.createEntry(key, cfg);
 			}
 			RepositoryEntryUpdate update = internalUpdate(entry, false);

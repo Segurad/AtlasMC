@@ -30,10 +30,10 @@ import de.atlasmc.master.server.ServerManager;
 import de.atlasmc.master.socket.SocketManager;
 import de.atlasmc.network.NetworkInfo;
 import de.atlasmc.network.NetworkInfo.SlotMode;
+import de.atlasmc.network.NodeConfig;
 import de.atlasmc.network.permission.ContextProvider;
 import de.atlasmc.network.permission.PermissionContext;
 import de.atlasmc.network.permission.PermissionGroup;
-import de.atlasmc.network.NodeConfig;
 import de.atlasmc.permission.Permission;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupHandlerRegister;
@@ -42,7 +42,7 @@ import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
-import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 
 @StartupHandlerRegister({ StartupContext.LOAD_MASTER_DATA })
 class CoreLoadMasterDataStageHandler implements StartupStageHandler {
@@ -99,7 +99,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		log.info("Loading permissions...");
 		Configuration cfg = null;
 		try {
-			cfg = YamlConfiguration.loadConfiguration(file);
+			cfg = YamlConfigurationFactory.INSTANCE.load(file);
 		} catch (IOException e) {
 			log.error("Error while load permissions!", e);
 			return;
@@ -230,7 +230,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		for (File file : files) {
 			Configuration cfg;
 			try {
-				cfg = YamlConfiguration.loadConfiguration(file);
+				cfg = YamlConfigurationFactory.INSTANCE.load(file);
 			} catch (IOException e) {
 				log.error("Error while loading server group: " + file, e);
 				continue;
@@ -249,7 +249,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		for (File file : files) {
 			Configuration cfg;
 			try {
-				cfg = YamlConfiguration.loadConfiguration(file);
+				cfg = YamlConfigurationFactory.INSTANCE.load(file);
 			} catch (IOException e) {
 				log.error("Error while loading sockets: " + file, e);
 				continue;
@@ -267,7 +267,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		for (File file : files) {
 			Configuration cfg;
 			try {
-				cfg = YamlConfiguration.loadConfiguration(file);
+				cfg = YamlConfigurationFactory.INSTANCE.load(file);
 			} catch (IOException e) {
 				log.error("Error while loading node configs: " + file, e);
 				continue;
@@ -282,7 +282,7 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 		log.info("Loading global config...");
 		Configuration cfg = null;
 		try {
-			cfg = YamlConfiguration.loadConfiguration(file);
+			cfg = YamlConfigurationFactory.INSTANCE.load(file);
 		} catch (IOException e) {
 			log.error("Error while loading global config!", e);
 			return;

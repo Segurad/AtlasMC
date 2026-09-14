@@ -8,7 +8,7 @@ import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.codec.StringCodec;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.io.protocol.status.ClientboundResponse;
-import de.atlasmc.util.configuration.file.JsonConfiguration;
+import de.atlasmc.util.configuration.file.JsonConfigurationFactory;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutResponse implements PacketCodec<ClientboundResponse> {
@@ -16,7 +16,7 @@ public class CorePacketOutResponse implements PacketCodec<ClientboundResponse> {
 	@Override
 	public void deserialize(ClientboundResponse packet, ByteBuf in, ConnectionHandler handler) throws IOException {
 		String rawResponse = StringCodec.readString(in);
-		packet.response = JsonConfiguration.loadConfiguration(new StringReader(rawResponse));
+		packet.response = JsonConfigurationFactory.INSTANCE.load(new StringReader(rawResponse));
 	}
 
 	@Override

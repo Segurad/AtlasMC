@@ -1,5 +1,6 @@
 package de.atlasmc.core.registry;
 
+import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -38,12 +39,9 @@ public class CoreRegistryHandler implements RegistryHandler {
 	
 	@Override
 	public <T extends Registry<?>> T createRegistry(NamespacedKey key, Class<?> clazz, Target target) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (clazz == null)
-			throw new IllegalArgumentException("Class can not be null!");
-		if (target == null)
-			throw new IllegalArgumentException("Target can not be null!");
+		Objects.requireNonNull(key, "key");
+		Objects.requireNonNull(clazz, "class");
+		Objects.requireNonNull(target, "target");
 		Registry<?> rawRegistry = checkPresentRegistry(key, clazz, target);
 		if (rawRegistry != null) {
 			@SuppressWarnings("unchecked")

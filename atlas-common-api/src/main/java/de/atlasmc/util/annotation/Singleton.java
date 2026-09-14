@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
  * Marks a class a singleton.
  * Types marked with this annotation should contain a static function getInstance()
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target(TYPE)
 public @interface Singleton {
-
+	
 }

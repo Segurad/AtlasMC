@@ -11,14 +11,19 @@ import de.atlasmc.util.annotation.Nullable;
 
 public interface Registry<T> extends Namespaced {
 	
+	@Nullable
 	T getDefault();
 	
-	T setDefault(T defaultEntry);
+	@Nullable
+	T setDefault(@Nullable T defaultEntry);
 	
+	@Nullable
 	T get(CharSequence key);
 	
+	@Nullable
 	T getOrDefault(CharSequence key);
 	
+	@Nullable
 	T getOrDefault(CharSequence key, T defaultValue);
 	
 	/**

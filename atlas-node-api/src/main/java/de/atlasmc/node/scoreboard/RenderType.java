@@ -1,38 +1,15 @@
 package de.atlasmc.node.scoreboard;
 
-import java.util.List;
+import de.atlasmc.IDHolder;
 
-public enum RenderType {
+public enum RenderType implements IDHolder {
 	
 	INTEGER,
 	HEARTS;
 	
-	private static List<RenderType> VALUES;
-	
+	@Override
 	public int getID() {
 		return ordinal();
-	}
-	
-	public static RenderType getByID(int id) {
-		return getValues().get(id);
-	}
-	
-	/**
-	 * Returns a immutable List of all Types.<br>
-	 * This method avoid allocation of a new array not like {@link #values()}.
-	 * @return list
-	 */
-	public static List<RenderType> getValues() {
-		if (VALUES == null)
-			VALUES = List.of(values());
-		return VALUES;
-	}
-	
-	/**
-	 * Releases the system resources used from the values cache
-	 */
-	public static void freeValues() {
-		VALUES = null;
 	}
 
 }

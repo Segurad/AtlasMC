@@ -3,7 +3,7 @@ package de.atlasmc.util.configuration;
 public class ConfigurationSettings  {
 
 	private boolean preserveComments = true;
-	private boolean beautify = false;
+	private boolean beautify = true;
 	private boolean autoSerialize = false;
 	private ClassLoader laoder;
 	

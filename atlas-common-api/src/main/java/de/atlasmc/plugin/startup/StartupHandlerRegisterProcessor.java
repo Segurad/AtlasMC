@@ -29,6 +29,7 @@ import de.atlasmc.util.annotation.AnnotationProcessorUtils;
 import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 
 @SupportedAnnotationTypes({"de.atlasmc.plugin.startup.StartupHandlerRegister"})
 @SupportedSourceVersion(SourceVersion.RELEASE_25)
@@ -84,7 +85,7 @@ public class StartupHandlerRegisterProcessor extends AbstractProcessor {
 		try {
 			FileObject file = filter.getResource(StandardLocation.CLASS_OUTPUT, "", path);
 			InputStream in = file.openInputStream();
-			startupCfg = YamlConfiguration.loadConfiguration(in);
+			startupCfg = YamlConfigurationFactory.INSTANCE.load(in);
 		} catch(IOException e) {
 			// no file present
 		}

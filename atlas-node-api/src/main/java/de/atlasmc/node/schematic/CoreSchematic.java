@@ -3,13 +3,13 @@ package de.atlasmc.node.schematic;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.atlasmc.node.Location;
+import org.joml.Vector3i;
 
 public class CoreSchematic implements Schematic {
 	
 	private final SchematicSection[] sections; // ordered by y > z > x
 	private List<SchematicAccess> schematics;
-	private final Location off;
+	private final Vector3i off;
 	private final int lengthX;
 	private final int lengthZ;
 	private final int height;
@@ -18,7 +18,7 @@ public class CoreSchematic implements Schematic {
 	 * Creates a new CoreSchamtic instance with no contents
 	 * @param off the offset added when placed
 	 */
-	public CoreSchematic(Location off) {
+	public CoreSchematic(Vector3i off) {
 		this(off, 0, 0, 0);
 	}
 	
@@ -31,8 +31,8 @@ public class CoreSchematic implements Schematic {
 	 * @param height
 	 * @param lengthZ 
 	 */
-	public CoreSchematic(Location off, int lengthX, int height, int lengthZ) {
-		this.off = off.clone().convertToBlock();
+	public CoreSchematic(Vector3i off, int lengthX, int height, int lengthZ) {
+		this.off = new Vector3i(off);
 		this.lengthX = lengthX;
 		this.lengthZ = lengthZ;
 		this.height = height;
@@ -65,17 +65,18 @@ public class CoreSchematic implements Schematic {
 	}
 
 	@Override
-	public Location getOffset() {
-		return off.clone();
+	public Vector3i getOffset() {
+		return new Vector3i(off);
 	}
 
 	@Override
-	public Location getOffset(Location loc) {
-		return off.copyTo(loc);
+	public Vector3i getOffset(Vector3i loc) {
+		off.set(loc);
+		return loc;
 	}
 
 	@Override
-	public void setOffset(Location loc) {
+	public void setOffset(Vector3i loc) {
 		off.set(loc);
 	}
 
@@ -86,7 +87,8 @@ public class CoreSchematic implements Schematic {
 
 	@Override
 	public SchematicAccess addSchematic(Schematic schematic, int offX, int offY, int offZ, float rotation, boolean visible) {
-		if (schematics == null) schematics = new ArrayList<>();
+		if (schematics == null) 
+			schematics = new ArrayList<>();
 		SchematicAccess access = new CoreSchematicAccess(schematic, offX, offY, offZ, rotation, visible);
 		schematics.add(access);
 		return access;

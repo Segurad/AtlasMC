@@ -1,9 +1,6 @@
 package de.atlasmc.util.configuration.file;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -16,16 +13,27 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
-import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
+import de.atlasmc.util.configuration.ConfigurationSettings;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 
 public class JsonConfiguration extends FileConfiguration {
 	
-	public JsonConfiguration() {}
+	public JsonConfiguration() {
+		super(null, null);
+	}
 	
-	public JsonConfiguration(ConfigurationSection configuration) {
-		super(configuration);
+	public JsonConfiguration(ConfigurationSettings settings) {
+		super(settings, null);
+	}
+	
+	public JsonConfiguration(ConfigurationSection config) {
+		super(null, config);
+	}
+	
+	public JsonConfiguration(ConfigurationSettings settings, ConfigurationSection config) {
+		super(settings, config);
 	}
 	
 	@Override
@@ -72,10 +80,12 @@ public class JsonConfiguration extends FileConfiguration {
 			writer.beginArray();
 			writeList((List<Object>) value, writer);
 			writer.endArray();
-		} else if (value instanceof ConfigurationSection) {
+		} else if (value instanceof ConfigurationSection section) {
 			writer.beginObject();
-			writeSection((ConfigurationSection) value, writer);
+			writeSection(section, writer);
 			writer.endObject();
+		} else if (value instanceof ConfigurationSerializable serializable){
+			writeValue(null, serializable.toConfiguration(), writer);
 		} else if (value instanceof Number) {
 			writer.value((Number) value);
 		} else {
@@ -173,34 +183,6 @@ public class JsonConfiguration extends FileConfiguration {
 			}
 		}
 		reader.endArray();
-	}
-	
-	@NotNull
-	public static JsonConfiguration loadConfiguration(File file) throws FileNotFoundException, IOException {
-		JsonConfiguration cfg = new JsonConfiguration();
-		cfg.load(file);
-		return cfg;
-	}
-
-	@NotNull
-	public static JsonConfiguration loadConfiguration(Reader reader) throws IOException {
-		JsonConfiguration cfg = new JsonConfiguration();
-		cfg.load(reader);
-		return cfg;
-	}
-	
-	@NotNull
-	public static JsonConfiguration loadConfiguration(JsonReader reader) {
-		JsonConfiguration cfg = new JsonConfiguration();
-		cfg.load(reader);
-		return cfg;
-	}
-
-	@NotNull
-	public static JsonConfiguration loadConfiguration(InputStream input) throws IOException {
-		JsonConfiguration cfg = new JsonConfiguration();
-		cfg.load(input);
-		return cfg;
 	}
 
 }

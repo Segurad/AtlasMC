@@ -1,12 +1,17 @@
 package de.atlasmc.network;
 
+import static de.atlasmc.registry.RegistryValueKey.ofLiteral;
+
+import java.util.Objects;
+
+import de.atlasmc.NamespacedKey;
+import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.registry.ProtocolRegistryValueBase;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.registry.RegistryHolder;
 import de.atlasmc.registry.RegistryHolder.Target;
 import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.registry.RegistryValueKey;
-import static de.atlasmc.registry.RegistryValueKey.ofLiteral;
 
 @RegistryHolder(key = "atlas:network-type", target = Target.PROTOCOL)
 public class NetworkType extends ProtocolRegistryValueBase {
@@ -20,5 +25,16 @@ public class NetworkType extends ProtocolRegistryValueBase {
 	NODE = ofLiteral(REGISTRY_KEY, "atlas:node"),
 	SOCKET = ofLiteral(REGISTRY_KEY, "atlas:socket")
 	;
+	
+	private final StreamCodec<?> codec;
+	
+	public NetworkType(NamespacedKey key, int id, StreamCodec<?> codec) {
+		super(key, id);
+		this.codec = Objects.requireNonNull(codec, "codec");
+	}
+	
+	public StreamCodec<?> getCodec() {
+		return codec;
+	}
 
 }

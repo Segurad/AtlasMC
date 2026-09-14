@@ -14,6 +14,7 @@ import de.atlasmc.node.io.protocol.play.PacketOutUpdateObjectives.Mode;
 import de.atlasmc.node.io.protocol.play.PacketOutUpdateScore.NumberFormatType;
 import de.atlasmc.node.scoreboard.RenderType;
 import de.atlasmc.util.codec.CodecContext;
+import de.atlasmc.util.enums.EnumUtil;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketOutUpdateObjectives implements PacketCodec<PacketOutUpdateObjectives> {
@@ -26,7 +27,7 @@ public class CorePacketOutUpdateObjectives implements PacketCodec<PacketOutUpdat
 			return;
 		final CodecContext context = handler.getCodecContext();
 		packet.displayName = Chat.STREAM_CODEC.deserialize(in, context);
-		packet.renderType = RenderType.getByID(readVarInt(in));
+		packet.renderType = EnumUtil.getByID(RenderType.class, readVarInt(in));
 		if (in.readBoolean()) {
 			packet.formatType = NumberFormatType.getByID(readVarInt(in));
 			if (packet.formatType != NumberFormatType.BLANK)

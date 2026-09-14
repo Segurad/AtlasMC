@@ -115,13 +115,11 @@ public class ThreadWatchdog extends TickingThread {
 		}
 	}
 	
-	public static void init() {
-		synchronized (ThreadWatchdog.class) {
-			if (DOG.isRunning())
-				return;
-			DOG.logger.debug("Starting...");
-			DOG.start();
-		}
+	public static synchronized void init() {
+		if (DOG.isRunning())
+			return;
+		DOG.logger.debug("Starting...");
+		DOG.start();
 	}
 
 }

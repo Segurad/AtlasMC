@@ -13,7 +13,7 @@ import de.atlasmc.plugin.Plugin;
 import de.atlasmc.plugin.PluginLoader;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.configuration.Configuration;
-import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 
 /**
  * Default PluginLoader only capable of loading {@link JavaPlugin}
@@ -86,7 +86,7 @@ public class CoreJavaPluginLoader implements PluginLoader {
 				return null;
 			}
 			try (InputStream in = jar.getInputStream(entry)) {
-				return YamlConfiguration.loadConfiguration(in);
+				return YamlConfigurationFactory.INSTANCE.load(in);
 			}
 		}
 	}

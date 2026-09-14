@@ -27,6 +27,7 @@ import de.atlasmc.util.configuration.Configuration;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 
 @SupportedAnnotationTypes("de.atlasmc.registry.RegistryValue")
 @SupportedSourceVersion(SourceVersion.RELEASE_25)
@@ -84,7 +85,7 @@ public final class RegistryValueProcessor extends AbstractProcessor {
 		try {
 			FileObject file = filter.getResource(StandardLocation.CLASS_OUTPUT, "", path);
 			InputStream in = file.openInputStream();
-			registryCfg = YamlConfiguration.loadConfiguration(in);
+			registryCfg = YamlConfigurationFactory.INSTANCE.load(in);
 		} catch(IOException e) {
 			// no file present
 		}

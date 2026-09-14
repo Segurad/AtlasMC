@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.cache.Caching;
@@ -33,6 +34,7 @@ import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.ConfigurationException;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 import de.atlasmc.util.map.ConcurrentLinkedListMultimap;
 import de.atlasmc.util.map.Multimap;
 
@@ -132,9 +134,8 @@ public class Commands {
 	 * @throws ConfigurationException
 	 */
 	public static Collection<Command> loadCommands(File file) throws IOException {
-		if (file == null)
-			throw new IllegalArgumentException("File can not be null!");
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+		Objects.requireNonNull(file, "file");
+		YamlConfiguration config = YamlConfigurationFactory.INSTANCE.load(file);
 		List<ConfigurationSection> rawCommands = config.getListOfType("commands", ConfigurationSection.class);
 		List<Command> commands = new ArrayList<>();
 		for (ConfigurationSection rawCommand : rawCommands) {

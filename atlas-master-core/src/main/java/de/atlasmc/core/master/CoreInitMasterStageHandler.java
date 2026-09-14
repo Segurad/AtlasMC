@@ -26,6 +26,7 @@ import de.atlasmc.plugin.startup.StartupHandlerRegister;
 import de.atlasmc.plugin.startup.StartupStageHandler;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 import de.atlasmc.util.sql.SQLConnectionPool;
 import de.atlasmc.util.sql.ScriptRunner;
 
@@ -46,7 +47,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 		File masterCfgFile = new File(Atlas.getWorkdir(), "master/master.yml");
 		YamlConfiguration masterCfg;
 		try {
-			masterCfg = YamlConfiguration.loadConfiguration(masterCfgFile);
+			masterCfg = YamlConfigurationFactory.INSTANCE.load(masterCfgFile);
 		} catch (Exception e) {
 			log.error("Error while loading master.yml!", e);
 			context.fail();
@@ -67,7 +68,7 @@ class CoreInitMasterStageHandler implements StartupStageHandler {
 		if (nodeIDFile.exists()) {
 			YamlConfiguration nodeIDCfg;
 			try {
-				nodeIDCfg = YamlConfiguration.loadConfiguration(nodeIDFile);
+				nodeIDCfg = YamlConfigurationFactory.INSTANCE.load(nodeIDFile);
 			} catch (IOException e) {
 				log.error("Error while loading node id file!", e);
 				context.fail(e);

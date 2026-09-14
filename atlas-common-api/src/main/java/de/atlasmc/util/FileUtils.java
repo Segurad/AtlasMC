@@ -50,10 +50,11 @@ public class FileUtils {
 	
 	public static File extractResource(File dest, String resource, boolean override, Class<?> caller) throws IOException {
 		if (dest.exists()) {
-			if (override)
+			if (override) {
 				dest.delete();
-			else
+			} else {
 				return dest;
+			}
 		}
 		InputStream resourceStream = caller.getResourceAsStream(resource);
 		if (resourceStream == null)
