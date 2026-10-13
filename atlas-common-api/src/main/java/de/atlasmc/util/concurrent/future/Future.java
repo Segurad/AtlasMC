@@ -19,7 +19,8 @@ public interface Future<V> extends java.util.concurrent.Future<V> {
 	Throwable cause();
 	
 	/**
-	 * Returns whether or not this future is successfully
+	 * Returns whether or not this future is successfully.
+	 * A future is successfully if it completes without any errors and produces a value.
 	 * @return true if success
 	 */
 	boolean isSuccess();

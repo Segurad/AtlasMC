@@ -1,5 +1,9 @@
 package de.atlasmc.util.concurrent.future;
 
+/**
+ * Future implementation that will be completed by a external cause
+ * @param <V>
+ */
 public class CompletableFuture<V> extends AbstractFuture<V> {
 	
 	@Override

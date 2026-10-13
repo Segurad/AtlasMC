@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.atlasmc.network.permission.ContextProvider;
@@ -18,21 +19,34 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 
 	private static final PermissionContext[] EMPTY = {};
 	
+	private final int id;
 	private final UUID uuid;
 	private final ContextProvider contextProvider;
 	private final ContextProvider tempProvider;
 	
 	private final CoreAbstractPermissionManager manager;
-	private CoreGroupSetPermission groupSet;
-	private PermissionContext[] activeContexts = EMPTY;
+	private volatile CoreGroupSetPermission groupSet;
+	/**
+	 * Array storing active permission contexts this should be treated as copy on write.
+	 * If changes to the array are made a new copy should be set.
+	 * Changes must be made synchronous using mutex this
+	 */
+	private volatile PermissionContext[] activeContexts = EMPTY;
 	
-	public CorePermissionHandler(UUID uuid, CoreAbstractPermissionManager manager) {
-		this.uuid = uuid;
-		contextProvider = new CorePermissionHandlerContextProvider(this);
-		tempProvider = new CorePermissionHandlerContextProvider(this);
-		this.manager = manager;
+	public CorePermissionHandler(int id, UUID uuid, CoreAbstractPermissionManager manager) {
+		this.id = id;
+		this.uuid = Objects.requireNonNull(uuid, "uuid");
+		this.manager = Objects.requireNonNull(manager, "manager");
+		this.contextProvider = new CorePermissionHandlerContextProvider(this);
+		this.tempProvider = new CorePermissionHandlerContextProvider(this);
 	}
 	
+	/**
+	 * Used to notify this handler that a context has changed by a context provider
+	 * @param key
+	 * @param oldValue
+	 * @param newValue
+	 */
 	void onContextChange(String key, String oldValue, String newValue) {
 		PermissionContext oldCtx = null;
 		PermissionContext newCtx = null;
@@ -50,6 +64,8 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 	}
 	
 	private synchronized void rebuildActivePermissionContexts(PermissionContext oldCtx, PermissionContext newCtx) {
+		if (oldCtx == newCtx)
+			return;
 		PermissionContext[] oldActive = this.activeContexts;
 		PermissionContext[] newContexts = null;
 		if (oldCtx == null) {
@@ -71,7 +87,7 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 				newActive[i] = ctx;
 			}
 		} else if (oldCtx != newCtx) { // ctx has changed
-			newContexts = oldActive;
+			newContexts = oldActive.clone();
 			final int length = newContexts.length;
 			for (int i = 0; i < length; i++) {
 				if (newContexts[i] != oldCtx)
@@ -79,8 +95,6 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 				newContexts[i] = newCtx;
 				break;
 			}
-		} else { // no changes
-			newContexts = oldActive;
 		}
 		activeContexts = newContexts;
 	}
@@ -103,22 +117,27 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 		this.groupSet.handlers.remove(this);
 		groupSet.handlers.add(this);
 		this.groupSet = groupSet;
+		super.groupsChanged();
 	}
 	
-	public void groupSetUpdated(CoreGroupSetPermission groupSet) {
+	/**
+	 * Notifies this handler that the a permission set has been updated
+	 * @param groupSet
+	 */
+	public synchronized void onGroupSetUpdated(CoreGroupSetPermission groupSet) {
 		if (this.groupSet != groupSet) {
 			groupSet.handlers.remove(this);
 			return;
 		}
-		synchronized (this) {
-			if (this.groupSet != groupSet) {
-				groupSet.handlers.remove(this);
-				return;
-			}
-			activeContexts = getActiveContexts(groupSet);
-		}
+		activeContexts = getActiveContexts(groupSet);
 	}
 	
+	/**
+	 * Aggregates the active permissions contexts in order of relevants.
+	 * The most significant context is the temp context followed by the persistent context and group context
+	 * @param groupSet
+	 * @return
+	 */
 	private PermissionContext[] getActiveContexts(CoreGroupSetPermission groupSet) {
 		ArrayList<PermissionContext> groupContext = new ArrayList<>(5);
 		super.groupsChanged();
@@ -126,7 +145,7 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 		getActiveContexts(contextProvider.getContext(), groupContext);
 		getActiveContexts(groupSet.context.getContext(), groupContext);
 		if (!groupContext.isEmpty()) {
-			return (PermissionContext[]) groupContext.toArray();
+			return groupContext.toArray(new PermissionContext[groupContext.size()]);
 		} else {
 			return EMPTY;
 		}
@@ -152,12 +171,16 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 	public Permission getPermission(CharSequence permission) {
 		final CoreGroupSetPermission groupSet = this.groupSet;
 		if (groupSet == null)
-			return null;
+			return null; // if no group set is present there can be no permission
+		// direct group set lookup
 		Permission perm = groupSet.permissions.get(permission);
 		if (perm != null)
 			return perm;
+		// context lookup
 		final PermissionContext[] activeGroups = activeContexts;
-		for (PermissionContext ctx : activeGroups) {
+		final int length = activeGroups.length;
+		for (int i = 0; i < length; i++) {
+			final PermissionContext ctx = activeContexts[i];
 			if (ctx == null)
 				break;
 			perm = ctx.getPermission(permission);
@@ -179,8 +202,7 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 
 	@Override
 	public String getContext(String key) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
+		Objects.requireNonNull(key, "key");
 		String value = tempProvider.getContext(key);
 		if (value != null)
 			return value;
@@ -191,6 +213,11 @@ public class CorePermissionHandler extends CorePermissionGroupHolder implements 
 		if (groupSet == null)
 			return null;
 		return groupSet.context.getContext(key);
+	}
+
+	@Override
+	public int getID() {
+		return id;
 	}
 
 }

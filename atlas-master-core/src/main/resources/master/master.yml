@@ -5,11 +5,11 @@ database:
   port: 3306
   user: atlas
   password: atlas
-host: localhost
-port: 666
 socket-configuration:
   name: master-socket
   type: EPOLL
+  host: localhost
+  port: 666
   worker-threads: 2
   boss-threads: 1
   channel-options:
@@ -17,6 +17,8 @@ socket-configuration:
   child-channel-options:
     SO_KEEPALIVE: true
   mode: open
+  labels:
+  - master
   connection-config:
   - ==type: de.atlasmc.network.player.PlayerConnectionConfig
     name: node-connection

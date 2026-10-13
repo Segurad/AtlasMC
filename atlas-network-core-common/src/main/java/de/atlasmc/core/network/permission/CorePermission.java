@@ -1,5 +1,7 @@
 package de.atlasmc.core.network.permission;
 
+import java.util.Objects;
+
 import de.atlasmc.permission.Permission;
 
 public class CorePermission implements Permission {
@@ -7,8 +9,8 @@ public class CorePermission implements Permission {
 	private final String permission;
 	private final int value;
 	
-	public CorePermission(String permission, int value) {
-		this.permission = permission;
+	public CorePermission(CharSequence permission, int value) {
+		this.permission = Objects.requireNonNull(permission, "permission").toString();
 		this.value = value;
 	}
 	

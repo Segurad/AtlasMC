@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import de.atlasmc.io.socket.SocketConfig.ChannelType;
 import de.atlasmc.log.Log;
+import de.atlasmc.util.configuration.ConfigurationException;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -25,10 +26,16 @@ public class ServerSocket implements Closeable {
 	private final Log logger;
 	private final InetSocketAddress host;
 	
+	public ServerSocket(SocketConfig config, Log logger) {
+		this(null, config, logger);
+	}
+	
 	public ServerSocket(InetSocketAddress host, SocketConfig config, Log logger) {
-		this.host = Objects.requireNonNull(host);
-		this.config = Objects.requireNonNull(config);
-		this.logger = Objects.requireNonNull(logger);
+		this.config = Objects.requireNonNull(config, "config");
+		if (host == null)
+			host = config.getHost();
+		this.host = Objects.requireNonNull(host, "host");
+		this.logger = Objects.requireNonNull(logger, "logger");
 		this.logger.sendToConsole(true);
 	}
 
@@ -44,16 +51,26 @@ public class ServerSocket implements Closeable {
 		return host;
 	}
 	
+	/**
+	 * Opens the socket
+	 * @throws IllegalStateException if the socket is already open
+	 * @throws ConfigurationException if the host couldn't be resolved
+	 */
 	public synchronized void open() {
 		if (isOpen()) 
 			throw new IllegalStateException("Socket already open!");
 		
 		ChannelType type = config.getType();
+		if (!type.isAvailable()) {
+			var defaultType = ChannelType.getDefault();
+			logger.warn("Configured channel type not available: " + type + " defaulting to: " + defaultType);
+			type = defaultType;
+		}
 		bossGroup = new MultiThreadIoEventLoopGroup(config.getBossThreads(), type.getDefaultFactory());
 		workerGroup = new MultiThreadIoEventLoopGroup(config.getWorkerThreads(), type.getDefaultFactory());
 		ServerBootstrap b = new ServerBootstrap();
 		b.group(bossGroup, workerGroup);
-		b.channel(type.getServerSocektChannelClass());
+		b.channel(type.getServerSocketChannelClass());
 		b.childHandler(handler);
 		if (!config.getChannelOptions().isEmpty()) {
 			for (Entry<ChannelOption<?>, Object> entry : config.getChannelOptions().entrySet()) {
@@ -69,6 +86,9 @@ public class ServerSocket implements Closeable {
 				b.childOption(option, entry.getValue());
 			}
 		}
+		var host = new InetSocketAddress(this.host.getHostString(), this.host.getPort());
+		if (host.isUnresolved())
+			throw new ConfigurationException("Failed to resolve host " + host.getHostString() + ":" + host.getPort());
 		channel = (ServerChannel) b.bind(host).channel();
 		logger.info("Socket running on {}:{}", host.getHostString(), host.getPort());
 	}

@@ -4,8 +4,6 @@ import java.lang.reflect.Array;
 
 public abstract class AbstractPipeline<E> implements Pipeline<E> {
 	
-	protected static final String[] EMPTY_NAMES = {};
-	
 	protected <T> T[] removeAt(T[] array, int i, T[] empty) {
 		final int length = array.length;
 		if (length == 1)

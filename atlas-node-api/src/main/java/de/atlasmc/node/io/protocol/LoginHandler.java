@@ -5,17 +5,18 @@ import java.util.UUID;
 import javax.crypto.SecretKey;
 
 import de.atlasmc.chat.Chat;
-import de.atlasmc.io.connection.ServerSocketConnectionHandler;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.network.player.AtlasPlayer;
 import de.atlasmc.node.io.protocol.cookie.CookieManager;
 import de.atlasmc.node.io.protocol.handshake.HandshakeData;
 import de.atlasmc.node.io.socket.NodeSocket;
+import de.atlasmc.tick.Tickable;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.mojang.PlayerProfile;
 
-public interface LoginHandler {
+public interface LoginHandler extends Tickable {
 	
 	@NotNull
 	CookieManager getCookieManager();
@@ -31,12 +32,10 @@ public interface LoginHandler {
 	boolean isStarted();
 	
 	@NotNull
-	default NodeSocket getSocket() {
-		return (NodeSocket) getConnection().getSocket();
-	}
+	NodeSocket getSocket();
 	
 	@NotNull
-	ServerSocketConnectionHandler getConnection();
+	ConnectionHandler getConnection();
 	
 	/**
 	 * The name used in login attempt.
@@ -120,9 +119,7 @@ public interface LoginHandler {
 	 * Whether or not encryption is enabled
 	 * @return true enabled
 	 */
-	default boolean hasEncryption() {
-		return getConnection().isEncryotionEnabled();
-	}
+	boolean hasEncryption();
 
 	HandshakeData getHandshakeData();
 

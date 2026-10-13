@@ -95,38 +95,50 @@ public class ServerHandlerList extends HandlerList {
 	
 	@Override
 	public void unregisterListener(Listener listener) {
-		if (listener == null)
-			throw new IllegalArgumentException("Listener can not be null!");
-		modLock.lock();
-		globalExecutors = super.internalUnregister(listener, globalExecutors);
-		super.internalUnregister(listener, serverExecutors);
-		super.internalUnregister(listener, groupExecutors);
-		modLock.unlock();
+		Objects.requireNonNull(listener, "listener");
+		try {
+			modLock.lock();
+			globalExecutors = super.internalUnregister(listener, globalExecutors);
+			super.internalUnregister(listener, serverExecutors);
+			super.internalUnregister(listener, groupExecutors);
+			modLock.unlock();
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 	@Override
 	public void unregisterAllListener(Plugin plugin) {
 		Objects.requireNonNull("plugin");
-		modLock.lock();
-		globalExecutors = super.internalUnregister(plugin, globalExecutors, true);
-		super.internalUnregister(plugin, serverExecutors, true);
-		super.internalUnregister(plugin, groupExecutors, true);
-		modLock.unlock();
+		try {
+			modLock.lock();
+			if (defaultExecutor != null && defaultExecutor.plugin.getPlugin() == plugin)
+				defaultExecutor = null;
+			globalExecutors = super.internalUnregister(plugin, globalExecutors, true);
+			super.internalUnregister(plugin, serverExecutors, true);
+			super.internalUnregister(plugin, groupExecutors, true);
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 	@Override
 	public void unregisterListener(PluginHandle plugin) {
 		Objects.requireNonNull("plugin");
-		modLock.lock();
-		globalExecutors = super.internalUnregister(plugin, globalExecutors, false);
-		super.internalUnregister(plugin, serverExecutors, false);
-		super.internalUnregister(plugin, groupExecutors, false);
-		modLock.unlock();
+		try {
+			modLock.lock();
+			if (defaultExecutor != null && defaultExecutor.plugin == plugin)
+				defaultExecutor = null;
+			globalExecutors = super.internalUnregister(plugin, globalExecutors, false);
+			super.internalUnregister(plugin, serverExecutors, false);
+			super.internalUnregister(plugin, groupExecutors, false);
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 	public static void unregisterServer(InternalServer server) {
-		if (server == null) 
-			throw new IllegalArgumentException("Server can not be null!");
+		Objects.requireNonNull(server, "server");
 		synchronized (HANDLERS) {
 			for (WeakReference<HandlerList> ref : HANDLERS) {
 				if (ref.refersTo(null))

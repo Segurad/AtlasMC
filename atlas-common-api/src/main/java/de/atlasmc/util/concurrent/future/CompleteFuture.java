@@ -10,6 +10,10 @@ import java.util.concurrent.TimeoutException;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 
+/**
+ * A future that is already complete.
+ * @param <V>
+ */
 public class CompleteFuture<V> implements Future<V> {
 	
 	private static final Future<?> NULL_RESULT_FUTURE = new CompleteFuture<>(null);

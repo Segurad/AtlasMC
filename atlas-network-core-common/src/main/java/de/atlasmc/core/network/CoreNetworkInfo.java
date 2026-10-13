@@ -2,6 +2,7 @@ package de.atlasmc.core.network;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.atlasmc.network.NetworkInfo;
@@ -26,13 +27,13 @@ public class CoreNetworkInfo implements NetworkInfo {
 	public CoreNetworkInfo(int slots, int slotDistance, SlotMode mode, String motd, String protocolText, String serverIcon, List<String> playerInfo, boolean maintenance) {
 		this.slots = slots;
 		this.slotDistance = slotDistance;
-		this.mode = mode;
+		this.mode = Objects.requireNonNull(mode, "mode");
 		this.motd = motd;
 		this.protocolText = protocolText;
-		this.serverIcon = "data:image/png;base64," + serverIcon;
-		this.playerInfo = List.copyOf(playerInfo);
-		playerInfoUUIDs = new String[playerInfo.size()];
-		for (int i = 0; i < playerInfo.size(); i++) {
+		this.serverIcon =  serverIcon != null ? "data:image/png;base64," + serverIcon : null;
+		this.playerInfo = playerInfo != null ? List.copyOf(playerInfo) : List.of();
+		playerInfoUUIDs = new String[this.playerInfo.size()];
+		for (int i = 0; i < this.playerInfo.size(); i++) {
 			playerInfoUUIDs[i] = UUID.randomUUID().toString();
 		}
 		this.maintenance = maintenance;
@@ -92,11 +93,6 @@ public class CoreNetworkInfo implements NetworkInfo {
 		case DYNAMIC: 
 			onlinePlayers = onlinePlayerCount;
 			maxPlayers = onlinePlayers + slotDistance;
-			break;
-		case BASE:
-			onlinePlayers = onlinePlayerCount;
-			maxPlayers = onlinePlayers + slotDistance;
-			// TODO implement slotmode base
 			break;
 		case FIXED:
 			onlinePlayers = slots;

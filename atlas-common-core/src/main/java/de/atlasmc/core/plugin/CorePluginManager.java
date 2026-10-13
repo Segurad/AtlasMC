@@ -69,7 +69,7 @@ public class CorePluginManager implements PluginManager {
 	
 	@Override
 	public Future<Plugin> loadPlugin(File file, Object lock) {
-		if (file.exists())
+		if (!file.exists())
 			throw new IllegalArgumentException("File does not exist: " + file.getPath());
 		List<Future<Plugin>> futures = internalLoadPlugins(List.of(file), lock);
 		if (futures.isEmpty())
@@ -234,7 +234,7 @@ public class CorePluginManager implements PluginManager {
 		CoreRegisteredPlugin registered = plugins.get(plugin.getName());
 		if (registered == null)
 			return false;
-		return !registered.isLocked();
+		return registered.isLocked();
 	}
 
 	@Override
@@ -276,7 +276,7 @@ public class CorePluginManager implements PluginManager {
 	@Nullable
 	CoreRegisteredPlugin getRegisteredPlugin(File file) {
 		for (var plugin : plugins.values()) {
-			if (plugin.prototype.getFile().equals(file));
+			if (plugin.prototype.getFile().equals(file))
 				return plugin;
 		}
 		return null;

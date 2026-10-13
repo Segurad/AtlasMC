@@ -1,5 +1,6 @@
 package de.atlasmc.node;
 
+import java.security.KeyPair;
 import java.util.UUID;
 
 import de.atlasmc.node.io.protocol.ProtocolAdapterManager;
@@ -14,6 +15,7 @@ public class AtlasNodeBuilder implements Builder<LocalAtlasNode> {
 	private ProtocolAdapterManager protocolAdapterManager;
 	private UUID uuid;
 	private LocalAtlasNodeFactory factory;
+	private KeyPair playerAuthKey;
 	
 	public AtlasNodeBuilder setServerManager(NodeServerManager serverManager) {
 		this.serverManager = serverManager;
@@ -25,7 +27,7 @@ public class AtlasNodeBuilder implements Builder<LocalAtlasNode> {
 		return this;
 	}
 	
-	public AtlasNodeBuilder setProxyManager(SocketManager proxyManager) {
+	public AtlasNodeBuilder setSocketManager(SocketManager proxyManager) {
 		this.proxyManager = proxyManager;
 		return this;
 	}
@@ -65,6 +67,15 @@ public class AtlasNodeBuilder implements Builder<LocalAtlasNode> {
 		if (factory == null)
 			throw new IllegalStateException("No node factory defined!");
 		return factory.createNode(this);
+	}
+	
+	public AtlasNodeBuilder setPlayerAuthKey(KeyPair playerAuthKey) {
+		this.playerAuthKey = playerAuthKey;
+		return this;
+	}
+
+	public KeyPair getPlayerAuthKey() {
+		return playerAuthKey;
 	}
 
 }

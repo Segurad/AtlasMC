@@ -4,23 +4,28 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
-import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.chat.Chat;
 import de.atlasmc.chat.ChatUtil;
+import de.atlasmc.chat.component.ChatComponent;
 import de.atlasmc.core.node.io.protocol.cookie.CoreCookieManager;
 import de.atlasmc.event.HandlerList;
 import de.atlasmc.io.ProtocolException;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.connection.ServerSocketConnectionHandler;
+import de.atlasmc.io.connection.SocketConnectionHandler;
+import de.atlasmc.io.netty.channel.PacketDecryptor;
+import de.atlasmc.io.netty.channel.PacketEncryptor;
 import de.atlasmc.network.player.AtlasPlayer;
+import de.atlasmc.node.AtlasNode;
 import de.atlasmc.node.event.socket.AsyncPlayerLoginAttemptEvent;
 import de.atlasmc.node.io.protocol.LoginHandler;
 import de.atlasmc.node.io.protocol.cookie.CookieClient;
@@ -29,16 +34,19 @@ import de.atlasmc.node.io.protocol.handshake.HandshakeData;
 import de.atlasmc.node.io.protocol.login.ClientboundCookieRequest;
 import de.atlasmc.node.io.protocol.login.ClientboundDisconnect;
 import de.atlasmc.node.io.protocol.login.ClientboundEncryptionRequest;
+import de.atlasmc.node.io.socket.NodeSocket;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.mojang.PlayerProfile;
 import io.netty.buffer.ByteBuf;
 
 public class CoreLoginHandler implements LoginHandler, CookieClient {
-	
+
 	static final String SERVER_ID = "AtlasMC";
-	private static final int VERIFY_TOKEN_LENGTH = 32;
-	
+
+	private static final String CHANNEL_PIPE_PACKET_DECRYPTOR = "packet_decryptor",
+			CHANNEL_PIPE_PACKET_ENCRYPTOR = "packet_encryptor";
+
 	private final ServerSocketConnectionHandler connection;
 	private final HandshakeData handshakeData;
 	private final CookieManager cookieManager;
@@ -52,7 +60,8 @@ public class CoreLoginHandler implements LoginHandler, CookieClient {
 	private volatile byte[] verifyToken;
 	private volatile PlayerProfile profile;
 	private volatile boolean authenticated;
-	
+	private int tick;
+
 	public CoreLoginHandler(ServerSocketConnectionHandler connection, HandshakeData handshake) {
 		this.connection = Objects.requireNonNull(connection, "connection");
 		this.handshakeData = Objects.requireNonNull(handshake, "handshake");
@@ -64,46 +73,47 @@ public class CoreLoginHandler implements LoginHandler, CookieClient {
 		});
 		this.loginTime = handshake.timestamp();
 	}
-	
+
 	@Override
 	public HandshakeData getHandshakeData() {
 		return handshakeData;
 	}
-	
+
 	@Override
 	public long getLoginTime() {
 		return loginTime;
 	}
-	
+
 	@Override
 	public String getLoginName() {
 		return name;
 	}
-	
+
 	@Override
 	public UUID getLoginUUID() {
 		return uuid;
 	}
-	
+
 	@Override
-	public ServerSocketConnectionHandler getConnection() {
+	public ConnectionHandler getConnection() {
 		return connection;
 	}
-	
+
 	@Override
 	public Chat getDisconnectMessage() {
 		return disconnectMessage;
 	}
-	
+
 	/**
 	 * Whether or not the connection is closed
+	 * 
 	 * @return
 	 */
 	@Override
 	public boolean isClosed() {
 		return closed || connection.isClosed();
 	}
-	
+
 	@Override
 	public synchronized boolean disconnect(Chat message) {
 		if (closed)
@@ -131,13 +141,19 @@ public class CoreLoginHandler implements LoginHandler, CookieClient {
 		this.encryptionFuture = future;
 		var packet = new ClientboundEncryptionRequest();
 		packet.serverID = SERVER_ID;
-		packet.publicKey = Atlas.getKeyPair().getPublic().getEncoded();
-		verifyToken = packet.verifyToken = generateVerifyToken();
+		packet.publicKey = AtlasNode.getPlayerAuthKey().getPublic().getEncoded();
+		try {
+			packet.verifyToken = verifyToken = generateVerifyToken();
+		} catch (NoSuchAlgorithmException e) {
+			connection.getLogger().error("Failed to generate verify token!", e);
+			disconnect(ChatUtil.toChat("Server Error!"));
+			future.complete(null, e);
+		}
 		packet.authenticate = useAuthentication;
 		connection.sendPacket(packet);
 		return future;
 	}
-	
+
 	@Override
 	public boolean isValidToken(byte[] token) {
 		byte[] verifyToken = this.verifyToken;
@@ -145,13 +161,11 @@ public class CoreLoginHandler implements LoginHandler, CookieClient {
 			throw new IllegalStateException("Token not initialized!"); // not authentication started
 		return verifyToken.equals(token);
 	}
-	
-	private static byte[] generateVerifyToken() {
-		Random rand = new Random();
-		byte[] token = new byte[VERIFY_TOKEN_LENGTH];
-		for (int i = 0; i < VERIFY_TOKEN_LENGTH; i++)
-			token[i] = (byte) rand.nextInt(0x100);
-		return token;
+
+	private byte[] generateVerifyToken() throws NoSuchAlgorithmException {
+		KeyGenerator generator = KeyGenerator.getInstance("AES");
+		generator.init(128);
+		return generator.generateKey().getEncoded();
 	}
 
 	@Override
@@ -165,7 +179,7 @@ public class CoreLoginHandler implements LoginHandler, CookieClient {
 	public boolean hasAuthentication() {
 		return useAuthentication;
 	}
-	
+
 	@Override
 	public Future<AtlasPlayer> getPlayer() {
 		// TODO Auto-generated method stub
@@ -191,7 +205,7 @@ public class CoreLoginHandler implements LoginHandler, CookieClient {
 	public void setAuthenticated(boolean authenticated) {
 		this.authenticated = authenticated;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "[ " + name + " | " + uuid + " | " + connection.getRemoteAddress() + " ]";
@@ -217,7 +231,12 @@ public class CoreLoginHandler implements LoginHandler, CookieClient {
 			encryptionFuture.complete(false, e);
 			throw new ProtocolException("Failed to enable encryption!", e);
 		}
-		connection.enableEncryption(encription, decription);
+		// set encryption to netty connection
+		connection.getChannel().pipeline()
+				.addAfter(SocketConnectionHandler.CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER,
+						CHANNEL_PIPE_PACKET_ENCRYPTOR, new PacketEncryptor(encription))
+				.addAfter(SocketConnectionHandler.CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER,
+						CHANNEL_PIPE_PACKET_DECRYPTOR, new PacketDecryptor(decription));
 		encryptionFuture.complete(true);
 	}
 
@@ -253,6 +272,23 @@ public class CoreLoginHandler implements LoginHandler, CookieClient {
 	@Override
 	public CookieManager getCookieManager() {
 		return cookieManager;
+	}
+
+	@Override
+	public boolean hasEncryption() {
+		return connection.getChannel().pipeline().get(CHANNEL_PIPE_PACKET_DECRYPTOR) != null;
+	}
+
+	@Override
+	public NodeSocket getSocket() {
+		return (NodeSocket) connection.getSocket();
+	}
+
+	@Override
+	public synchronized void tick() {
+		if (tick++ > 600) {
+			disconnect(ChatComponent.translate("multiplayer.disconnect.slow_login"));
+		}
 	}
 
 }

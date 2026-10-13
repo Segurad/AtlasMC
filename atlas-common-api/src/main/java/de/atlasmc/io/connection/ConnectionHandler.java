@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Queue;
 
-import javax.crypto.Cipher;
 import de.atlasmc.io.IOExceptionHandler;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketChunker;
@@ -68,10 +67,6 @@ public interface ConnectionHandler {
 	void setExceptionHandler(IOExceptionHandler handler);
 
 	boolean handleException(Throwable cause);
-	
-	void enableEncryption(Cipher encription, Cipher decription);
-	
-	boolean isEncryotionEnabled();
 	
 	void setCompressionThreshold(int threshold);
 	

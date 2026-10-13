@@ -10,7 +10,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import de.atlasmc.Atlas;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
@@ -64,7 +63,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<LoginH
 			}
 			String hash;
 			try {
-				hash = MojangAPI.buildServerIDHash(CoreLoginHandler.SERVER_ID, Atlas.getKeyPair().getPublic(), secretKey);
+				hash = MojangAPI.buildServerIDHash(CoreLoginHandler.SERVER_ID, AtlasNode.getPlayerAuthKey().getPublic(), secretKey);
 			} catch (Exception e) {
 				throw new ProtocolException("Failed to create server id hash!");
 			}
@@ -113,7 +112,7 @@ public class CorePacketListenerLoginIn extends CoreAbstractPacketListener<LoginH
 	}
 	
 	private static Cipher buildCipher() {
-		PrivateKey privateKey = Atlas.getKeyPair().getPrivate();
+		PrivateKey privateKey = AtlasNode.getPlayerAuthKey().getPrivate();
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance("RSA");

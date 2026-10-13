@@ -24,8 +24,8 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 	
 	protected final MapCache<String, PermissionGroup> groups;
 	protected final MapCache<UUID, PermissionHandler> handlers;
-	protected final MapCache<UUID, PermissionContext> contexts;
-	private final MapCache<Collection<PermissionGroup>, CoreGroupSetPermission> groupSetCache;
+	protected final MapCache<Integer, PermissionContext> contexts;
+	private final MapCache<Set<PermissionGroup>, CoreGroupSetPermission> groupSetCache;
 	private final Set<PermissionGroup> defaultGroups;
 	private final Collection<PermissionGroup> defaultGroupsView;
 	
@@ -45,7 +45,7 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 	protected void updateGroup(PermissionGroup group) {
 		boolean containsDefault = defaultGroups.contains(group);
 		synchronized (groupSetCache) { // update all cached sets containing the group
-			for (Entry<Collection<PermissionGroup>, CoreGroupSetPermission> entry : groupSetCache.entrySet()) {
+			for (Entry<Set<PermissionGroup>, CoreGroupSetPermission> entry : groupSetCache.entrySet()) {
 				Collection<PermissionGroup> keySet = entry.getKey();
 				if (!keySet.contains(group))
 					continue;
@@ -63,7 +63,11 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 					} else {
 						defaultGroups.add(group);
 					}
-					// TODO notify existing default handlers
+					for (var handler : this.handlers.values()) {
+						if (!handler.getGroups().isEmpty())
+							continue;
+						handler.groupsChanged();
+					}
 				}
 			}
 		}
@@ -76,6 +80,8 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 	
 	CoreGroupSetPermission getGroupSetPermissions(Collection<PermissionGroup> groups) {
 		Set<PermissionGroup> key;
+		// ensure groups a set to use sets for comparison and hash generation in key lookup.
+		// this ensures we are not order dependent in this lookup
 		if (groups instanceof Set<PermissionGroup> set) {
 			key = set;
 		} else { 
@@ -129,7 +135,7 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 			String value = ctx.getContext();
 			CorePermissionContext effectiveCtx = (CorePermissionContext) inner.get(value);
 			if (effectiveCtx == null)
-				inner.put(value, effectiveCtx = new CorePermissionContext(UUID.randomUUID(), key, value));
+				inner.put(value, effectiveCtx = new CorePermissionContext(0, key, value));
 			if (ctx instanceof CorePermissionContext coreCtx) {
 				addPermissions(coreCtx, effectiveCtx.permissions());
 			} else {
@@ -137,6 +143,14 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 			}
 		}
 	}
+	
+	private void addPermissions(CorePermissionHolder holder, Map<CharKey, Permission> permissions) {
+		Map<CharKey, Permission> perms = holder.permissions();
+		for (Entry<CharKey, Permission> entry : perms.entrySet()) {
+			permissions.putIfAbsent(entry.getKey(), entry.getValue());
+		}
+	}
+
 	
 	@Override
 	public Collection<PermissionGroup> getDefaultGroups() {
@@ -152,26 +166,15 @@ public abstract class CoreAbstractPermissionManager implements PermissionManager
 		}
 	}
 	
-	private void addPermissions(CorePermissionHolder holder, Map<CharKey, Permission> permissions) {
-		Map<CharKey, Permission> perms = holder.permissions();
-		for (Entry<CharKey, Permission> entry : perms.entrySet()) {
-			permissions.putIfAbsent(entry.getKey(), entry.getValue());
-		}
-	}
-	
-	@Override
-	public Permission createPermission(String permission) {
-		return createPermission(permission, 0);
-	}
 
 	@Override
-	public Permission createPermission(String permission, int value) {
+	public Permission createPermission(CharSequence permission, int value) {
 		return new CorePermission(permission, value);
 	}
 
 	@Override
-	public PermissionContext getContext(UUID uuid) {
-		return contexts.get(uuid);
+	public PermissionContext getContext(int id) {
+		return contexts.get(id);
 	}
 
 	@Override

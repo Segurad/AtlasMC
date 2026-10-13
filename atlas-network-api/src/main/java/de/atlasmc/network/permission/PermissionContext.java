@@ -1,7 +1,6 @@
 package de.atlasmc.network.permission;
 
-import java.util.UUID;
-
+import de.atlasmc.IDHolder;
 import de.atlasmc.permission.Permissible;
 import de.atlasmc.util.annotation.NotNull;
 
@@ -13,11 +12,8 @@ import de.atlasmc.util.annotation.NotNull;
  * For example some permission are only required on some Servers or in some ServerGroups.
  * @see ContextProvider
  */
-public interface PermissionContext extends PermissionHolder {
-	
-	@NotNull
-	UUID getUUID();
-	
+public interface PermissionContext extends PermissionHolder, IDHolder {
+
 	/**
 	 * Returns the key of this context
 	 * @return key

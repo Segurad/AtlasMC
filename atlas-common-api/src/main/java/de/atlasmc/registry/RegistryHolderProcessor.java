@@ -33,6 +33,8 @@ import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 @SupportedSourceVersion(SourceVersion.RELEASE_25)
 public final class RegistryHolderProcessor extends AbstractProcessor {
 
+	public static final String RESOURCE_LOCATION = "/META-INF/atlas/registries.yml";
+	
 	private Configuration registries;
 	
 	@Override
@@ -79,7 +81,7 @@ public final class RegistryHolderProcessor extends AbstractProcessor {
 			return;
 		}
 		Filer filer = processingEnv.getFiler();
-		String path = "META-INF/atlas/registries.yml";
+		String path = RESOURCE_LOCATION.substring(1);
 		YamlConfiguration registryCfg = null;
 		try {
 			FileObject file = filer.getResource(StandardLocation.CLASS_OUTPUT, "", path);

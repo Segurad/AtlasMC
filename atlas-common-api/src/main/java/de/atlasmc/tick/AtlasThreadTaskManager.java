@@ -2,6 +2,10 @@ package de.atlasmc.tick;
 
 import de.atlasmc.util.pipeline.AbstractConcurrentPipeline;
 
+/**
+ * Manager for tasks executed on each tick of the thread
+ * @param <T>
+ */
 public class AtlasThreadTaskManager<T> extends AbstractConcurrentPipeline<AtlasThreadTask<T>> {
 	
 	private static final AtlasThreadTask<?>[] EMPTY = {};

@@ -13,12 +13,12 @@ import de.atlasmc.tag.Tags;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
-public class DataSetStreamCodec<T extends ProtocolRegistryValue> implements StreamCodec<DataSet<T>> {
+final class DataSetStreamCodec<T extends ProtocolRegistryValue> implements StreamCodec<DataSet<T>> {
 
 	private final RegistryKey<T> registry;
 	
 	public DataSetStreamCodec(RegistryKey<T> registry) {
-		this.registry = Objects.requireNonNull(registry);
+		this.registry = Objects.requireNonNull(registry, "registry");
 	}
 	
 	@Override

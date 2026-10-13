@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.ConcurrentLinkedList.LinkedListIterator;
-import de.atlasmc.util.reference.WeakReference1;
 
 /**
  * A {@link CacheHolder} that maps keys to values.
@@ -169,10 +168,9 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 			entry.ttl = newttl;
 			insertTTL(entry);
 		}
-		WeakReference1<?, CacheEntry<K, V>> ref = null;
-		while ((ref = (WeakReference1<?, CacheEntry<K, V>>) refQueue.poll()) != null) {
-			CacheEntry<K, V> e = ref.value1;	
-			map.remove(e.key, e);
+		CacheEntry<K, V> ref = null;
+		while ((ref = (CacheEntry<K, V>) refQueue.poll()) != null) {
+			map.remove(ref.key, ref);
 		}
 	}
 	

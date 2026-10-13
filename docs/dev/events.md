@@ -5,6 +5,8 @@
 
 ---
 
+## General
+
 event handling is similar to the known system from Bukkit. Additionally it features listener registration on different level possible because of the design of atlas. by default all listeners are registered global listeners which will listen to every event regardless of its source. some events e.g. only used by server have different level. for servers you are able to register listeners directly for events only fired on a single server or his group. for custom events it is similar e.g. use a existing event group or create your own.
 
 AtlasEvents (all events fired by atlas)
@@ -31,7 +33,7 @@ Global
 
 ...Custom conditions
 
----
+## Functional Listeners
 
 additionally to the listener system with methods marked by annotations atlas features a functional interface listener.
 
@@ -45,6 +47,10 @@ Atlas.getPluginManager().registerFunctionalListener(MY_PLUGIN, SomeEvent.class, 
 }, ignoreCancelled, EventPriority.NORMAL);
 ```
 
----
+## Differences to Bukkit
 
 Some modifications triggered by events may depend on being called after the event e.g. inventory modifications after event to avoid inconsistencies. this modifications are now applicable directly after the event with change in the EventPriority. EventExecutors with the priority “MONITOR” will now be called after the event is handled by the system. To replace the Bukkit EventPriority.MONITOR, PRE_MONITOR is added. in both cases PRE_MONITOR and MONITOR should not modify the event any further.
+
+## Auto Listeners
+
+Using the annotation ListenerAutoregister you are able to automatically register a Listener when your Plugin gets enabled. The annotated class must implement the Listener interface and provide a public constructor without any arguments.

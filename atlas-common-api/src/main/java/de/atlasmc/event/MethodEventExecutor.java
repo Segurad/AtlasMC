@@ -35,7 +35,9 @@ public final class MethodEventExecutor extends EventExecutor {
 					handle, 
 					MethodType.methodType(void.class, eventClass));
 			MethodHandle factory = site.getTarget();
-			handler = (Consumer<Event>) factory.invoke(listener);
+			@SuppressWarnings("unchecked")
+			var handler = (Consumer<Event>) factory.invoke(listener);
+			this.handler = handler;
 		} catch (Throwable e) {
 			throw new EventException("Failed to create handler " + method.getName() + " for listener" + listener.getClass().getName(), e);
 		}

@@ -9,7 +9,7 @@ public abstract class AbstractIndirectPalette<E> extends AbstractPalette<E> {
 	
 	protected int lowestEntry = 0; // lowest available index
 	protected int currentMaxEntries; // number of entries stored before growing
-	protected int highestEntry = -1;
+	protected int highestEntry = -1; // highest id used by a entry
 
 	public AbstractIndirectPalette(int minBitsPerEntry, int capacity, int maxBitsPerEntry, ToIntFunction<E> provider) {
 		super(minBitsPerEntry, capacity, maxBitsPerEntry, provider);
@@ -34,7 +34,8 @@ public abstract class AbstractIndirectPalette<E> extends AbstractPalette<E> {
 		Entry<E> pEntry = super.addOrReplaceEntry(entry, index);
 		if (pEntry != null)
 			return pEntry;
-		if (lowestEntry < currentMaxEntries) { // insert value at valid position
+		// try insert value in the current collection
+		if (lowestEntry < currentMaxEntries) { 
 			pEntry = addEntry(entry, lowestEntry);
 			if (lowestEntry > highestEntry)
 				highestEntry = lowestEntry;
@@ -46,7 +47,7 @@ public abstract class AbstractIndirectPalette<E> extends AbstractPalette<E> {
 			}
  			return pEntry;
 		}
-		// grow palette
+		// grow palette and add entry
 		currentMaxEntries <<= 1;
 		int newBitsPerValue = values.getBitsPerValue()+1;
 		if (newBitsPerValue >= maxBitsPerEntry && maxBitsPerEntry != 0) {

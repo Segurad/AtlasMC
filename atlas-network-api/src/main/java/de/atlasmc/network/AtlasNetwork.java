@@ -1,23 +1,26 @@
 package de.atlasmc.network;
 
 import java.security.PublicKey;
-import java.util.Collection;
+import java.security.cert.Certificate;
 import java.util.UUID;
 
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.io.socket.SocketConfig;
+import de.atlasmc.network.io.MasterClient;
 import de.atlasmc.network.permission.PermissionManager;
-import de.atlasmc.network.player.ProfileHandler;
+import de.atlasmc.network.player.ProfileManager;
 import de.atlasmc.network.server.ServerManager;
 import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.concurrent.future.Future;
 
 public class AtlasNetwork  {
 	
 	private static AtlasNetworkHandler HANDLER;
 	
 	private AtlasNetwork() {}
+	
+	public static AtlasNetworkHandler getInstance() {
+		return HANDLER;
+	}
 	
 	@InternalAPI
 	public static void init(AtlasNetworkHandler handler) {
@@ -28,6 +31,14 @@ public class AtlasNetwork  {
 		}
 	}
 	
+	public static MasterClient getMasterClient() {
+		return HANDLER.getMasterClient();
+	}
+	
+	public static Certificate getNodeCertificate() {
+		return HANDLER.getNodeCertificate();
+	}
+	
 	public static NodeManager getNodeManager() {
 		return HANDLER.getNodeManager();
 	}
@@ -36,28 +47,12 @@ public class AtlasNetwork  {
 		return HANDLER.getServerManager();
 	}
 	
-	public static ProfileHandler getProfileHandler() {
+	public static ProfileManager getProfileHandler() {
 		return HANDLER.getProfileHandler();
 	}
 	
 	public static PermissionManager getPermissionProvider() {
 		return HANDLER.getPermissionManager();
-	}
-	
-	public static Future<NodeConfig> getNodeConfig(String name) {
-		return HANDLER.getNodeConfig(name);
-	}
-	
-	public static Future<Collection<NodeConfig>> getNodeConfigs(Collection<String> names) {
-		return HANDLER.getNodeConfigs(names);
-	}
-	
-	public static Future<SocketConfig> getSocketConfig(String name) {
-		return HANDLER.getSocketConfig(name);
-	}
-	
-	public static Future<Collection<SocketConfig>> getSocketConfigs(Collection<String> names) {
-		return HANDLER.getSocketConfigs(names);
 	}
 	
 	public static NetworkInfo getNetworkInfo() {

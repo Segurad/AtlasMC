@@ -20,13 +20,13 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	protected final DefaultPacketListenerPipeline inboundListeners;
 	protected final DefaultPacketListenerPipeline outboundPipeline;
 	protected volatile int compressionThreshold;
-	private volatile IOExceptionHandler errHandler = IOExceptionHandler.UNHANDLED;
+	private volatile IOExceptionHandler errHandler = IOExceptionHandler.LOG_ONLY;
 	protected final Queue<Packet> syncPacketQueue;
 	protected boolean syncPacketHandling;
 	
 	public AbstractConnectionHandler(Log log, Protocol protocol) {
-		this.log = Objects.requireNonNull(log);
-		this.protocol = Objects.requireNonNull(protocol);
+		this.log = Objects.requireNonNull(log, "log");
+		this.protocol = Objects.requireNonNull(protocol, "protocol");
 		this.syncPacketQueue = new ConcurrentLinkedQueue<>();
 		this.inboundListeners = new DefaultPacketListenerPipeline();
 		this.outboundPipeline = new DefaultPacketListenerPipeline();
@@ -69,8 +69,7 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 
 	@Override
 	public synchronized void setProtocol(Protocol protocol) {
-		if (protocol == null) 
-			throw new IllegalArgumentException("Protocol can not be null!");
+		Objects.requireNonNull(protocol, "protocol");
 		log.debug("Switching Protocol to: {}", protocol.getClass().getSimpleName());
 		this.protocol = protocol;
 		syncPacketQueue.clear();
@@ -85,12 +84,15 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	
 	@Override
 	public void setExceptionHandler(IOExceptionHandler handler) {
-		this.errHandler = handler != null ? handler : IOExceptionHandler.UNHANDLED;
+		this.errHandler = handler != null ? handler : IOExceptionHandler.LOG_ONLY;
 	}
 
 	@Override
 	public boolean handleException(Throwable cause) {
-		return errHandler.handle(this, cause);
+		if (errHandler.handle(this, cause))
+			return true;
+		close();
+		return false;
 	}
 
 	@Override
@@ -129,8 +131,10 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 	@Override
 	public void handleSyncPackets() {
 		Packet packet = null;
-		while ((packet = syncPacketQueue.poll()) != null) {
-			if (inboundListeners.handlePacket(this, packet)) {
+		var queue = syncPacketQueue;
+		var listeners = inboundListeners;
+		while ((packet = queue.poll()) != null) {
+			if (listeners.handlePacket(this, packet)) {
 				throw new ProtocolException("Unhandled packet: " + packet, protocol, packet);
 			}
 		}

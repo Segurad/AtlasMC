@@ -12,7 +12,13 @@ import de.atlasmc.util.annotation.Nullable;
 
 public class AtlasUtil {
 	
+	/**
+	 * Function that returns the given value
+	 */
 	public static final Function<?, ?> GET_SELF = v -> { return v; };
+	/**
+	 * BiConsumer that does nothing
+	 */
 	public static final BiConsumer<?, ?> SET_VOID = (_, _) -> {};
 	
 	/**

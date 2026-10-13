@@ -11,7 +11,7 @@ Plugin Resourcepaths:
 
 ---
 
-For lounching atlas the goal is to only provide a minimal system that will load `AtlasModul` plugins.
+For lounching atlas the goal is to only provide a minimal system that will load `AtlasCorePlugin` plugins.
 
 These modules are the foundation of all of Atlas Core functionality. To freely controll how atlas works and to be able to replace single implementations Atlas has a startup process consisting of multiple stages. This system itself is also used by the default implementation of Atlas so functionality can be added or replaced without the need to recompile the whole Software. Simply drop in or replace a Modul.
 
@@ -21,10 +21,12 @@ These modules are the foundation of all of Atlas Core functionality. To freely c
 - `init-stages` modules can register new stages at this stage
 - `init-master` initialization of the master
 - `load-master-data` loading of all configurations
+- `finish-master-startup` the master is fully loaded and ready
 - `connect-master` builing master connection
 - `init-node` initialization of node
 - `load-node-data` loading of all configurations
-- `finalize-startup` sould be always the last stage can be used for last changes before the node will be marked as online
+- `finish-node-startup` the node is fully loaded and ready
+- `finalize-startup` should be always the last stage can be used for last changes before the node will be marked  online
 
 ## Usage
 

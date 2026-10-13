@@ -268,6 +268,10 @@ public final class Dependency {
 		
 	}
 	
+	public boolean matches(String name, Version version) {
+		return this.name.equals(name) && matches(version);
+	}
+	
 	public boolean matches(Version version) {
 		Objects.requireNonNull(version, "version");
 		if (operation == MatchOperation.ANY)

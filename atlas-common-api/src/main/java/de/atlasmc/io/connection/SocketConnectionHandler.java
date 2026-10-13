@@ -2,10 +2,6 @@ package de.atlasmc.io.connection;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import javax.crypto.Cipher;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
@@ -14,9 +10,7 @@ import de.atlasmc.io.netty.channel.OutboundErrorHandler;
 import de.atlasmc.io.netty.channel.PacketCompressor;
 import de.atlasmc.io.netty.channel.PacketDecoder;
 import de.atlasmc.io.netty.channel.PacketDecompressor;
-import de.atlasmc.io.netty.channel.PacketDecryptor;
 import de.atlasmc.io.netty.channel.PacketEncoder;
-import de.atlasmc.io.netty.channel.PacketEncryptor;
 import de.atlasmc.io.netty.channel.PacketLengthDecoder;
 import de.atlasmc.io.netty.channel.PacketLengthEncoder;
 import de.atlasmc.io.netty.channel.PacketProcessor;
@@ -38,8 +32,6 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	
 	public static final String
 	CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER = "outbound_exception_handler",
-	CHANNEL_PIPE_PACKET_DECRYPTOR = "packet_decryptor",
-	CHANNEL_PIPE_PACKET_ENCRYPTOR = "packet_encryptor",
 	CHANNEL_PIPE_PACKET_LENGTH_DECODER = "packet_length_decoder",
 	CHANNEL_PIPE_FLOW_CONTROLLER = "flow_controller",
 	CHANNEL_PIPE_PACKET_DECOMPRESSOR = "packet_decompressor",
@@ -57,8 +49,6 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	 *  <table>
 	 *  <tr><th>Optional</th><th>Direction	</th><th>Name</th></tr>
 	 *  <tr><td> 		</td><td>OUT		</td><td>outbound_exception_handler	</td></tr>
-	 *  <tr><td>X		</td><td>IN 	  	</td><td>packet_decryptor 			</td></tr>
-	 *  <tr><td>X		</td><td>OUT		</td><td>packet_encryptor 			</td></tr>
 	 *  <tr><td> 		</td><td>IN 		</td><td>packet_length_decoder		</td></tr>
 	 *  <tr><td>		</td><td>IN			</td><td>flow_controller			</td></tr>
 	 *  <tr><td>X		</td><td>IN 		</td><td>packet_decompressor		</td></tr>
@@ -71,11 +61,9 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	 *  <tr><td>		</td><td>IN 		</td><td>packet_processor			</td></tr>
 	 *  <tr><td>		</td><td>IN 		</td><td>inbound_exception_handler 	</td></tr>
 	 *  </table>
-	 *  "packet_decryptor" and "packet_encryptor" are only present if {@link #enableEncryption(byte[])} has been called<br>
 	 *  "packet_decompressor" and "packet_compressor" are only present if {@link #setCompression(int)} has been called with a value > 0
 	 */
 	protected final SocketChannel channel;
-	private final Queue<Object> queue; // contains Packet and FuturePacket
 	
 	public SocketConnectionHandler(SocketChannel channel, Log log) {
 		this(channel, log, HandshakeProtocol.DEFAULT_PROTOCOL);
@@ -84,17 +72,16 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	
 	public SocketConnectionHandler(SocketChannel channel, Log log, Protocol protocol) {
 		super(log, protocol);
-		this.queue = new ConcurrentLinkedQueue<>();
-		this.channel = Objects.requireNonNull(channel);
+		this.channel = Objects.requireNonNull(channel, "channel");
 		channel.pipeline()
-		.addLast(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, new OutboundErrorHandler(this.getLogger()))
+		.addLast(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, new OutboundErrorHandler(this))
 		.addLast(CHANNEL_PIPE_PACKET_LENGTH_DECODER, new PacketLengthDecoder())
 		.addLast(CHANNEL_PIPE_PACKET_LENGTH_ENCODER, PacketLengthEncoder.INSTANCE)
 		.addLast(CHANNEL_PIPE_FLOW_CONTROLLER, new FlowControlHandler())
 		.addLast(CHANNEL_PIPE_PACKET_DECODER, new PacketDecoder(this))
 		.addLast(CHANNEL_PIPE_PACKET_ENCODER, new PacketEncoder(this))
 		.addLast(CHANNEL_PIPE_PACKET_PROCESSOR, new PacketProcessor(this))
-		.addLast(CHANNEL_PIPE_INBOUND_EXCEPTION_HANDLER, new InboundErrorHandler(this.getLogger()))
+		.addLast(CHANNEL_PIPE_INBOUND_EXCEPTION_HANDLER, new InboundErrorHandler(this))
 		;
 	}
 	
@@ -109,51 +96,9 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 			return;
 		if (outboundPipeline.handlePacket(this, packet))
 			return;
-		if (channel.isActive()) {
-			writeQueuedPackets();
-			writePacket(packet, listener);
-		} else queuePacket(packet, listener);
-	}
-	
-	private void writePacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
-		if (!channel.isActive()) {
-			queuePacket(packet, listener);
-			return;
-		}
 		ChannelFuture future = channel.writeAndFlush(packet);
 		if (listener != null)
 			future.addListener(listener);
-	}
-	
-	private void queuePacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
-		if (listener == null) {
-			queue.add(packet);
-		} else
-			queue.add(new FuturePacket(packet, listener));
-	}
-
-	public void writeQueuedPackets() {
-		if (!channel.isActive() || queue.isEmpty())
-			return;
-		synchronized (queue) {
-			Object element = null;
-			while ((element = queue.poll()) != null) {
-				if (element instanceof Packet packet)
-					writePacket(packet, null);
-				else {
-					FuturePacket future = (FuturePacket) element;
-					writePacket(future.packet, future.listener);
-				}
-			}
-		}
-	}
-
-	public boolean hasQueued() {
-		return !queue.isEmpty();
-	}
-	
-	public Queue<Object> getQueue() {
-		return queue;
 	}
 
 	@Override
@@ -162,7 +107,6 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 			return;
 		channel.config().setAutoRead(false);
 		channel.close();
-		queue.clear();
 	}
 	
 	@Override
@@ -175,19 +119,6 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	}
 	
 	@Override
-	public synchronized void enableEncryption(Cipher encription, Cipher decription) {
-		if (isEncryotionEnabled())
-			throw new IllegalStateException("Encryption already enabled");
-		channel.pipeline()
-			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, 
-					CHANNEL_PIPE_PACKET_ENCRYPTOR, 
-					new PacketEncryptor(encription))
-			.addAfter(CHANNEL_PIPE_OUTBOUND_EXCEPTION_HANDLER, 
-					CHANNEL_PIPE_PACKET_DECRYPTOR, 
-					new PacketDecryptor(decription));
-	}
-	
-	@Override
 	public synchronized void setProtocol(Protocol protocol) {
 		super.setProtocol(protocol);
 		ChannelPipeline pipeline = channel.pipeline();
@@ -196,11 +127,6 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 		if (isOutboundTerminated())
 			pipeline.remove(CHANNEL_PIPE_OUTBOUND_NO_PROTOCOL);
 		channel.config().setAutoRead(true);
-	}
-	
-	@Override
-	public boolean isEncryotionEnabled() {
-		return channel.pipeline().get(CHANNEL_PIPE_PACKET_ENCRYPTOR) != null;
 	}
 	
 	@Override
@@ -257,18 +183,6 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 	@Override
 	public boolean hasDecompression() {
 		return channel.pipeline().get(CHANNEL_PIPE_PACKET_DECOMPRESSOR) != null;
-	}
-	
-	static class FuturePacket {
-		
-		private final Packet packet;
-		private final GenericFutureListener<? extends Future<? super Void>> listener;
-		
-		public FuturePacket(Packet packet, GenericFutureListener<? extends Future<? super Void>> listener) {
-			this.packet = packet;
-			this.listener = listener;
-		}
-		
 	}
 
 	@Override

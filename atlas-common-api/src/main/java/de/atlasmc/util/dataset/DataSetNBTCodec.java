@@ -23,7 +23,7 @@ final class DataSetNBTCodec<T extends Namespaced> implements NBTCodec<DataSet<T>
 	private final RegistryKey<T> registry;
 	
 	public DataSetNBTCodec(RegistryKey<T> registry) {
-		this.registry = Objects.requireNonNull(registry);
+		this.registry = Objects.requireNonNull(registry, "registry");
 	}
 	
 	@Override
@@ -51,10 +51,10 @@ final class DataSetNBTCodec<T extends Namespaced> implements NBTCodec<DataSet<T>
 		} else {
 			writer.writeListTag(key, TagType.STRING, size);
 			if (context.clientSide) {
-				for (T v : value.values())
+				for (T v : value)
 					writer.writeNamespacedKey(null, v.getClientKey());
 			} else {
-				for (T v : value.values())
+				for (T v : value)
 					writer.writeNamespacedKey(null, v.getNamespacedKey());
 			}
 		}

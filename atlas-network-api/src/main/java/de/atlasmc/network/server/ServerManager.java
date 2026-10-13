@@ -14,12 +14,12 @@ public interface ServerManager {
 	ServerGroup getServerGroup(String name);
 	
 	@Nullable
-	BaseServer getServer(UUID uuid);
+	Server getServer(UUID uuid);
 	
 	@NotNull
 	Future<ServerGroup> loadServerGroup(String name);
 	
 	@NotNull
-	Future<BaseServer> loadServer(UUID uuid);
+	Future<Server> loadServer(UUID uuid);
 
 }

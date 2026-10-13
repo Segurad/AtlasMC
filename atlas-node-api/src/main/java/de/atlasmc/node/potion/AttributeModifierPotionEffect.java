@@ -2,6 +2,7 @@ package de.atlasmc.node.potion;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.attribute.Attribute;
+import de.atlasmc.node.attribute.AttributeModifier.Operation;
 import de.atlasmc.util.annotation.NotNull;
 
 /**
@@ -20,5 +21,14 @@ public interface AttributeModifierPotionEffect extends PotionEffect {
 	
 	@NotNull
 	NamespacedKey getDefaultModifierID();
+	
+	@NotNull
+	Operation getOperation();
+	
+	@NotNull
+	Attribute getAttribute();
+	
+	@NotNull
+	double getValue();
 	
 }

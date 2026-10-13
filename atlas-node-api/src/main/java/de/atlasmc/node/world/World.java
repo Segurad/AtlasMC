@@ -101,12 +101,6 @@ public interface World extends Tickable, SoundListener, ParticleListener, WorldE
 	 * @return the given Location
 	 */
 	WorldLocation getSpawnLocation(WorldLocation loc);
-	
-	boolean hasFlag(WorldFlag flag);
-	
-	void addFlag(WorldFlag flag);
-	
-	void removeFlag(WorldFlag flag);
 
 	default Block getBlock(Location loc) {
 		return getBlock(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());

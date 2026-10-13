@@ -3,6 +3,7 @@ package de.atlasmc.core.node.event.player;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.Listener;
+import de.atlasmc.event.ListenerAutoregister;
 import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.Location;
 import de.atlasmc.node.entity.Player;
@@ -14,6 +15,7 @@ import de.atlasmc.node.io.protocol.PlayerConnection;
 import de.atlasmc.node.io.protocol.PlayerSettings;
 import de.atlasmc.node.io.protocol.play.PacketOutSetHeldItem;
 
+@ListenerAutoregister(isDefault = true)
 public class CorePlayerListener implements Listener {
 
 	@EventHandler

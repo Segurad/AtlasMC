@@ -22,7 +22,7 @@ public class CoreRemoveEffects extends CoreAbstractEffect implements RemoveEffec
 	@Override
 	public void apply(Entity target, ItemStack item) {
 		if (target instanceof LivingEntity entity && hasEffects()) {
-			for (PotionEffectType type : effects.values()) {
+			for (PotionEffectType type : effects) {
 				entity.removePotionEffect(type);
 			}
 		}

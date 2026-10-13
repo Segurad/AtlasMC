@@ -1,10 +1,12 @@
 package de.atlasmc.event;
 
+import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,9 @@ import de.atlasmc.plugin.PluginHandle;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
 import de.atlasmc.util.annotation.ThreadSafe;
+import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.file.YamlConfiguration;
+import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 import de.atlasmc.util.iterator.ArrayIterator;
 
 /**
@@ -91,8 +96,8 @@ public class HandlerList {
 	}
 	
 	public void registerExecutor(@NotNull EventExecutor executor) {
-		assert executor != null;
-		register(globalExecutors, executor);
+		Objects.requireNonNull(executor, "executor");
+		this.globalExecutors = register(globalExecutors, executor);
 	}
 	
 	public void registerExecutor(@NotNull EventExecutor executor, Object... context) {
@@ -105,6 +110,9 @@ public class HandlerList {
 	 * @param executor
 	 */
 	protected EventExecutor[] register(final EventExecutor[] exes, final EventExecutor executor) {
+		if (exes.length == 0) {
+			return new EventExecutor[]{ executor };
+		}
 		final int priority = executor.priority.ordinal();
 		int insertIndex = -1;
 		for (int i = 0; i < exes.length; i++) {
@@ -116,6 +124,13 @@ public class HandlerList {
 				break;
 			}
 		}
+		// check if append
+		if (insertIndex == -1) { 
+			var newExes = Arrays.copyOf(exes, exes.length + 1);
+			newExes[exes.length] = executor;
+			return newExes;
+		}
+		// insert
 		EventExecutor[] newExes = new EventExecutor[exes.length + 1];
 		System.arraycopy(exes, 0, newExes, 0, insertIndex);
 		newExes[insertIndex] = executor;
@@ -124,19 +139,20 @@ public class HandlerList {
 	}
 	
 	protected <T> void register(final T context, final Map<T, EventExecutor[]> contextExecutors, final EventExecutor executor) {
-		if (context == null)
-			throw new IllegalArgumentException("Context can not be null!");
-		if (executor == null)
-			throw new IllegalArgumentException("Executor can not be null!");
-		modLock.lock();
-		final EventExecutor[] executors = contextExecutors.get(context);
-		if (executors == null || executors.length == 0) {
-			contextExecutors.put(context, new EventExecutor[] { executor });
+		Objects.requireNonNull(context, "context");
+		Objects.requireNonNull(executor, "executor");
+		try {
+			modLock.lock();
+			final EventExecutor[] executors = contextExecutors.get(context);
+			if (executors == null || executors.length == 0) {
+				contextExecutors.put(context, new EventExecutor[] { executor });
+			}
+			final EventExecutor[] newExecutors = register(executors, executor);
+			if (executors != newExecutors)
+				contextExecutors.put(context, newExecutors);
+		} finally {
+			modLock.unlock();
 		}
-		final EventExecutor[] newExecutors = register(executors, executor);
-		if (executors != newExecutors)
-			contextExecutors.put(context, newExecutors);
-		modLock.unlock();
 	}
 	
 	protected static <T> Iterator<EventExecutor> getContextIterator(T context, Map<T, EventExecutor[]> contextExecutors) {
@@ -302,11 +318,13 @@ public class HandlerList {
 	 * @param listener
 	 */
 	public void unregisterListener(Listener listener) {
-		if (listener == null)
-			throw new IllegalArgumentException("Listener can not be null!");
-		modLock.lock();
-		globalExecutors = internalUnregister(listener, globalExecutors);
-		modLock.unlock();
+		Objects.requireNonNull(listener, "listener");
+		try {
+			modLock.lock();
+			globalExecutors = internalUnregister(listener, globalExecutors);
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 	/**
@@ -314,17 +332,27 @@ public class HandlerList {
 	 * @param plugin
 	 */
 	public void unregisterAllListener(Plugin plugin) {
-		Objects.requireNonNull("plugin");
-		modLock.lock();
-		globalExecutors = internalUnregister(plugin, globalExecutors, true);
-		modLock.unlock();
+		Objects.requireNonNull(plugin, "plugin");
+		try {
+			modLock.lock();
+			if (defaultExecutor != null && defaultExecutor.plugin.getPlugin() == plugin)
+				defaultExecutor = null;
+			globalExecutors = internalUnregister(plugin, globalExecutors, true);
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 	public void unregisterListener(PluginHandle plugin) {
 		Objects.requireNonNull("plugin");
-		modLock.lock();
-		globalExecutors = internalUnregister(plugin, globalExecutors, false);
-		modLock.unlock();
+		try {
+			modLock.lock();
+			if (defaultExecutor != null && defaultExecutor.plugin == plugin)
+				defaultExecutor = null;
+			globalExecutors = internalUnregister(plugin, globalExecutors, false);
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 	/**
@@ -405,7 +433,7 @@ public class HandlerList {
 				continue;
 			newExes[j++] = exe;
 		}
-		return executors;
+		return newExes;
 	}
 	
 	protected static void internalUnregister(final PluginHandle plugin, final Map<?, EventExecutor[]> contextExecutors, boolean byPlugin) {
@@ -454,6 +482,67 @@ public class HandlerList {
 		HandlerList handlers = getHandlerListOf(eventClass);
 		FunctionalListenerExecutor exe = new FunctionalListenerExecutor(plugin, eventClass, listener);
 		handlers.registerExecutor(exe, context);
+	}
+	
+	public static boolean loadAutoregisterListeners(Plugin plugin) {
+		var in = plugin.getResourceAsStream(ListenerAutoregisterProcessor.RESOURCE_LOCATION);
+		if (in == null)
+			return false;
+		var log = plugin.getLogger();
+		YamlConfiguration config;
+		try {
+			config = YamlConfigurationFactory.INSTANCE.load(in);
+		} catch (IOException e) {
+			log.error("Failed to load auto listener configuration!", e);
+			return false;
+		}
+		return loadAutoregisterListeners(plugin, config);
+	}
+	
+	public static boolean loadAutoregisterListeners(Plugin plugin, ConfigurationSection config) {
+		var classes = config.getStringList("listeners", List.of());
+		if (classes.isEmpty())
+			return false;
+		var loader = plugin.getClass().getClassLoader();
+		var log = plugin.getLogger();
+		boolean added = false;
+		for (var rawClazz : classes) {
+			Class<?> clazz;
+			try {
+				clazz = loader.loadClass(rawClazz);
+			} catch (ClassNotFoundException e) {
+				log.error("Failed to load class for auto listener: {}", rawClazz);
+				continue;
+			}
+			if (!Listener.class.isAssignableFrom(clazz)) {
+				log.error("Auto listener class is not assignable from listener class: {}", rawClazz);
+				continue;
+			}
+			Listener listener;
+			try {
+				listener = (Listener) clazz.getConstructor().newInstance();
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException e) {
+				log.error("Failed to create new auto listener instance: " + rawClazz, e);
+				continue;
+			}
+			var executors = MethodEventExecutor.getExecutors(plugin, listener);
+			final var isDefault = clazz.getDeclaredAnnotation(ListenerAutoregister.class).isDefault();
+			for (var exe : executors) {
+				Class<? extends Event> eventClazz = exe.eventClass;
+				HandlerList handlers = HandlerList.getHandlerListOf(eventClazz);
+				if (isDefault) {
+					log.debug("Set default executor for event: {}", eventClazz.getSimpleName());
+					handlers.setDefaultExecutor(exe);
+				} else {
+					log.debug("Registered executor for event: {}", eventClazz.getSimpleName());
+					handlers.registerExecutor(exe);
+				}
+				added = true;
+			}
+			log.debug("Registered auto listener: {}", rawClazz);
+		}
+		return added;
 	}
 	
 	/**

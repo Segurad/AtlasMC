@@ -3,6 +3,7 @@ package de.atlasmc.core.network.permission;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.network.permission.PermissionHolder;
@@ -38,12 +39,13 @@ public class CorePermissionHolder implements PermissionHolder {
 	}
 
 	@Override
-	public void setPermission(String permission, int value) {
-		setPermission(new CorePermission(permission, value));
+	public boolean setPermission(CharSequence permission, int value) {
+		return setPermission(new CorePermission(permission, value));
 	}
 
 	@Override
-	public void setPermission(Permission permission) {
+	public boolean setPermission(Permission permission) {
+		Objects.requireNonNull(permission, "permission");
 		Map<CharKey, Permission> map = permissions;
 		if (map == null) {
 			synchronized (this) {
@@ -55,23 +57,25 @@ public class CorePermissionHolder implements PermissionHolder {
 			}
 		}
 		Permission perm = map.put(CharKey.of(permission.permission()), permission);
-		if (!permission.equals(perm))
+		if (!permission.equals(perm)) {
 			changed = true;
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public void removePermission(String permission) {
+	public boolean removePermission(CharSequence permission) {
+		Objects.requireNonNull(permission, "permission");
 		Map<?, Permission> map = permissions;
 		if (map == null)
-			return;
+			return false;
 		Permission perm = map.remove(map);
-		if (perm != null)
+		if (perm != null) {
 			changed = true;
-	}
-
-	@Override
-	public void removePermission(Permission permission) {
-		removePermission(permission.permission());
+			return true;
+		}
+		return false;
 	}
 	
 	@Override

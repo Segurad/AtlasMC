@@ -2,11 +2,13 @@ package de.atlasmc.core.node.event.inventory;
 
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.Listener;
+import de.atlasmc.event.ListenerAutoregister;
 import de.atlasmc.node.entity.Player;
 import de.atlasmc.node.event.inventory.InventoryClickEvent;
 import de.atlasmc.node.event.inventory.InventoryCloseEvent;
 import de.atlasmc.node.inventory.Inventory;
 
+@ListenerAutoregister(isDefault = true)
 public final class CoreInventoryListener implements Listener {
 
 	@EventHandler

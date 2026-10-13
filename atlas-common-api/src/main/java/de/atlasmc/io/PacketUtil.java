@@ -3,7 +3,7 @@ package de.atlasmc.io;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collection;
+
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.registry.ProtocolRegistry;
 import de.atlasmc.registry.ProtocolRegistryValue;
@@ -263,10 +263,9 @@ public class PacketUtil {
 			writeVarInt(2, out);
 			writeVarInt(singleValue.getValue().getID(), out);
 		} else {
-			Collection<T> values = set.values();
-			final int size = values.size() + 1;
+			final int size = set.size() + 1;
 			writeVarInt(size, out);
-			for (T value : values)
+			for (T value : set)
 				writeVarInt(value.getID(), out);
 		}
 	}

@@ -1,15 +1,16 @@
 package de.atlasmc.network.permission;
 
 import java.util.Comparator;
-import java.util.UUID;
 
 import de.atlasmc.Color;
+import de.atlasmc.IDHolder;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatColor;
 import de.atlasmc.permission.Permission;
+import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
-public interface PermissionGroup extends PermissionHolder, PermissionContextHolder {
+public interface PermissionGroup extends PermissionHolder, PermissionContextHolder, IDHolder {
 	
 	/**
 	 * Sorts {@link PermissionGroup}s by {@link #getPower()} in descending order.
@@ -42,48 +43,56 @@ public interface PermissionGroup extends PermissionHolder, PermissionContextHold
 	
 	void setPower(int power);
 	
+	@NotNull
 	ContextProvider getContext();
 	
+	@Nullable
 	@Override
-	default Permission getPermission(CharSequence permission) {
+	default Permission getPermission(@NotNull CharSequence permission) {
 		return getPermission(permission, null);
 	}
 
+	@NotNull
 	String getName();
 
 	int getSortWeight();
 	
 	void setSortWeight(int weight);
 
+	@Nullable
 	Chat getPrefix();
 	
-	void setPrefix(Chat chat);
+	void setPrefix(@Nullable Chat chat);
 
+	@Nullable
 	Chat getSuffix();
 	
-	void setSuffix(Chat chat);
+	void setSuffix(@Nullable Chat chat);
 
+	@Nullable
 	Color getChatColor();
 	
-	void setChatColor(ChatColor color);
-	
-	void setChatColor(Color color);
+	void setChatColor(@Nullable Color color);
 
+	@Nullable
 	Color getNameColor();
 	
-	void setNameColor(ChatColor color);
-	
-	void setNameColor(Color color);
+	void setNameColor(@Nullable Color color);
 
 	boolean isDefault();
 	
 	void setDefault(boolean isDefault);
 	
+	/**
+	 * Whether or not the group has changed
+	 * @return true if changed
+	 */
 	boolean hasGroupChanged();
 	
+	/**
+	 * Used to indicate that all changes have been persisted
+	 */
+	@InternalAPI
 	void changedGroup();
-
-	@NotNull
-	UUID getUUID();
 
 }

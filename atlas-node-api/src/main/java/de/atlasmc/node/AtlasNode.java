@@ -1,5 +1,6 @@
 package de.atlasmc.node;
 
+import java.security.KeyPair;
 import java.util.UUID;
 
 import de.atlasmc.node.io.protocol.ProtocolAdapterManager;
@@ -22,6 +23,10 @@ public class AtlasNode {
 				throw new IllegalStateException("Atlas already initialized!");
 			AtlasNode.INSTANCE = node;
 		}
+	}
+	
+	public static KeyPair getPlayerAuthKey() {
+		return INSTANCE.getPlayerAuthKey();
 	}
 	
 	public static NodePlayer getPlayer(UUID uuid) {

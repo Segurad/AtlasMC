@@ -146,6 +146,7 @@ public class CoreInternalServer extends CoreAbstractNodeServer implements Intern
 			return future;
 		}
 		status = Status.STARTUP;
+		targetStatus = Status.ONLINE;
 		logger.info("Starting...");
 		AtlasThread<CoreInternalServer> thread = this.thread = new AtlasThread<>(this.getServerName(), 50, logger, false,  this);
 		logger.debug("Initializing startup hooks...");
@@ -155,6 +156,7 @@ public class CoreInternalServer extends CoreAbstractNodeServer implements Intern
 		logger.debug("Initializing tick tasks...");
 		buildTasks(thread.getTickTasks(), TASKS_ON_TICK, "tick-tasks");
 		this.future = future = thread.startThread();
+		lock.unlock();
 		future.setListener((_) -> {
 			lock.lock();
 			logger.info("Server online...");
@@ -163,7 +165,6 @@ public class CoreInternalServer extends CoreAbstractNodeServer implements Intern
 			this.future = null;
 			lock.unlock();
 		});
-		lock.unlock();
 		return future;
 	}
 	
@@ -262,10 +263,12 @@ public class CoreInternalServer extends CoreAbstractNodeServer implements Intern
 			return future;
 		}
 		status = Status.SHUTDOWN;
+		targetStatus = Status.OFFLINE;
 		logger.info("Shutting down...");
 		this.scheduler.shutdown();
 		this.scheduler = null;
 		this.future = future = this.thread.stopThread();
+		lock.unlock();
 		future.setListener((_) -> {
 			lock.lock();
 			logger.info("Server offline...");
@@ -275,7 +278,6 @@ public class CoreInternalServer extends CoreAbstractNodeServer implements Intern
 			this.future = null;
 			lock.unlock();
 		});
-		lock.unlock();
 		return future;
 	}
 
@@ -295,6 +297,7 @@ public class CoreInternalServer extends CoreAbstractNodeServer implements Intern
 		CoreInternalServerPreparingTask task = new CoreInternalServerPreparingTask(this);
 		this.future = future = task.getFuture();
 		targetStatus = Status.AWAIT_START;
+		lock.unlock();
 		future.setListener((f) -> {
 			lock.lock();
 			if (f.resultNow()) {
@@ -310,7 +313,6 @@ public class CoreInternalServer extends CoreAbstractNodeServer implements Intern
 			lock.unlock();
 		});
 		Atlas.getScheduler().runAsyncTask(Atlas.getSystem(), task);
-		lock.unlock();
 		return future;
 	}
 

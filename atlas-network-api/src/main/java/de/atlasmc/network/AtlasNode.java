@@ -1,10 +1,10 @@
 package de.atlasmc.network;
 
-import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.util.List;
 import java.util.UUID;
 
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.annotation.Nullable;
 
 /**
  * Represents a AtlasNode
@@ -12,19 +12,13 @@ import de.atlasmc.util.annotation.Nullable;
  */
 public interface AtlasNode {
 	
-	/**
-	 * Returns the id of the main socket of this node.
-	 * May be null if there is no active socket.
-	 * @return id or null
-	 */
-	@Nullable
-	UUID getSocketID();
+	List<UUID> getSocketIDs();
 	
 	@NotNull
 	NodeStatus getStatus();
 	
 	@NotNull
-	PublicKey getPublicKey();
+	Certificate getCertificate();
 
 	@NotNull
 	UUID getID();

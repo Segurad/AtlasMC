@@ -2,8 +2,6 @@ package de.atlasmc.io.connection;
 
 import java.net.InetSocketAddress;
 
-import javax.crypto.Cipher;
-
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.Protocol;
 import de.atlasmc.log.Log;
@@ -45,11 +43,6 @@ public class InternalConnectionHandler extends AbstractConnectionHandler {
 	}
 
 	@Override
-	public boolean isEncryotionEnabled() {
-		return false;
-	}
-
-	@Override
 	public void setDecompression(boolean enable) {
 		// not required
 	}
@@ -77,11 +70,6 @@ public class InternalConnectionHandler extends AbstractConnectionHandler {
 	@Override
 	public boolean isOutboundTerminated() {
 		return outboundTerminated;
-	}
-
-	@Override
-	public void enableEncryption(Cipher encription, Cipher decription) {
-		// not required
 	}
 
 }

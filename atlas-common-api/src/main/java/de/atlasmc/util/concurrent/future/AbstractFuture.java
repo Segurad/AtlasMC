@@ -5,6 +5,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * Base implementation for atlas futures
+ * @param <V>
+ */
 public class AbstractFuture<V> implements Future<V> {
 	
 	protected volatile boolean done;

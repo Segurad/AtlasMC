@@ -14,7 +14,7 @@ CREATE TABLE `nodes` (
 -- atlas.perm_context definition
 
 CREATE TABLE `perm_context` (
-  `context_id` binary(16) NOT NULL COMMENT 'context UUID',
+  `context_id` int(11) NOT NULL AUTO_INCREMENT,
   `ctx_key` varchar(128) NOT NULL,
   `ctx_value` varchar(128) NOT NULL,
   PRIMARY KEY (`context_id`)
@@ -24,7 +24,7 @@ CREATE TABLE `perm_context` (
 -- atlas.perm_groups definition
 
 CREATE TABLE `perm_groups` (
-  `group_id` binary(16) NOT NULL COMMENT 'group UUID',
+  `group_id` int(11) NOT NULL AUTO_INCREMENT COMMENT,
   `name` varchar(64) NOT NULL,
   `sort_weight` int(11) NOT NULL DEFAULT 0,
   `prefix` varchar(32) DEFAULT NULL,
@@ -38,14 +38,15 @@ CREATE TABLE `perm_groups` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- atlas.perm_user_context definition
+-- atlas.perm_handler_context definition
 
-CREATE TABLE `perm_user_context` (
-  `user_id` binary(16) NOT NULL,
+CREATE TABLE `perm_handler_context` (
+  `handler_id` int(11) NOT NULL,
   `ctx_key` varchar(128) NOT NULL,
   `ctx_value` varchar(128) NOT NULL,
-  UNIQUE KEY `uk_perm_user_context` (`user_id`,`ctx_key`,`ctx_value`),
-  KEY `fk_profile_context` (`user_id`)
+  UNIQUE KEY `uk_perm_handler_context` (`handler_id`,`ctx_key`,`ctx_value`),
+  KEY `fk_perm_handler_context_handler_id` (`handler_id`)
+  CONSTRAINT `fk_perm_handler_context_handler_id` FOREIGN KEY (`handler_id`) REFERENCES `perm_handler` (`handler_id`) ON DELETE CASCADE,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -83,10 +84,11 @@ CREATE TABLE `schema_versions` (
 -- atlas.perm_context_perm definition
 
 CREATE TABLE `perm_context_perm` (
-  `context_id` binary(16) NOT NULL,
+  `context_id` int(11) NOT NULL,
   `perm` varchar(128) NOT NULL,
   `power` int(11) NOT NULL,
   KEY `fk_context_perm` (`context_id`),
+  UNIQUE KEY `uk_perm_context_perm` (`context_id`,`perm`),
   CONSTRAINT `fk_context_perm` FOREIGN KEY (`context_id`) REFERENCES `perm_context` (`context_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -94,7 +96,7 @@ CREATE TABLE `perm_context_perm` (
 -- atlas.perm_group_context definition
 
 CREATE TABLE `perm_group_context` (
-  `group_id` binary(16) NOT NULL,
+  `group_id` int(11) NOT NULL,
   `ctx_key` varchar(128) NOT NULL,
   `ctx_value` varchar(128) NOT NULL,
   UNIQUE KEY `uk_perm_group_context` (`group_id`,`ctx_key`,`ctx_value`),
@@ -106,7 +108,7 @@ CREATE TABLE `perm_group_context` (
 -- atlas.perm_group_perm definition
 
 CREATE TABLE `perm_group_perm` (
-  `group_id` binary(16) NOT NULL,
+  `group_id` int(11) NOT NULL,
   `perm` varchar(128) NOT NULL,
   `power` int(11) NOT NULL,
   UNIQUE KEY `uk_perm_group_perm` (`group_id`,`perm`),
@@ -118,22 +120,24 @@ CREATE TABLE `perm_group_perm` (
 -- atlas.perm_group_perm_context definition
 
 CREATE TABLE `perm_group_perm_context` (
-  `group_id` binary(16) NOT NULL,
-  `context_id` binary(16) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  `context_id` int(11) NOT NULL,
   KEY `fk_group_ctx_perm` (`group_id`),
   KEY `fk_ctx_id_group` (`context_id`),
+  UNIQUE KEY `uk_perm_group_perm_context` (`group_id`,`context_id`),
   CONSTRAINT `fk_ctx_id_group` FOREIGN KEY (`context_id`) REFERENCES `perm_context` (`context_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_group_ctx_perm` FOREIGN KEY (`group_id`) REFERENCES `perm_groups` (`group_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- atlas.perm_user_group definition
+-- atlas.perm_handler_group definition
 
-CREATE TABLE `perm_user_group` (
-  `user_id` binary(16) NOT NULL,
+CREATE TABLE `perm_handler_group` (
+  `handler_id` int(11) NOT NULL,
   `group` varchar(64) NOT NULL,
-  UNIQUE KEY `uk_perm_user_group` (`user_id`,`group`),
-  KEY `fk_profile_group` (`user_id`),
-  KEY `fk_group_profile` (`group`),
-  CONSTRAINT `fk_perm_user_group_group_name` FOREIGN KEY (`group`) REFERENCES `perm_groups` (`name`) ON DELETE CASCADE
+  UNIQUE KEY `uk_perm_handler_group` (`handler_id`,`group`),
+  KEY `fk_perm_handler_group_handler_id` (`handler_id`),
+  KEY `fk_perm_handler_group_group_name` (`group`),
+  CONSTRAINT `fk_perm_handler_group_handler_id` FOREIGN KEY (`handler_id`) REFERENCES `perm_handler` (`handler_id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_perm_handler_group_group_name` FOREIGN KEY (`group`) REFERENCES `perm_groups` (`name`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

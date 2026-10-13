@@ -25,7 +25,6 @@ public class AnnotationProcessorUtils {
 		for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : rawValues.entrySet()) {
 			String key = entry.getKey().getSimpleName().toString();
 			Object value = entry.getValue().getValue();
-			//System.out.println(k.getSimpleName().toString() + " : " + v.getValue());
 			values.put(key, value);
 		}
 		return values;

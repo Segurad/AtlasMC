@@ -59,8 +59,9 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 	}
 
 	public void load(File file) throws IOException, FileNotFoundException {
-		FileInputStream in = new FileInputStream(file);
-		load(in);
+		try (var in = new FileInputStream(file)) {
+			load(in);
+		}
 	}
 	
 	public void load(InputStream in) throws IOException {

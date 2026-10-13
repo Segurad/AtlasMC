@@ -3,7 +3,7 @@ package de.atlasmc.node.event.socket;
 import java.util.Objects;
 
 import de.atlasmc.event.Cancellable;
-import de.atlasmc.io.connection.ServerSocketConnectionHandler;
+import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.event.SocketHandlerList;
 import de.atlasmc.node.io.protocol.handshake.HandshakeData;
 import de.atlasmc.node.io.socket.NodeSocket;
@@ -14,15 +14,15 @@ public class AsyncPlayerHandshakeEvent extends SocketEvent implements Cancellabl
 	
 	private boolean cancelled;
 	private final HandshakeData data;
-	private final ServerSocketConnectionHandler con;
+	private final ConnectionHandler con;
 	
-	public AsyncPlayerHandshakeEvent(boolean async, ServerSocketConnectionHandler con, HandshakeData data) {
-		super(async, (NodeSocket) con.getSocket());
+	public AsyncPlayerHandshakeEvent(boolean async, NodeSocket socket, ConnectionHandler con, HandshakeData data) {
+		super(async, socket);
 		this.data = Objects.requireNonNull(data);
 		this.con = con;
 	}
 	
-	public ServerSocketConnectionHandler getConnection() {
+	public ConnectionHandler getConnection() {
 		return con;
 	}
 	

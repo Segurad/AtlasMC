@@ -7,6 +7,7 @@
 
 - [altas-plugin.yml](#atlas-pluginyml)
 - [Dependencies](#dependencies)
+- [PluginLifecycleHandler](#lifecyclehandler)
 
 ---
 
@@ -33,7 +34,7 @@ Because the APIs are loaded dynamically in Atlas a Plugin should depend on its r
 ```yaml
 name: MyPluginName
 version: v1.0.0 # must be a valid semver format may be prefixed with "v"
-loader: de.atlascore.plugin.CoreJavaPluginLoader # classpath for loader class if not present treated as CoreJavaPluginLoader 
+loader: de.atlasmc.core.plugin.CoreJavaPluginLoader # classpath for loader class if not present treated as CoreJavaPluginLoader 
 main: path.to.my.class.extends.JavaPlugin # Loader depending option e.g. classpath for main class for java plugins
 description: "My Super duper Plugin does awsome stuff"
 author: # List of String containing all the awsome people that worked on this plugin
@@ -75,8 +76,8 @@ It is not required to define a order value. If not defined it defaults to `+` lo
 
 Defines the type of the dependency.
 
-- `!` is a incompatiple dependency. If the dependecy is present it will prevent this plugin from loading. (default)
-- `*` is a required dependency. If the dependency is not present it will prevent this plugin from loading.
+- `!` is a incompatiple dependency. If the dependecy is present it will prevent this plugin from loading. 
+- `*` is a required dependency. If the dependency is not present it will prevent this plugin from loading. (default) 
 - `?` is a optional dependency. This dependency is not required for this plugin but if it is the load order can be modifier with this type.
 
 It is not required to define a type value. If not defined it defaults to `*` a required dependency
@@ -97,6 +98,10 @@ the `from` and `to` value must be a valid version format e.g. `1.0.0 - 1.5.0` or
 ## PluginHandle
 
 A plugin handles represent plugins for registration of new functionality or values. Handles allow you to register and unregister those bound to a context like a server or servergroup. For example if a servergroup requires a specific configuration of your minigame you just create a new plugin handle and register all listeners for this minigame with the newly created handle. If the servergroup is no longer required you can simply remove every listener with the removeAll function without the need of tracking the listeners yourself. If your implementation does not require this sort of registration you can simply use your plugin instance.
+
+## PluginLifecycleHandler
+
+Handlers for atomation around Plugin lifecycle e.g. clearing resources like Listeners or Scheduled Tasks.
 
 ## setup.yml
 

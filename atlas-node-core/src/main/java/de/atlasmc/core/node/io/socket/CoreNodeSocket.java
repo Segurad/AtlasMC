@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.io.netty.channel.DefaultChannelInitHandler;
+import de.atlasmc.io.netty.channel.DefaultServerChannelInitHandler;
 import de.atlasmc.io.socket.ServerSocket;
 import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.log.Logging;
@@ -31,7 +31,7 @@ public class CoreNodeSocket extends ServerSocket implements NodeSocket {
 		this.getLogger().sendToConsole(true);
 		this.connectionProcesses = ConcurrentHashMap.newKeySet();
 		this.externalHost = externalHost != null ? externalHost : host;
-		setChannelInitHandler(new DefaultChannelInitHandler(this));
+		setChannelInitHandler(new DefaultServerChannelInitHandler(this));
 	}
 
 	@Override
@@ -73,6 +73,12 @@ public class CoreNodeSocket extends ServerSocket implements NodeSocket {
 	@Override
 	public InetSocketAddress getExternalHost() {
 		return externalHost;
+	}
+
+	@Override
+	public Set<String> getLabels() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -2,11 +2,9 @@ package de.atlasmc.core.network.permission;
 
 import java.util.Collection;
 import java.util.Objects;
-import java.util.UUID;
 
 import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
-import de.atlasmc.chat.ChatColor;
 import de.atlasmc.network.permission.ContextProvider;
 import de.atlasmc.network.permission.PermissionGroup;
 import de.atlasmc.permission.Permission;
@@ -14,7 +12,7 @@ import de.atlasmc.util.annotation.InternalAPI;
 
 public class CorePermissionGroup extends CorePermissionContextHolder implements PermissionGroup {
 
-	private UUID uuid;
+	private int id;
 	private Chat prefix;
 	private Chat suffix;
 	private Color chatColor;
@@ -28,11 +26,16 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	
 	private boolean groupChanged;
 	
-	public CorePermissionGroup(UUID uuid, String name) {
-		this.uuid = Objects.requireNonNull(uuid);
-		this.name = Objects.requireNonNull(name);
+	public CorePermissionGroup(int id, String name) {
+		this.id = id;
+		this.name = Objects.requireNonNull(name, "name");
 		this.permissions = new CorePermissionHolder();
 		this.contextProvider = new CoreContextProvider();
+	}
+	
+	@Override
+	public int getID() {
+		return id;
 	}
 	
 	CorePermissionHolder permissions() {
@@ -45,23 +48,18 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	}
 
 	@Override
-	public void setPermission(String permission, int value) {
-		permissions.setPermission(permission, value);
+	public boolean setPermission(CharSequence permission, int value) {
+		return permissions.setPermission(permission, value);
 	}
 
 	@Override
-	public void setPermission(Permission permission) {
-		permissions.setPermission(permission);
+	public boolean setPermission(Permission permission) {
+		return permissions.setPermission(permission);
 	}
 
 	@Override
-	public void removePermission(String permission) {
-		permissions.removePermission(permission);		
-	}
-
-	@Override
-	public void removePermission(Permission permission) {
-		permissions.removePermission(permission);
+	public boolean removePermission(CharSequence permission) {
+		return permissions.removePermission(permission);		
 	}
 
 	@Override
@@ -123,18 +121,6 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	}
 	
 	@Override
-	public void setChatColor(ChatColor chatColor) {
-		if (chatColor == null) {
-			if (this.chatColor == null)
-				return;
-			groupChanged = true;
-			this.chatColor = null;
-			return;
-		}
-		setChatColor(chatColor.asColor());
-	}
-	
-	@Override
 	public void setChatColor(Color color) {
 		if (this.chatColor == color)
 			return;
@@ -147,18 +133,6 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	@Override
 	public Color getNameColor() {
 		return nameColor;
-	}
-	
-	@Override
-	public void setNameColor(ChatColor color) {
-		if (color == null) {
-			if (this.nameColor == null)
-				return;
-			groupChanged = true;
-			this.nameColor = null;
-			return;
-		}
-		setNameColor(color.asColor());
 	}
 	
 	@Override
@@ -201,11 +175,6 @@ public class CorePermissionGroup extends CorePermissionContextHolder implements 
 	@Override
 	public void changedPermissions() {
 		permissions.changedPermissions();
-	}
-
-	@Override
-	public UUID getUUID() {
-		return uuid;
 	}
 
 	@Override

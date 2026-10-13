@@ -13,16 +13,7 @@ import java.util.Set;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.NamespacedKey;
-import de.atlasmc.core.node.event.command.CoreCommandListener;
-import de.atlasmc.core.node.event.inventory.CoreInventoryListener;
-import de.atlasmc.core.node.event.player.CorePlayerListener;
 import de.atlasmc.core.node.system.init.ContainerFactoryLoader;
-import de.atlasmc.core.node.system.listener.CoreSocketListener;
-import de.atlasmc.event.Event;
-import de.atlasmc.event.EventExecutor;
-import de.atlasmc.event.HandlerList;
-import de.atlasmc.event.Listener;
-import de.atlasmc.event.MethodEventExecutor;
 import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.log.Log;
 import de.atlasmc.network.AtlasNetwork;
@@ -35,6 +26,7 @@ import de.atlasmc.plugin.startup.StartupStageHandler;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.configuration.ConfigurationSection;
+import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.file.JsonConfiguration;
 import de.atlasmc.util.configuration.file.JsonConfigurationFactory;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
@@ -72,7 +64,7 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		if (!nodeConfigNames.isEmpty()) {
 			Collection<NodeConfig> nodeConfigs;
 			try {
-				 nodeConfigs = AtlasNetwork.getNodeConfigs(nodeConfigNames).get();
+				 nodeConfigs = AtlasNetwork.getMasterClient().getNodeConfigs(nodeConfigNames).get();
 			} catch (Exception e) {
 				log.error("Error while loading node configs!", e);
 				context.fail();
@@ -90,24 +82,30 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 			// TODO load remote modules
 		}
 		SocketManager socketManager = AtlasNode.getSocketManager();
-		List<ConfigurationSection> sockets = config.getConfigurationList("sockets");
+		List<ConfigurationSection> sockets = config.getConfigurationList("socket");
 		if (sockets != null && !sockets.isEmpty()) {
 			for (ConfigurationSection socketCfg : sockets) {
-				SocketConfig socket = resolveSocket(socketCfg.getString("config"));
-				InetSocketAddress host = new InetSocketAddress(socketCfg.getString("host"), socketCfg.getInt("port", 25565));
+				var socketKey = socketCfg.getString("config");
+				SocketConfig socket;
+				if (socketKey == null) {
+					socket = resolveSocket(socketKey);
+				} else {
+					socket = ConfigurationSerializable.deserialize(socketCfg.getConfigurationSection("config"), SocketConfig.class);
+				}
+				InetSocketAddress hostOverride = null;
 				InetSocketAddress externalHost = null;
-				if (socketCfg.contains("external-host")) {
-					externalHost = new InetSocketAddress(socketCfg.getString("external-host"), socketCfg.getInt("external-port", host.getPort()));
+				var rawHost = socketCfg.getString("host");
+				if (rawHost != null)
+					hostOverride = InetSocketAddress.createUnresolved(rawHost, socketCfg.getInt("port", 25565));
+				var rawExternal = socketCfg.getString("external-host");
+				if (rawExternal != null) {
+					externalHost = InetSocketAddress.createUnresolved(rawExternal, socketCfg.getInt("external-port", 25565));
 				}
 				log.info("Creating socket: {}", socket.getName());
-				socketManager.createSocket(socket, host, externalHost);
+				socketManager.createSocket(socket, hostOverride, externalHost);
 			}
 		}
 		// === init internals 
-		initDefaultExecutor(log, new CorePlayerListener());
-		initDefaultExecutor(log, new CoreInventoryListener());
-		initDefaultExecutor(log, new CoreCommandListener());
-		initDefaultExecutor(log, new CoreSocketListener());
 		loadData();
 		ContainerFactoryLoader.loadContainerFactories();
 	}
@@ -147,7 +145,7 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 	private SocketConfig resolveSocket(String configName) {
 		SocketConfig socket;
 		try {
-			socket = AtlasNetwork.getSocketConfig(configName).get();
+			socket = AtlasNetwork.getMasterClient().getSocketConfig(configName).get();
 		} catch (Exception e) {
 			log.error("Error while loading socket configs!", e);
 			return null;
@@ -155,16 +153,6 @@ class CoreLoadNodeDataHandler implements StartupStageHandler {
 		if (socket == null)
 			log.warn("Unable to load socket config: {}", configName);
 		return socket;
-	}
-	
-	private static void initDefaultExecutor(Log log, Listener listener) {
-		List<EventExecutor> exes = MethodEventExecutor.getExecutors(Atlas.getSystem(), listener);
-		for (EventExecutor exe : exes) {
-			Class<? extends Event> clazz = exe.eventClass;
-			log.debug("Set default executor for event: {}", clazz.getSimpleName());
-			HandlerList handlers = HandlerList.getHandlerListOf(clazz);
-			handlers.setDefaultExecutor(exe);
-		}
 	}
 
 }

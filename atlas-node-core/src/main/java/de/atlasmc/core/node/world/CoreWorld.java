@@ -9,8 +9,8 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import de.atlasmc.event.HandlerList;
-import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.SoundCategory;
+import de.atlasmc.node.WorldLocation;
 import de.atlasmc.node.block.Block;
 import de.atlasmc.node.block.data.BlockData;
 import de.atlasmc.node.entity.Entity;
@@ -38,7 +38,6 @@ import de.atlasmc.node.world.PlayerChunkListener;
 import de.atlasmc.node.world.World;
 import de.atlasmc.node.world.WorldBuilder;
 import de.atlasmc.node.world.WorldEvent;
-import de.atlasmc.node.world.WorldFlag;
 import de.atlasmc.node.world.entitytracker.EntityTracker;
 import de.atlasmc.node.world.entitytracker.EntityTrackerFactory;
 import de.atlasmc.node.world.particle.Particle;
@@ -223,24 +222,6 @@ public class CoreWorld implements World {
 			}
 			player.getConnection().sendPacked(packet);
 		}
-	}
-
-	@Override
-	public boolean hasFlag(WorldFlag flag) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void addFlag(WorldFlag flag) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void removeFlag(WorldFlag flag) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

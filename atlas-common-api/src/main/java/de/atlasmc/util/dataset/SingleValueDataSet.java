@@ -1,21 +1,17 @@
 package de.atlasmc.util.dataset;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 
 import de.atlasmc.NamespacedKey.Namespaced;
-import de.atlasmc.util.iterator.SingleValueIterator;
+import it.unimi.dsi.fastutil.objects.ObjectIterators;
 
-public class SingleValueDataSet<T extends Namespaced> extends AbstractDataSet<T> {
+public final class SingleValueDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 
 	private final T value;
 	
 	public SingleValueDataSet(T value) {
-		if (value == null)
-			throw new IllegalArgumentException("Value can not be null!");
-		this.value = value;
+		this.value = Objects.requireNonNull(value, "value");
 	}
 	
 	public T getValue() {
@@ -23,12 +19,7 @@ public class SingleValueDataSet<T extends Namespaced> extends AbstractDataSet<T>
 	}
 	
 	@Override
-	public Collection<T> values() {
-		return List.of(value);
-	}
-	
-	@Override
-	public boolean contains(T value) {
+	public boolean contains(Object value) {
 		return this.value.equals(value);
 	}
 	
@@ -44,7 +35,7 @@ public class SingleValueDataSet<T extends Namespaced> extends AbstractDataSet<T>
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value);
+		return value.hashCode();
 	}
 
 	@Override
@@ -61,7 +52,7 @@ public class SingleValueDataSet<T extends Namespaced> extends AbstractDataSet<T>
 
 	@Override
 	public Iterator<T> iterator() {
-		return new SingleValueIterator<>(value);
+		return ObjectIterators.singleton(value);
 	}
 	
 }

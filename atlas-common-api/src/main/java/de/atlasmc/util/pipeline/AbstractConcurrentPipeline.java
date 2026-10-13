@@ -2,10 +2,16 @@ package de.atlasmc.util.pipeline;
 
 import java.util.Objects;
 
+import de.atlasmc.util.AtlasUtil;
+
 public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> {
 
-	protected volatile E[] entries = getEmpty();
-	protected volatile String[] names = EMPTY_NAMES;
+	protected volatile E[] entries;
+	protected volatile String[] names = AtlasUtil.EMPTY_STRING;
+	
+	public AbstractConcurrentPipeline() {
+		this.entries = getEmpty();
+	}
 	
 	@Override
 	public E get(String name) {
@@ -109,7 +115,7 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 		if (index == -1)
 			return false;
 		this.entries = removeAt(entries, index, getEmpty());
-		this.names = removeAt(names, index, EMPTY_NAMES);
+		this.names = removeAt(names, index, AtlasUtil.EMPTY_STRING);
 		return true;
 	}
 
@@ -122,7 +128,7 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 		if (index == -1)
 			return false;
 		this.entries = removeAt(this.entries, index, getEmpty());
-		this.names = removeAt(names, index, EMPTY_NAMES);
+		this.names = removeAt(names, index, AtlasUtil.EMPTY_STRING);
 		return true;
 	}
 
@@ -131,7 +137,7 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 		if (entries.length == 0)
 			return false;
 		entries = getEmpty();
-		names = EMPTY_NAMES;
+		names = AtlasUtil.EMPTY_STRING;
 		return true;
 	}
 	

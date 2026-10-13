@@ -1,10 +1,13 @@
 package de.atlasmc.core.node;
 
-import java.security.PublicKey;
+import java.security.KeyPair;
+import java.security.cert.Certificate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import de.atlasmc.Atlas;
+
+import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.node.AtlasNodeBuilder;
 import de.atlasmc.node.LocalAtlasNode;
 import de.atlasmc.node.NodePlayer;
@@ -19,14 +22,14 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	private final ProtocolAdapterManager adapterManager;
 	private final SocketManager socketManager;
 	private final NodeServerManager smanager;
-	private final UUID uuid;
+	private final KeyPair playerAuthKey;
 	private volatile NodeStatus status;
 	
 	public CoreLocalAtlasNode(AtlasNodeBuilder builder) {
-		this.uuid = Objects.requireNonNull(builder.getUUID());
-		this.adapterManager = Objects.requireNonNull(builder.getProtocolAdapterManager());
-		this.smanager = Objects.requireNonNull(builder.getServerManager());
-		this.socketManager = Objects.requireNonNull(builder.getProxyManager());
+		this.adapterManager = Objects.requireNonNull(builder.getProtocolAdapterManager(), "ProtocolAdapterManager");
+		this.smanager = Objects.requireNonNull(builder.getServerManager(), "ServerManager");
+		this.socketManager = Objects.requireNonNull(builder.getProxyManager(), "ProxyManager");
+		this.playerAuthKey = Objects.requireNonNull(builder.getPlayerAuthKey(), "PlayerAuthKey");
 		this.status = NodeStatus.STARTING;
 	}
 	
@@ -57,7 +60,7 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	
 	@Override
 	public UUID getID() {
-		return uuid;
+		return AtlasNetwork.getNodeUUID();
 	}
 
 	@Override
@@ -78,8 +81,8 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	}
 
 	@Override
-	public PublicKey getPublicKey() {
-		return Atlas.getKeyPair().getPublic();
+	public Certificate getCertificate() {
+		return AtlasNetwork.getNodeCertificate();
 	}
 
 	@Override
@@ -100,9 +103,14 @@ public class CoreLocalAtlasNode implements LocalAtlasNode {
 	}
 
 	@Override
-	public UUID getSocketID() {
+	public List<UUID> getSocketIDs() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public KeyPair getPlayerAuthKey() {
+		return playerAuthKey;
 	}
 
 }

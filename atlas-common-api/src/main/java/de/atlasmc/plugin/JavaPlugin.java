@@ -31,6 +31,14 @@ public class JavaPlugin implements Plugin {
 	public final void load() {
 		if (isLoaded())
 			return;
+		var handlers = PluginLifecycleHandler.REGISTRY_KEY.get().entries();
+		for (var entry : handlers) {
+			try {
+				entry.value().onLoad(this);
+			} catch(Exception e) {
+				logger.error("Error in lifecyclehandler onLoad: " + entry.key(), e);
+			}
+		}
 		onLoad();
 		loaded = true;
 	}
@@ -41,6 +49,14 @@ public class JavaPlugin implements Plugin {
 			return;
 		if (!isLoaded())
 			throw new IllegalStateException("Plugin has to be loaded first!");
+		var handlers = PluginLifecycleHandler.REGISTRY_KEY.get().entries();
+		for (var entry : handlers) {
+			try {
+				entry.value().onEnable(this);
+			} catch(Exception e) {
+				logger.error("Error in lifecyclehandler onEnable: " + entry.key(), e);
+			}
+		}
 		onEnable();
 		enabled = true;
 	}
@@ -50,8 +66,14 @@ public class JavaPlugin implements Plugin {
 		if (!isEnabled())
 			return;
 		onDisable();
-		HandlerList.unregisterAllListenerGlobal(this);
-		Atlas.getScheduler().removeAllTasks(this);
+		var handlers = PluginLifecycleHandler.REGISTRY_KEY.get().entries();
+		for (var entry : handlers) {
+			try {
+				entry.value().onDisable(this);
+			} catch(Exception e) {
+				logger.error("Error in lifecyclehandler onDisable: " + entry.key(), e);
+			}
+		}
 		enabled = false;
 	}
 
@@ -62,6 +84,14 @@ public class JavaPlugin implements Plugin {
 		if (isEnabled())
 			throw new IllegalStateException("Plugin has the be disabled first!");
 		onUnload();
+		var handlers = PluginLifecycleHandler.REGISTRY_KEY.get().entries();
+		for (var entry : handlers) {
+			try {
+				entry.value().onUnload(this);
+			} catch(Exception e) {
+				logger.error("Error in lifecyclehandler onUnload: " + entry.key(), e);
+			}
+		}
 		loaded = false;
 	}
 	

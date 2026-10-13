@@ -1,27 +1,20 @@
 package de.atlasmc.util.dataset;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.util.annotation.NotNull;
 import it.unimi.dsi.fastutil.objects.ObjectIterators;
 
-class EmptyDataSet<T extends Namespaced> extends AbstractDataSet<T> {
+final class EmptyDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 
 	@NotNull
 	public static final EmptyDataSet<?> INSTANCE = new EmptyDataSet<>();
 	
 	private EmptyDataSet() {}
-	
-	@Override
-	public Collection<T> values() {
-		return List.of();
-	}
 
 	@Override
-	public boolean contains(T value) {
+	public boolean contains(Object value) {
 		return false;
 	}
 	
@@ -45,6 +38,11 @@ class EmptyDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 	@Override
 	public Iterator<T> iterator() {
 		return ObjectIterators.emptyIterator();
+	}
+
+	@Override
+	public int hashCode() {
+		return 0;
 	}
 
 }

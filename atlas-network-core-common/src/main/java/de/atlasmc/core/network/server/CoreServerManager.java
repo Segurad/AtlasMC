@@ -12,7 +12,7 @@ import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.network.NetworkType;
 import de.atlasmc.network.io.protocol.ServerboundRequestTypeByName;
 import de.atlasmc.network.io.protocol.ServerboundRequestTypeByUUID;
-import de.atlasmc.network.server.BaseServer;
+import de.atlasmc.network.server.Server;
 import de.atlasmc.network.server.ServerGroup;
 import de.atlasmc.network.server.ServerManager;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
@@ -25,13 +25,13 @@ import de.atlasmc.util.concurrent.future.Future;
 public class CoreServerManager implements ServerManager {
 	
 	private static final Function<String, CompletableFuture<ServerGroup>> loadGroup = CoreServerManager::internalLoadGroup;
-	private static final Function<UUID, CompletableFuture<BaseServer>> loadServer = CoreServerManager::internalLoadServer;
+	private static final Function<UUID, CompletableFuture<Server>> loadServer = CoreServerManager::internalLoadServer;
 	
 	private final MapCache<String, ServerGroup> groups;
-	private final MapCache<UUID, BaseServer> server;
+	private final MapCache<UUID, Server> server;
 
 	private final ConcurrentHashMap<String, CompletableFuture<ServerGroup>> futureGroups;
-	private final ConcurrentHashMap<UUID, CompletableFuture<BaseServer>> futureServers;
+	private final ConcurrentHashMap<UUID, CompletableFuture<Server>> futureServers;
 	
 	private volatile ServerGroup fallback;
 	
@@ -50,7 +50,7 @@ public class CoreServerManager implements ServerManager {
 	}
 	
 	@Override
-	public BaseServer getServer(UUID uuid) {
+	public Server getServer(UUID uuid) {
 		return server.get(uuid);
 	}
 	
@@ -65,7 +65,7 @@ public class CoreServerManager implements ServerManager {
 	}
 
 	@Override
-	public Future<BaseServer> loadServer(UUID uuid) {
+	public Future<Server> loadServer(UUID uuid) {
 		return getOrLoad(uuid, server, futureServers, loadServer);
 	}
 	
@@ -101,7 +101,7 @@ public class CoreServerManager implements ServerManager {
 		return new CompletableFuture<>();
 	}
 	
-	private static CompletableFuture<BaseServer> internalLoadServer(UUID uuid) {
+	private static CompletableFuture<Server> internalLoadServer(UUID uuid) {
 		var con = AtlasNetwork.getMasterConnection();
 		var packet = new ServerboundRequestTypeByUUID();
 		packet.uuid = uuid;

@@ -2,6 +2,7 @@ package de.atlasmc.io.netty.channel;
 
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.ProtocolException;
+import de.atlasmc.util.annotation.Singleton;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -11,6 +12,7 @@ import io.netty.channel.ChannelHandler.Sharable;
  * Channel handler that throws a {@link ProtocolException} when a packet passes it.
  * Used for marking the channel direction as not usable.
  */
+@Singleton
 @Sharable
 public class OutboundNoProtocolHandler extends ChannelOutboundHandlerAdapter {
 	

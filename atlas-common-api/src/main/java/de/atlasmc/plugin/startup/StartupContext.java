@@ -284,8 +284,9 @@ public class StartupContext {
 	 * @param cause
 	 */
 	public void fail(Throwable cause) {
-		if (failed)
+		if (failed) {
 			throw new IllegalStateException("Startup already failed!");
+		}
 		this.failed = true;
 		this.cause = cause;
 		throw new StartupException("Failed startup in stage: " + getStage(), cause);

@@ -1,13 +1,12 @@
 package de.atlasmc.core.network;
 
-import java.security.PublicKey;
 import java.util.UUID;
 
-import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.network.AtlasNetworkHandler;
 import de.atlasmc.network.NodeManager;
+import de.atlasmc.network.io.MasterClient;
 import de.atlasmc.network.permission.PermissionManager;
-import de.atlasmc.network.player.ProfileHandler;
+import de.atlasmc.network.player.ProfileManager;
 import de.atlasmc.network.server.ServerManager;
 import de.atlasmc.util.Builder;
 
@@ -15,11 +14,10 @@ public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstr
 
 	private NodeManager nodeManager;
 	private ServerManager serverManager;
-	private ProfileHandler profileHandler;
+	private ProfileManager profileHandler;
 	private PermissionManager permissionManager;
 	private UUID uuid;
-	private PublicKey publicKey;
-	private ConnectionHandler connection;
+	private MasterClient client;
 	
 	public NodeManager getNodeManager() {
 		return nodeManager;
@@ -39,11 +37,11 @@ public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstr
 		return getThis();
 	}
 
-	public ProfileHandler getProfileHandler() {
+	public ProfileManager getProfileManager() {
 		return profileHandler;
 	}
 	
-	public T setProfileHandler(ProfileHandler profileHandler) {
+	public T setProfileHandler(ProfileManager profileHandler) {
 		this.profileHandler = profileHandler;
 		return getThis();
 	}
@@ -65,25 +63,16 @@ public abstract class CoreAbstractAtlasNetworkHandlerBuilder<T extends CoreAbstr
 		this.uuid = uuid;
 		return getThis();
 	}
-
-	public PublicKey getPublicKey() {
-		return publicKey;
-	}
 	
-	public T setPublicKey(PublicKey publicKey) {
-		this.publicKey = publicKey;
+	public T setClient(MasterClient client) {
+		this.client = client;
 		return getThis();
 	}
 	
-	public T setConnection(ConnectionHandler connection) {
-		this.connection = connection;
-		return getThis();
-	}
-	
-	public ConnectionHandler getConnection() {
-		return connection;
+	public MasterClient getClient() {
+		return client;
 	}
 	
 	public abstract T getThis();
-
+	
 }

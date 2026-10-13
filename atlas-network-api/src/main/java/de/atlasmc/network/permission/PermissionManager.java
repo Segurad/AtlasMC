@@ -11,12 +11,14 @@ import de.atlasmc.util.concurrent.future.Future;
 public interface PermissionManager {
 	
 	/**
-	 * Creates a new permission with the given string value of 0
+	 * Creates a new permission with the given string value of 1
 	 * @param permission
 	 * @return permission instance
 	 */
 	@NotNull
-	Permission createPermission(String permission);
+	default Permission createPermission(@NotNull CharSequence permission) {
+		return createPermission(permission, 1);
+	}
 	
 	/**
 	 * Creates a new permission with the given string and value
@@ -25,7 +27,7 @@ public interface PermissionManager {
 	 * @return permission instance
 	 */
 	@NotNull
-	Permission createPermission(String permission, int value);
+	Permission createPermission(@NotNull CharSequence permission, int value);
 	
 	/**
 	 * Creates a new permission context with the given key and value
@@ -33,35 +35,39 @@ public interface PermissionManager {
 	 * @param value
 	 * @return permission context
 	 */
-	Future<PermissionContext> createContext(String key, String value);
+	@NotNull
+	Future<PermissionContext> createContext(@NotNull String key, @NotNull String value);
 	
 	/**
 	 * Returns the loaded context with the given id or null of not loaded
-	 * @param uuid
+	 * @param id
 	 * @return future context
 	 */
 	@Nullable
-	PermissionContext getContext(UUID uuid);
+	PermissionContext getContext(int id);
 	
 	/**
 	 * Returns a future that returns the context or null if not present
-	 * @param uuid
+	 * @param id
 	 * @return future context
 	 */
-	Future<PermissionContext> loadContext(UUID uuid);
+	@NotNull
+	Future<PermissionContext> loadContext(int id);
 	
 	/**
 	 * Deletes the given context the future value will be true if successfully
-	 * @param uuid
+	 * @param id
 	 * @return future success
 	 */
-	Future<Boolean> deleteContext(UUID uuid);
+	@NotNull
+	Future<Boolean> deleteContext(int id);
 	
 	/**
 	 * Saves the given context the future value will be true if successfully
 	 * @param context
 	 * @return future success
 	 */
+	@NotNull
 	Future<Boolean> saveContext(PermissionContext context);
 	
 	/**
@@ -69,6 +75,7 @@ public interface PermissionManager {
 	 * @param name
 	 * @return future group
 	 */
+	@NotNull
 	Future<PermissionGroup> createGroup(String name);
 	
 	/**
@@ -84,6 +91,7 @@ public interface PermissionManager {
 	 * @param name
 	 * @return future group
 	 */
+	@NotNull
 	Future<PermissionGroup> loadGroup(String name);
 	
 	/**
@@ -91,6 +99,7 @@ public interface PermissionManager {
 	 * @param group
 	 * @return future success
 	 */
+	@NotNull
 	Future<Boolean> saveGroup(PermissionGroup group);
 	
 	/**
@@ -98,6 +107,7 @@ public interface PermissionManager {
 	 * @param name
 	 * @return future success
 	 */
+	@NotNull
 	Future<Boolean> deleteGroup(String name);
 	
 	/**
@@ -113,6 +123,7 @@ public interface PermissionManager {
 	 * @param uuid
 	 * @return future handler
 	 */
+	@NotNull
 	Future<PermissionHandler> loadHandler(UUID uuid);
 	
 	/**
@@ -120,6 +131,7 @@ public interface PermissionManager {
 	 * @param handler
 	 * @return future success
 	 */
+	@NotNull
 	Future<Boolean> saveHandler(PermissionHandler handler);
 	
 	/**
@@ -127,24 +139,30 @@ public interface PermissionManager {
 	 * @param uuid
 	 * @return future handler
 	 */
+	@NotNull
 	Future<PermissionHandler> createHandler(UUID uuid);
 	
+	@NotNull
 	Future<Boolean> deleteHandler(UUID uuid);
 
 	/**
 	 * Returns a collection of all loaded groups
 	 * @return groups
 	 */
+	@NotNull
 	Collection<PermissionGroup> getGroups();
 
 	/**
 	 * Returns a collection of all loaded handlers
 	 * @return handlers
 	 */
+	@NotNull
 	Collection<PermissionHandler> getHandlers();
 	
+	@NotNull
 	Collection<PermissionGroup> getDefaultGroups();
 	
+	@NotNull
 	Future<Collection<PermissionGroup>> loadDefaultGroups();
 	
 }

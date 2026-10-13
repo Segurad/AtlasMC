@@ -1,20 +1,17 @@
 package de.atlasmc.util.dataset;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.tag.Tag;
 
-public class TagDataSet<T extends Namespaced> extends AbstractDataSet<T> {
+public final class TagDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 	
 	private final Tag<T> tag;
 	
 	public TagDataSet(Tag<T> tag) {
-		if (tag == null)
-			throw new IllegalArgumentException("Tag can not be null!");
-		this.tag = tag;
+		this.tag = Objects.requireNonNull(tag, "tag");
 	}
 	
 	public Tag<T> getTag() {
@@ -22,12 +19,7 @@ public class TagDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 	}
 
 	@Override
-	public Collection<T> values() {
-		return tag.getValues();
-	}
-
-	@Override
-	public boolean contains(T value) {
+	public boolean contains(Object value) {
 		return tag.isTaged(value);
 	}
 	
@@ -35,15 +27,10 @@ public class TagDataSet<T extends Namespaced> extends AbstractDataSet<T> {
 	public int size() {
 		return tag.size();
 	}
-	
-	@Override
-	public boolean isEmpty() {
-		return tag.isEmpty();
-	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(tag);
+		return tag.hashCode();
 	}
 
 	@Override

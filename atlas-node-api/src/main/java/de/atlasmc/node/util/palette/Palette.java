@@ -23,6 +23,7 @@ public interface Palette<E> extends IOWriteable, StreamSerializedSizePredictable
 	 * Returns the values mapped to the entries
 	 * @return values
 	 */
+	@NotNull
 	VariableValueArray getValues();
 	
 	/**
@@ -52,6 +53,7 @@ public interface Palette<E> extends IOWriteable, StreamSerializedSizePredictable
 	 * Returning a collection containing all entries
 	 * @return entries
 	 */
+	@NotNull
 	Collection<? extends PaletteEntry<E>> getEntries();
 	
 	/**

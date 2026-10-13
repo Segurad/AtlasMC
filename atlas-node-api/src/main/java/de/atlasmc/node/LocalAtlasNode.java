@@ -1,5 +1,6 @@
 package de.atlasmc.node;
 
+import java.security.KeyPair;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -12,6 +13,8 @@ import de.atlasmc.node.server.NodeServerManager;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface LocalAtlasNode extends AtlasNode {
+	
+	KeyPair getPlayerAuthKey();
 	
 	@NotNull
 	NodeServerManager getServerManager();

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import de.atlasmc.Atlas;
+import de.atlasmc.Color;
 import de.atlasmc.chat.ChatColor;
 import de.atlasmc.chat.ChatUtil;
 import de.atlasmc.core.network.CoreNetworkInfo;
@@ -130,10 +131,20 @@ class CoreLoadMasterDataStageHandler implements StartupStageHandler {
 			group.setPrefix(prefix == null ? null : ChatUtil.toChat(prefix));
 			String suffix = groupCfg.getString("suffix");
 			group.setSuffix(suffix == null ? null : ChatUtil.toChat(suffix));
-			ChatColor chatColor = ChatColor.getByFormatID(groupCfg.getString("chat-color").charAt(1));
-			group.setChatColor(chatColor);
-			ChatColor nameColor = ChatColor.getByFormatID(groupCfg.getString("name-color").charAt(1));
-			group.setNameColor(nameColor);
+			String rawChat = groupCfg.getString("chat-color");
+			if (rawChat != null) {
+				Color color = rawChat.length() > 2 ? 
+						Color.fromRGB(Integer.parseInt(rawChat, 1, rawChat.length(), 16)) : 
+							ChatColor.getByFormatID(rawChat.charAt(1)).asColor();
+				group.setChatColor(color);
+			}
+			String rawName = groupCfg.getString("name-color");
+			if (rawName != null) {
+				Color color = rawName.length() > 2 ? 
+						Color.fromRGB(Integer.parseInt(rawName, 1, rawName.length(), 16)) : 
+							ChatColor.getByFormatID(rawName.charAt(1)).asColor();
+				group.setNameColor(color);
+			}
 			int power  = groupCfg.getInt("power");
 			group.setPower(power);
 			boolean isDefault = groupCfg.getBoolean("default");

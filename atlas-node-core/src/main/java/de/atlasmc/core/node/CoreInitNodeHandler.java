@@ -1,5 +1,9 @@
 package de.atlasmc.core.node;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+
 import de.atlasmc.Atlas;
 import de.atlasmc.core.node.io.handshake.CorePacketMinecraftHandshake;
 import de.atlasmc.core.node.io.handshake.CorePacketMinecraftLegacyHandshake;
@@ -23,14 +27,18 @@ import de.atlasmc.plugin.startup.StartupStageHandler;
 
 @StartupHandlerRegister({ StartupContext.INIT_NODE })
 class CoreInitNodeHandler implements StartupStageHandler {
-
+	
 	@Override
 	public void handleStage(StartupContext context) {
+		var keypair = getKeyPair(context);
+		if (keypair == null)
+			return;
 		AtlasNodeBuilder builder = context.getContext("builder");
 		builder.setServerManager(new CoreNodeServerManager(Atlas.getWorkdir()))
 			.setUUID(AtlasNetwork.getNodeUUID())
 			.setFactory(new CoreLocalAtlasNodeFactory())
-			.setProxyManager(new CoreSocketManager())
+			.setSocketManager(new CoreSocketManager())
+			.setPlayerAuthKey(keypair)
 			.setProtocolAdapterManager(new ProtocolAdapterManager());
 		var adapter = new ProtocolAdapter(
 				new CoreProtocolStatus(),
@@ -45,6 +53,21 @@ class CoreInitNodeHandler implements StartupStageHandler {
 		HandshakeProtocol.DEFAULT_PROTOCOL.setPacketIO(
 				Packet.getDefaultPacketID(PacketMinecraftLegacyHandshake.class), 
 				new CorePacketMinecraftLegacyHandshake());
+	}
+	
+	private static KeyPair getKeyPair(StartupContext ctx) {
+		KeyPairGenerator gen;
+		try {
+			gen = KeyPairGenerator.getInstance("RSA");
+		} catch (NoSuchAlgorithmException e) {
+			ctx.getLogger().error("Failed to generate player auth keypair!");
+			ctx.fail(e);
+			return null;
+		}
+		gen.initialize(1024);
+		KeyPair pair = gen.generateKeyPair();
+		ctx.getLogger().debug("Keypair generated.");
+		return pair;
 	}
 
 }

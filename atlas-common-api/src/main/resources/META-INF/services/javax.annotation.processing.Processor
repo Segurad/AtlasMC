@@ -1,3 +1,4 @@
 de.atlasmc.registry.RegistryHolderProcessor
 de.atlasmc.registry.RegistryValueProcessor
 de.atlasmc.plugin.startup.StartupHandlerRegisterProcessor
+de.atlasmc.event.ListenerAutoregisterProcessor

@@ -1,7 +1,10 @@
 package de.atlasmc.node.recipe;
 
+import de.atlasmc.util.annotation.NotNull;
+
 public interface RecipeBook {
 	
+	@NotNull
 	BookType getType();
 	
 	boolean isOpen();

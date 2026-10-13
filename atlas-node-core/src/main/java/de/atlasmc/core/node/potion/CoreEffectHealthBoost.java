@@ -4,8 +4,6 @@ import java.util.UUID;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.node.attribute.Attribute;
-import de.atlasmc.node.attribute.AttributeModifier;
-import de.atlasmc.node.attribute.AttributeModifier.Operation;
 import de.atlasmc.node.entity.LivingEntity;
 import de.atlasmc.node.potion.PotionEffectType;
 import de.atlasmc.util.annotation.NotNull;
@@ -20,13 +18,6 @@ public class CoreEffectHealthBoost extends CoreAbstractAttributeModifierPotionEf
 	}
 
 	@Override
-	public void addEffect(LivingEntity entity) {
-		double amount = 2d*(getAmplifier()+1);
-		AttributeModifier modifier = new AttributeModifier(modifierID, amount, Operation.ADD_VALUE);
-		entity.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, modifier);
-	}
-
-	@Override
 	public void removeEffect(LivingEntity entity) {
 		entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(modifierID);
 	}
@@ -34,6 +25,16 @@ public class CoreEffectHealthBoost extends CoreAbstractAttributeModifierPotionEf
 	@Override
 	public NamespacedKey getDefaultModifierID() {
 		return MODIFIER_ID;
+	}
+
+	@Override
+	public Attribute getAttribute() {
+		return Attribute.GENERIC_MAX_HEALTH;
+	}
+
+	@Override
+	public double getValue() {
+		return 2d*(getAmplifier()+1);
 	}
 
 }

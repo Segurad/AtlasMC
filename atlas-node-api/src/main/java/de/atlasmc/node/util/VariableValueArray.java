@@ -1,10 +1,12 @@
 package de.atlasmc.node.util;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import de.atlasmc.util.CloneException;
 
 public class VariableValueArray implements Cloneable {
+
 	
 	private int capacity; // Number of values that can be stored
 	private long[] values; // backing array
@@ -12,14 +14,17 @@ public class VariableValueArray implements Cloneable {
 	private long mask; // mask containing as many 1 bits as bits per value defines
 	private byte valuesPerLong; // number of values stored per long
 	
+	private long divMul; // magic multiplier for index / valuesPerLong
+	private int divShift; // shift for index / valuesPerLong
+	
 	public VariableValueArray(VariableValueArray array) {
-		if (array == null)
-			throw new IllegalArgumentException("Array may not be null!");
+		Objects.requireNonNull(array, "array");
 		this.capacity = array.capacity;
 		this.values = array.values.clone();
 		this.bitsPerValue = array.bitsPerValue;
 		this.mask = array.mask;
 		this.valuesPerLong = array.valuesPerLong;
+		updateDivisor();
 	}
 	
 	public VariableValueArray(int capacity, int bitsPerValue) {
@@ -40,6 +45,7 @@ public class VariableValueArray implements Cloneable {
 		this.capacity = capacity;
 		this.bitsPerValue = (byte) bitsPerValue;
 		this.valuesPerLong = valuesPerLong(bitsPerValue);
+		updateDivisor();
 		int valuesSize = Math.ceilDiv(capacity, valuesPerLong);
 		if (values != null) {
 			if (values.length != valuesSize)
@@ -51,37 +57,53 @@ public class VariableValueArray implements Cloneable {
 		this.mask = MathUtil.createBitMask(bitsPerValue);
 	}
 	
+	private void updateDivisor() {
+		int l = 32 - Integer.numberOfLeadingZeros(valuesPerLong - 1); // ceil(log2(valuesPerLong))
+		divShift = 32 + l;
+		divMul = ((1L << divShift) + valuesPerLong - 1) / valuesPerLong;
+	}
+	
 	/**
 	 * Resizes the array to match new number of bits
 	 * @param bitsPerValue number of bits to represent a value
 	 */
-	public void resize(int bitsPerValue) {
+	public void resize(final int bitsPerValue) {
 		if (this.bitsPerValue == bitsPerValue)
 			return;
 		// save old
 		final long[] oldValues = values;
 		final long oldMask = mask;
-		final int oldBitPerValue = this.bitsPerValue;
+		final int oldBitsPerValue = this.bitsPerValue;
+		final int oldValuesPerLong = this.valuesPerLong;
 		// init new
-		this.bitsPerValue = (byte) bitsPerValue;
-		this.valuesPerLong = valuesPerLong(bitsPerValue);
-		values = new long[MathUtil.upper(capacity / (double) valuesPerLong)];
-		mask = MathUtil.createBitMask(bitsPerValue);
+		final int valuesPerLong = valuesPerLong(bitsPerValue);
+		final long[] values = new long[MathUtil.upper(capacity / (double) valuesPerLong)];
+		final long mask = MathUtil.createBitMask(bitsPerValue);
 		// copy data
-		int index = 0;
-		for (long l : oldValues) {
-			int restBits = 64;
-			while (restBits >= oldBitPerValue) {
-				int oldValue = (int) (l & oldMask);
-				if (oldValue != 0)  {
-					// assuming new array is empty so no need to set 0 values
-					set(index, oldValue);
+		int srcIndex = 0; // index of the source long
+		int srcCount = 0; // values read from the current source long
+		long src = oldValues.length > 0 ? oldValues[0] : 0;
+		int remaining = capacity;
+		for (int dst = 0; dst < values.length; dst++) {
+			final int count = (valuesPerLong <= remaining) ? valuesPerLong : remaining;
+			long packed = 0;
+			for (int i = 0, shift = 0; i < count; i++, shift += bitsPerValue) {
+				if (srcCount == oldValuesPerLong) {
+					src = oldValues[++srcIndex];
+					srcCount = 0;
 				}
-				index++;
-				l >>= oldBitPerValue;
-				restBits -= oldBitPerValue;
+				packed |= (src & oldMask & mask) << shift;
+				src >>>= oldBitsPerValue;
+				srcCount++;
 			}
+			values[dst] = packed;
+			remaining -= count;
 		}
+		this.values = values;
+		this.mask = mask;
+		this.valuesPerLong = (byte) valuesPerLong;
+		this.bitsPerValue = (byte) bitsPerValue;
+		updateDivisor();
 	}
 	
 	/**
@@ -90,17 +112,10 @@ public class VariableValueArray implements Cloneable {
 	 * @param value that will be set
 	 */
 	public void set(int index, int value) {
-		if (index < 0 || index >= capacity)
-			throw new ArrayIndexOutOfBoundsException(index);
-		int longIndex = index / valuesPerLong;
-		long longValue = values[longIndex];
+		Objects.checkIndex(index, capacity);
+		int longIndex = (int) ((long) index * divMul >>> divShift);
 		int bitsToShift = (index - longIndex * valuesPerLong) * bitsPerValue;
-		
-		longValue &= mask << bitsToShift ^ 0xFFFFFFFFFFFFFFFFL; // reset old value
-		if (value == 0)
-			return; // no need to set bits
-		longValue |= (value & mask) << bitsToShift; // set new value
-		values[longIndex] = longValue;
+		values[longIndex] = values[longIndex] & ~(mask << bitsToShift) | (value & mask) << bitsToShift;
 	}
 	
 	/**
@@ -110,21 +125,12 @@ public class VariableValueArray implements Cloneable {
 	 * @return the old value
 	 */
 	public int replace(int index, int value) {
-		if (index < 0 || index >= capacity)
-			throw new ArrayIndexOutOfBoundsException(index);
-		int longIndex = index / valuesPerLong;
-		long longValue = values[longIndex];
+		Objects.checkIndex(index, capacity);
+		int longIndex = (int) ((long) index * divMul >>> divShift);
 		int bitsToShift = (index - longIndex * valuesPerLong) * bitsPerValue;
-		
-		int oldValue = (int) (longValue >> bitsToShift & mask);
-		if (oldValue == value)
-			return value; // equal value no need for change
-		longValue &= mask << bitsToShift ^ 0xFFFFFFFFFFFFFFFFL; // reset old value
-		if (value == 0)
-			return oldValue; // no need to set bits
-		longValue |= (value & mask) << bitsToShift; // set new value
-		values[longIndex] = longValue;
-		return oldValue;
+		long longValue = values[longIndex];
+		values[longIndex] = longValue & ~(mask << bitsToShift) | (value & mask) << bitsToShift;
+		return (int) (longValue >>> bitsToShift & mask);
 	}
 	
 	/**
@@ -133,12 +139,10 @@ public class VariableValueArray implements Cloneable {
 	 * @return value
 	 */
 	public int get(int index) {
-		if (index < 0 || index >= capacity)
-			throw new ArrayIndexOutOfBoundsException(index);
-		int longIndex = index / valuesPerLong;
-		long longValue = values[longIndex];
+		Objects.checkIndex(index, capacity);
+		int longIndex = (int) ((long) index * divMul >>> divShift);
 		int bitsToShift = (index - longIndex * valuesPerLong) * bitsPerValue;
-		return (int) (longValue >> bitsToShift & mask);
+		return (int) (values[longIndex] >>> bitsToShift & mask);
 	}
 	
 	/**

@@ -1,6 +1,6 @@
 package de.atlasmc.core.network.node;
 
-import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.util.UUID;
 
 import de.atlasmc.core.network.CoreAtlasNode;
@@ -13,8 +13,8 @@ public abstract class CoreAtlasNodeMaster extends CoreAtlasNode implements Atlas
 	protected long maxHeap;
 	protected long usedHeap;
 	
-	public CoreAtlasNodeMaster(UUID uuid, PublicKey key) {
-		super(uuid, key);
+	public CoreAtlasNodeMaster(UUID uuid, Certificate cert) {
+		super(uuid, cert);
 	}
 
 	public long getMaxHeapSize() {

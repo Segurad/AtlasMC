@@ -5,11 +5,11 @@ import de.atlasmc.io.socket.ServerSocket;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 
-public class DefaultChannelInitHandler extends ChannelInitializer<SocketChannel> {
+public class DefaultServerChannelInitHandler extends ChannelInitializer<SocketChannel> {
 
 	private final ServerSocket socket;
 	
-	public DefaultChannelInitHandler(ServerSocket socket) {
+	public DefaultServerChannelInitHandler(ServerSocket socket) {
 		this.socket = socket;
 	}
 	

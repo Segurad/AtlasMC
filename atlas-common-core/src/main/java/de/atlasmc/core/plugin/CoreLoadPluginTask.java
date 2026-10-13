@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.atlasmc.NamespacedKey;
 import de.atlasmc.log.Log;
 import de.atlasmc.plugin.Dependency;
 import de.atlasmc.plugin.Dependency.Type;
@@ -86,6 +85,8 @@ final class CoreLoadPluginTask implements Runnable {
 			CoreRegisteredPlugin plugin = loadOrder.get(i);
 			PrototypePlugin prototype = plugin.prototype;
 			Plugin pl = prototype.getPlugin();
+			if (pl.isLoaded())
+				continue;
 			// TODO validate dependencies
 			try {
 				pl.load();
@@ -158,12 +159,9 @@ final class CoreLoadPluginTask implements Runnable {
 				future.complete(null, new PluginException(msg));
 				continue;
 			}
-			List<NamespacedKey> features = prototype.getRequiredFeatures();
-			final int size = features.size();
 			boolean satisfied = true;
-			for (int i = 0; i < size; i++) {
-				NamespacedKey feature = features.get(i);
-				if (features.contains(feature)) {
+			for (var feature : prototype.getRequiredFeatures()) {
+				if (!manager.hasFeature(feature)) {
 					satisfied = false;
 					CompletableFuture<Plugin> future = entry.getValue();
 					String msg = "Required feature: " + feature + " is unsatisfied in plugin: " + prototype;
@@ -174,12 +172,10 @@ final class CoreLoadPluginTask implements Runnable {
 			}
 			if (!satisfied)
 				continue;
-			List<NamespacedKey> softFeatures = prototype.getSoftRequiredFeatures();
-			final int softsize = softFeatures.size();
-			satisfied = false;
-			for (int i = 0; i < softsize; i++) {
-				NamespacedKey feature = softFeatures.get(i);
-				if (features.contains(feature)) {
+			var softDependencies = prototype.getSoftRequiredFeatures();
+			satisfied = softDependencies.isEmpty();
+			for (var feature : prototype.getSoftRequiredFeatures()) {
+				if (manager.hasFeature(feature)) {
 					satisfied = true;
 					break;
 				}
@@ -211,6 +207,8 @@ final class CoreLoadPluginTask implements Runnable {
 		}
 		List<Dependency> dependencies = plugin.prototype.getDependencies();
 		if (dependencies.isEmpty()) {
+			if (resolved.contains(plugin))
+				return true;
 			resolved.add(plugin);
 			return true;
 		}
@@ -219,7 +217,7 @@ final class CoreLoadPluginTask implements Runnable {
 			Dependency dependency = dependencies.get(i);
 			CoreRegisteredPlugin dependencyPlugin = plugins.get(dependency.name);
 			if (dependencyPlugin == null) {
-				manager.getRegisteredPlugin(dependency.name);
+				dependencyPlugin = manager.getRegisteredPlugin(dependency.name);
 			}
 			if (dependencyPlugin == null) {
 				if (dependency.type != Type.REQUIRED)
@@ -229,14 +227,16 @@ final class CoreLoadPluginTask implements Runnable {
 				fail(plugin, new PluginException(msg));
 				return false;
 			}
-			if (!dependency.matches(dependencyPlugin.prototype.getVersion()) && dependency.type == Type.REQUIRED) {
-				String msg = "Unsatisfied dependency " + dependency + " for plugin: " + plugin.prototype;
+			if (dependency.type == Type.INCOMPATIPLE) {
+				if (!dependency.matches(dependencyPlugin.prototype.getVersion()))
+					continue;
+				String msg = "Incompatiple Plugin found: " + dependencyPlugin.prototype + " for plugin: " + plugin.prototype;
 				log.error(msg);
 				fail(plugin, new PluginException(msg));
 				return false;
 			}
-			if (dependency.type == Type.INCOMPATIPLE) {
-				String msg = "Incompatiple Plugin found: " + dependencyPlugin.prototype + " for plugin: " + plugin.prototype;
+			if (!dependency.matches(dependencyPlugin.prototype.getVersion()) && dependency.type == Type.REQUIRED) {
+				String msg = "Unsatisfied dependency " + dependency + " for plugin: " + plugin.prototype;
 				log.error(msg);
 				fail(plugin, new PluginException(msg));
 				return false;
@@ -250,7 +250,7 @@ final class CoreLoadPluginTask implements Runnable {
 					return false;	
 				}
 				resolved.add(plugin);
-				plugin.addDependency(plugin);
+				plugin.addDependency(dependencyPlugin);
 				break;
 			case BEFORE:
 				if (!resolvePluginDependencies(dependencyPlugin, resolved, unresolved)) {

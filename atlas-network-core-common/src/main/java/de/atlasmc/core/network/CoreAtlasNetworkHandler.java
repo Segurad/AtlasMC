@@ -1,44 +1,38 @@
 package de.atlasmc.core.network;
 
 import java.security.PublicKey;
-import java.util.Collection;
+import java.security.cert.Certificate;
 import java.util.Objects;
 import java.util.UUID;
 
-import de.atlasmc.datarepository.Repository;
+import de.atlasmc.Atlas;
 import de.atlasmc.io.connection.ConnectionHandler;
-import de.atlasmc.io.socket.SocketConfig;
 import de.atlasmc.network.AtlasNetworkHandler;
 import de.atlasmc.network.NetworkInfo;
 import de.atlasmc.network.NetworkStats;
-import de.atlasmc.network.NodeConfig;
 import de.atlasmc.network.NodeManager;
+import de.atlasmc.network.io.MasterClient;
 import de.atlasmc.network.permission.PermissionManager;
-import de.atlasmc.network.player.ProfileHandler;
+import de.atlasmc.network.player.ProfileManager;
 import de.atlasmc.network.server.ServerManager;
-import de.atlasmc.util.concurrent.future.Future;
+import de.atlasmc.util.secrets.SecretManagerException;
 
 public class CoreAtlasNetworkHandler implements AtlasNetworkHandler {
 
 	private final NodeManager nodeManager;
 	private final ServerManager serverManager;
-	private final ProfileHandler profileHandler;
+	private final ProfileManager profileHandler;
 	private final PermissionManager permissionProvider;
 	private final UUID uuid;
-	private final PublicKey publicKey;
-	private final ConnectionHandler con;
-	private final NetworkInfo info;
-	private final NetworkInfo infoMaintenance;
-	private final NetworkStats stats;
+	private final MasterClient client;
 	
 	public CoreAtlasNetworkHandler(CoreAbstractAtlasNetworkHandlerBuilder<?> builder) {
-		this.nodeManager = Objects.requireNonNull(builder.getNodeManager());
-		this.serverManager = Objects.requireNonNull(builder.getServerManager());
-		this.profileHandler = Objects.requireNonNull(builder.getProfileHandler());
-		this.permissionProvider = Objects.requireNonNull(builder.getPermissionManager());
+		this.nodeManager = Objects.requireNonNull(builder.getNodeManager(), "NodeManager");
+		this.serverManager = Objects.requireNonNull(builder.getServerManager(), "ServerManager");
+		this.profileHandler = Objects.requireNonNull(builder.getProfileManager(), "ProfileManager");
+		this.permissionProvider = Objects.requireNonNull(builder.getPermissionManager(), "PermissionManager");
 		this.uuid = Objects.requireNonNull(builder.getUUID());
-		this.publicKey = Objects.requireNonNull(builder.getPublicKey());
-		this.con = Objects.requireNonNull(builder.getConnection());
+		this.client = Objects.requireNonNull(builder.getClient(), "client");
 	}
 
 	@Override
@@ -52,7 +46,7 @@ public class CoreAtlasNetworkHandler implements AtlasNetworkHandler {
 	}
 
 	@Override
-	public ProfileHandler getProfileHandler() {
+	public ProfileManager getProfileHandler() {
 		return profileHandler;
 	}
 
@@ -68,12 +62,12 @@ public class CoreAtlasNetworkHandler implements AtlasNetworkHandler {
 
 	@Override
 	public PublicKey getPublicKey() {
-		return publicKey;
+		return client.getCertificate().getPublicKey();
 	}
 	
 	@Override
 	public ConnectionHandler getMasterConnection() {
-		return con;
+		return client.getConnection();
 	}
 
 	@Override
@@ -83,48 +77,32 @@ public class CoreAtlasNetworkHandler implements AtlasNetworkHandler {
 	}
 
 	@Override
-	public Future<NodeConfig> getNodeConfig(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Future<Collection<NodeConfig>> getNodeConfigs(Collection<String> names) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Future<SocketConfig> getSocketConfig(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Future<Collection<SocketConfig>> getSocketConfigs(Collection<String> names) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public NetworkStats getNetworkStats() {
-		return stats;
+		return client.getNetworkStats();
 	}
 
 	@Override
 	public NetworkInfo getNetworkInfo() {
-		return info;
+		return client.getNetworkInfo();
 	}
 
 	@Override
 	public NetworkInfo getNetworkInfoMaintenance() {
-		return infoMaintenance;
+		return client.getNetworkInfoMaintenance();
 	}
 
 	@Override
-	public Collection<Repository> getRepositories() {
-		// TODO Auto-generated method stub
-		return null;
+	public Certificate getNodeCertificate() {
+		try {
+			return Atlas.getSecretManager().getCertificate("node-cert");
+		} catch (SecretManagerException e) {
+			throw new IllegalStateException("Unable to access certificate!", e);
+		}
+	}
+
+	@Override
+	public MasterClient getMasterClient() {
+		return client;
 	}
 
 }

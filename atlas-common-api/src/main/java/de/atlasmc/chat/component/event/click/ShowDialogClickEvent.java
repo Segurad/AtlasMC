@@ -13,7 +13,7 @@ public final class ShowDialogClickEvent implements ClickEvent {
 					.builder(ShowDialogClickEvent.class)
 					.include(ClickEvent.NBT_CODEC)
 					.codec("dialog", ShowDialogClickEvent::getDialog, ShowDialogClickEvent::setDialog, Registries.registryValueNBTCodec(Dialog.REGISTRY_KEY))
-					.codec("dialog", ShowDialogClickEvent::getDialog, ShowDialogClickEvent::setDialog, Dialog.NBT_HANDLER)
+					.codec("dialog", ShowDialogClickEvent::getDialog, ShowDialogClickEvent::setDialog, Dialog.NBT_CODEC)
 					.build();
 	
 	private Dialog dialog;

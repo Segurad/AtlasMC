@@ -10,20 +10,18 @@ import de.atlasmc.registry.RegistryKey;
 import de.atlasmc.tag.Tag;
 import de.atlasmc.util.annotation.NotNull;
 
-public interface DataSet<T extends Namespaced> extends Iterable<T> {
+/**
+ * Immutable set of values
+ * @param <T>
+ */
+public interface DataSet<T extends Namespaced> extends Collection<T> {
 	
-	Collection<T> values();
-	
-	boolean contains(T value);
-	
-	int size();
-	
-	boolean isEmpty();
-	
+	@NotNull
 	static <T extends Namespaced> NBTCodec<DataSet<T>> nbtCodec(RegistryKey<T> key) {
 		return new DataSetNBTCodec<>(key);
 	}
 	
+	@NotNull
 	static <T extends ProtocolRegistryValue> StreamCodec<DataSet<T>> streamCodec(RegistryKey<T> key) {
 		return new DataSetStreamCodec<>(key);
 	}
@@ -49,20 +47,16 @@ public interface DataSet<T extends Namespaced> extends Iterable<T> {
 	
 	@SafeVarargs
 	static <T extends Namespaced> DataSet<T> of(T... values) {
-		if (values == null)
-			throw new IllegalArgumentException("Values can not be null!");
-		if (values.length == 0)
+		if (values.length == 0) // implicit null check
 			return of();
 		if (values.length == 1)
-			return of(values[1]);
+			return of(values[0]);
 		return new CollectionDataSet<>(values);
 	}
 	
 	@NotNull
 	static <T extends Namespaced> DataSet<T> of(Collection<T> values) {
-		if (values == null)
-			throw new IllegalArgumentException("Values can not be null!");
-		if (values.isEmpty())
+		if (values.isEmpty()) // implicit null check
 			return of();
 		if (values.size() == 1)
 			return of(values.iterator().next());

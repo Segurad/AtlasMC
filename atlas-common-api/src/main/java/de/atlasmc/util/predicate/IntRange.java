@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.ints.IntPredicate;
 public class IntRange implements IntPredicate {
 	
 	public static final NBTCodec<IntRange>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(IntRange.class)
 					.defaultConstructor(IntRange::new)
 					.intField("min", IntRange::getMin, IntRange::setMin, Integer.MIN_VALUE)

@@ -5,8 +5,10 @@ import de.atlasmc.command.CommandContext;
 import de.atlasmc.command.Commands;
 import de.atlasmc.event.EventHandler;
 import de.atlasmc.event.Listener;
+import de.atlasmc.event.ListenerAutoregister;
 import de.atlasmc.event.command.CommandEvent;
 
+@ListenerAutoregister(isDefault = true)
 public class CoreCommandListener implements Listener {
 	
 	@EventHandler

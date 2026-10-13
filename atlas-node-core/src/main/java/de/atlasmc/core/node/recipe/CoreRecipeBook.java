@@ -1,5 +1,7 @@
 package de.atlasmc.core.node.recipe;
 
+import java.util.Objects;
+
 import de.atlasmc.node.recipe.BookType;
 import de.atlasmc.node.recipe.RecipeBook;
 
@@ -11,7 +13,7 @@ public class CoreRecipeBook implements RecipeBook {
 	private boolean changed;
 	
 	public CoreRecipeBook(BookType type) {
-		this.type = type;
+		this.type = Objects.requireNonNull(type, "type");
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import de.atlasmc.permission.Permissible;
 import de.atlasmc.permission.Permission;
+import de.atlasmc.util.annotation.InternalAPI;
 import de.atlasmc.util.annotation.NotNull;
 
 /**
@@ -14,23 +15,31 @@ public interface PermissionHolder extends Permissible {
 	@NotNull
 	Collection<Permission> getPermissions();
 	
-	void setPermission(String permission, int value);
+	boolean setPermission(@NotNull CharSequence permission, int value);
 	
-	default void setPermission(String permission) {
-		setPermission(permission, 1);
+	default boolean setPermission(@NotNull CharSequence permission) {
+		return setPermission(permission, 1);
 	}
 	
-	void setPermission(Permission permission);
+	boolean setPermission(@NotNull Permission permission);
 	
-	void removePermission(String permission);
+	boolean removePermission(@NotNull CharSequence permission);
 	
-	void removePermission(Permission permission);
+	default boolean removePermission(@NotNull Permission permission) {
+		return removePermission(permission.permission());
+	}
 	
+	
+	/**
+	 * Whether or not the permissions have changed
+	 * @return
+	 */
 	boolean hasChangedPermissions();
 	
 	/**
 	 * Used to indicate that all changes have been persisted
 	 */
+	@InternalAPI
 	void changedPermissions();
  
 }

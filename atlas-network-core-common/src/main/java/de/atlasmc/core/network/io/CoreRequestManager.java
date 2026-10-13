@@ -11,12 +11,13 @@ import de.atlasmc.cache.Caching;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.network.AtlasNetwork;
 import de.atlasmc.network.NetworkType;
+import de.atlasmc.network.io.RequestAction;
 import de.atlasmc.network.io.RequestException;
 import de.atlasmc.network.io.RequestHandler;
 import de.atlasmc.network.io.RequestManager;
 import de.atlasmc.network.io.RequestTimeoutException;
 import de.atlasmc.network.io.protocol.AbstractPacketRequestType;
-import de.atlasmc.network.io.protocol.AbstractPacketRequestType.Action;
+import de.atlasmc.network.io.protocol.ServerboundRequestTypeByID;
 import de.atlasmc.network.io.protocol.ServerboundRequestTypeByName;
 import de.atlasmc.network.io.protocol.ServerboundRequestTypeByUUID;
 import de.atlasmc.util.ConcurrentLinkedList;
@@ -57,18 +58,23 @@ public class CoreRequestManager implements RequestManager, CacheHolder {
 	}
 
 	@Override
-	public <T> Future<T> request(NetworkType type, String name, Action action, int timeout) {
+	public <T> Future<T> request(NetworkType type, String name, RequestAction action, int timeout) {
 		return request(ServerboundRequestTypeByName::new, type, name, action, timeout);
 	}
 
 	@Override
-	public <T> Future<T> request(NetworkType type, UUID uuid, Action action, int timeout) {
+	public <T> Future<T> request(NetworkType type, UUID uuid, RequestAction action, int timeout) {
 		return request(ServerboundRequestTypeByUUID::new, type, uuid, action, timeout);
 	}
 	
-	private synchronized <T, V> Future<T> request(Function<V, ? extends AbstractPacketRequestType> constructor, NetworkType type, V query, Action action, int timeout) {
+	@Override
+	public <T> Future<T> request(NetworkType type, int id, RequestAction action) {
+		return request(ServerboundRequestTypeByID::new, type, id, action, timeout);
+	}
+	
+	private synchronized <T, V> Future<T> request(Function<V, ? extends AbstractPacketRequestType> constructor, NetworkType type, V query, RequestAction action, int timeout) {
 		var hash = transactionHash(type, query);
-		if (action != Action.UNSUBSCRIBE) {
+		if (action.hasPayload()) {
 			var future = this.<T>getFuture(hash, type, query);
 			if (future != null) {
 				return future;
@@ -96,18 +102,18 @@ public class CoreRequestManager implements RequestManager, CacheHolder {
 		return future.type == type && future.query == query ? future : null;
 	}
 	
-	private <T> CoreRequestFuture<T> createFuture(int timeout, int transaction, int hash, NetworkType type, Object query, Action action) {
+	private <T> CoreRequestFuture<T> createFuture(int timeout, int transaction, int hash, NetworkType type, Object query, RequestAction action) {
 		var future = new CoreRequestFuture<T>(System.currentTimeMillis() + timeout, transaction, hash, type, query);
 		transactionFutures.put(transaction, future);
-		if (action != Action.UNSUBSCRIBE)
+		if (action.hasPayload())
 			hashFuture.putIfAbsent(hash, future);
 		var iter = timeoutQueue.iterator();
 		while (iter.hasNext()) {
 			var next = iter.next();
-			if (next.timeout < future.timeout)
-				continue;
-			iter.addBefore(future);
-			return future;
+			if (next.timeout >= future.timeout) {
+				iter.addBefore(future);
+				return future;
+			}
 		}
 		timeoutQueue.add(future);
 		return future;
@@ -137,6 +143,7 @@ public class CoreRequestManager implements RequestManager, CacheHolder {
 				if (next.isDone())
 					continue;
 				next.complete(null, new RequestTimeoutException());
+				timeoutIter.remove();
 			}
 		}
 		timeoutIter.reset();
@@ -176,6 +183,12 @@ public class CoreRequestManager implements RequestManager, CacheHolder {
 		timeoutQueue.remove(future);
 		handler.handle(response);
 		future.complete(response);
+	}
+
+	@Override
+	public <T> Future<T> request(NetworkType type, int id, RequestAction action, int timeout) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

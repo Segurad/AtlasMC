@@ -3,8 +3,8 @@ package de.atlasmc.core.network.io.atlasprotocol;
 import de.atlasmc.io.AbstractProtocol;
 import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.connection.PacketListener;
-import de.atlasmc.network.io.protocol.AtlasPacketServerbound;
 import de.atlasmc.network.io.protocol.AtlasPacketClientbound;
+import de.atlasmc.network.io.protocol.AtlasPacketServerbound;
 
 public class CoreAtlasProtocol extends AbstractProtocol<AtlasPacketServerbound, AtlasPacketClientbound> {
 	

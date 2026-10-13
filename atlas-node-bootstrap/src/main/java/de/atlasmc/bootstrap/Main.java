@@ -1,13 +1,9 @@
 package de.atlasmc.bootstrap;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,17 +41,21 @@ import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.plugin.startup.StartupContext;
 import de.atlasmc.plugin.startup.StartupException;
 import de.atlasmc.plugin.startup.StartupFinalizedEvent;
+import de.atlasmc.plugin.startup.StartupHandlerRegisterProcessor;
 import de.atlasmc.plugin.startup.StartupStageHandler;
 import de.atlasmc.registry.Registries;
 import de.atlasmc.tick.AtlasThread;
-import de.atlasmc.util.EncryptionUtil;
 import de.atlasmc.util.FileUtils;
 import de.atlasmc.util.ThreadWatchdog;
+import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.MemoryConfigurationSection;
 import de.atlasmc.util.configuration.file.FileConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
+import de.atlasmc.util.secrets.KeyStoreSecretManager;
+import de.atlasmc.util.secrets.SecretManager;
+import de.atlasmc.util.secrets.SecretManagerException;
 
 public class Main {
 	
@@ -100,7 +100,7 @@ public class Main {
 		if (FileUtils.CONFIG_OVERRIDE) {
 			log.info("Override configuration enabled!");
 		}
-		KeyPair keyPair = getKeyPair(workDir, log);
+		var secrets = getSecretManager(log, workDir);
 		FileConfiguration config = null;
 		try {
 			log.info("Loading bootstrap.yml...");
@@ -136,7 +136,7 @@ public class Main {
 		
 		new AtlasBuilder()
 		.setDataHandler(loadRepositories(log, workDir))
-		.setKeyPair(keyPair)
+		.setSecretManager(secrets)
 		.setLogger(log)
 		.setMainThread(new AtlasThread<>("Atlas-Main", 50, log, false, null))
 		.setPluginManager(pluginManager)
@@ -165,7 +165,7 @@ public class Main {
 			pluginManager.addFeature(NamespacedKey.literal("atlas:node-minion"));
 		}
 		
-		File modulDir = new File(workDir, "modules/");
+		File modulDir = new File(workDir, "core-plugins/");
 		
 		try (InputStream in = Atlas.getSystem().getResourceAsStream("/core-setup.yml")) {
 			ConfigurationSection setup = YamlConfigurationFactory.INSTANCE.load(in);
@@ -178,28 +178,35 @@ public class Main {
 		Registries.loadRegistries(Atlas.getSystem());
 		log.debug("Loading system registry data...");
 		Registries.loadRegistryEntries(Atlas.getSystem());
+		log.debug("Loading system listeners...");
+		HandlerList.loadAutoregisterListeners(Atlas.getSystem());
 		
-		pluginManager.loadPlugins(modulDir);
+		var plugins = Future.getFutureResults(pluginManager.loadPlugins(modulDir));
 		
 		Thread consoleDeamon = new Thread(() -> {
 			Atlas.getLogger().debug("Started console daemon!");
 			while (true) {
 				String command = console.readLine();
+				if (command == null) {
+					Atlas.getLogger().error("Failed to read line of console! Possible dead stream?");
+					Atlas.getLogger().error("Stopping console thread!");
+					return;
+				}
 				HandlerList.callEvent(new CommandEvent(console, command, true));
 			}
 		}, "Atlas-Console-Daemon");
 		consoleDeamon.setDaemon(true);
 		loadCommands(log, workDir);
 		
-		initStartupHandler(log, context, Main.class.getResourceAsStream("/META-INF/atlas/startup-handlers.yml"), Main.class.getClassLoader());
+		initStartupHandler(log, context, Main.class.getResourceAsStream(StartupHandlerRegisterProcessor.RESOURCE_LOCATION), Main.class.getClassLoader());
 		
-		for (Plugin plugin : pluginManager.getPlugins()) {
+		for (Plugin plugin : plugins) {
 			if (!(plugin instanceof AtlasCorePlugin modul))
 				continue;
 			if (!plugin.isEnabled())
 				continue;
 			modul.initStartupHandler(context);
-			initStartupHandler(log, context, plugin.getResourceAsStream("/META-INF/atlas/startup-handlers.yml"), plugin.getClass().getClassLoader());
+			initStartupHandler(log, context, plugin.getResourceAsStream(StartupHandlerRegisterProcessor.RESOURCE_LOCATION), plugin.getClass().getClassLoader());
 		}
 		
 		try {
@@ -304,6 +311,8 @@ public class Main {
 				handler.prepareStage(context);
 			}
 		} catch (Exception e) {
+			if (context.hasFailed())
+				return;
 			context.fail(e);
 		}
 	}
@@ -319,6 +328,8 @@ public class Main {
 				handler.handleStage(context);
 			}
 		} catch (Exception e) {
+			if (context.hasFailed())
+				return;
 			context.fail(e);
 		}
 	}
@@ -334,20 +345,22 @@ public class Main {
 				handler.finalizeStage(context);
 			}
 		} catch (Exception e) {
+			if (context.hasFailed())
+				return;
 			context.fail(e);
 		}
 	}
 
 	private static void loadCommands(Log log, File workDir) {
 		log.info("Loading commands...");
-		File commandFile = null;
+		File commandFile;
 		try {
 			commandFile = FileUtils.extractResource(new File(workDir, "data/commands.yml"), "/data/commands.yml", FileUtils.CONFIG_OVERRIDE, Main.class);
 		} catch (IOException e) {
 			log.error("Error while extracting commands.yml", e);
 			return;
 		}
-		Collection<Command> commands = null;
+		Collection<Command> commands;
 		try {
 			commands = Commands.loadCommands(commandFile);
 		} catch (Exception e) {
@@ -389,43 +402,15 @@ public class Main {
 		return arguments;
 	}
 	
-	private static KeyPair getKeyPair(File workDir, Log log) {
-		File privateKeyFile = new File(workDir, "node-key.key");
-		if (privateKeyFile.exists()) {
-			log.info("Loading keypair...");
-			try {
-				return EncryptionUtil.loadRSAFromFile(privateKeyFile.toPath());
-			} catch (Exception e) {
-				log.error("Error while loading keypair!", e);
-				System.exit(1);
-				return null;
-			}
-		} else {
-			log.info("Generating keypair...");
-			KeyPairGenerator gen;
-			try {
-				gen = KeyPairGenerator.getInstance("RSA");
-			} catch (NoSuchAlgorithmException e) {
-				log.error("Unable to find RSA key factory!", e);
-				System.exit(1);
-				return null;
-			}
-			gen.initialize(2048);
-			KeyPair pair = gen.generateKeyPair();
-			try (var out = new FileOutputStream(privateKeyFile)) {
-				out.write(pair.getPrivate().getEncoded());
-			} catch (IOException e) {
-				log.error("Error while writing private key file!", e);
-			}
-			String publicKey = EncryptionUtil.keyToString(pair.getPublic());
-			File publicKeyFile = new File(workDir, "node-key.pub");
-			try (var out = new FileOutputStream(publicKeyFile)) {
-				out.write(publicKey.getBytes());
-			} catch (IOException e) {
-				log.error("Error while writing public key file!", e);
-			}
-			log.info("\n\n{}", publicKey);
-			return pair;
+	private static SecretManager getSecretManager(Log logger, File workDir) {
+		var file = new File(workDir,  System.getProperty("atlas.keystore.file", "secrets.jks"));
+		var password = System.getProperty("atlas.keystore.password", "atlas-secrets");
+		try {
+			return new KeyStoreSecretManager(file, password);
+		} catch (SecretManagerException e) {
+			logger.error("Failed to create SecretManager", e);
+			System.exit(1);
+			return null;
 		}
 	}
 	

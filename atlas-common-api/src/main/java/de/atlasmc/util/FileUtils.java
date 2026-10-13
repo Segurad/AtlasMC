@@ -23,15 +23,14 @@ import de.atlasmc.util.configuration.ConfigurationSection;
 
 public class FileUtils {
 	
-	public static final boolean CONFIG_OVERRIDE;
+	/**
+	 * Whether or not configurations should be overwritten
+	 */
+	public static final boolean CONFIG_OVERRIDE = Boolean.getBoolean("atlas.config.override");
 	
 	public static final FileFilter 
 	JSON_FILE_FILTER = new ExtensionFileFilter("json"),
 	YAML_FILE_FILTER = new ExtensionFileFilter("yml", "yaml");
-	
-	static {
-		CONFIG_OVERRIDE = Boolean.getBoolean("atlas.config.override");
-	}
 	
 	public static File extractResource(File dest, String resource) throws IOException {
 		return extractResource(dest, resource, CONFIG_OVERRIDE);
@@ -49,17 +48,18 @@ public class FileUtils {
 	}
 	
 	public static File extractResource(File dest, String resource, boolean override, Class<?> caller) throws IOException {
-		if (dest.exists()) {
-			if (override) {
-				dest.delete();
-			} else {
-				return dest;
+		try (InputStream resourceStream = caller.getResourceAsStream(resource)) {
+			if (resourceStream == null)
+				throw new FileNotFoundException("Resource not found: " + resource);
+			if (dest.exists()) {
+				if (override) {
+					dest.delete();
+				} else {
+					return dest;
+				}
 			}
+			Files.copy(resourceStream, dest.toPath());
 		}
-		InputStream resourceStream = caller.getResourceAsStream(resource);
-		if (resourceStream == null)
-			throw new FileNotFoundException("Resource not found: " + resource);
-		Files.copy(resourceStream, dest.toPath());
 		return dest;
 	}
 	

@@ -2,6 +2,7 @@ package de.atlasmc.network.io.protocol;
 
 import de.atlasmc.io.AbstractPacket;
 import de.atlasmc.network.NetworkType;
+import de.atlasmc.network.io.RequestAction;
 
 public abstract class AbstractPacketRequestType extends AbstractPacket {
 	
@@ -16,21 +17,6 @@ public abstract class AbstractPacketRequestType extends AbstractPacket {
 	/**
 	 * Action for this request
 	 */
-	public Action action;
-
-	public static enum Action {
-		/**
-		 * Requests a type
-		 */
-		REQUEST,
-		/**
-		 * Requests and subscribes the type
-		 */
-		SUBSCRIBE,
-		/**
-		 * Unsubscribes the type
-		 */
-		UNSUBSCRIBE
-	}
+	public RequestAction action;
 	
 }

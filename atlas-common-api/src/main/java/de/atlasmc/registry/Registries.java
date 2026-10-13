@@ -100,7 +100,7 @@ public class Registries {
 	
 	public static void loadRegistries(Plugin plugin) {
 		Objects.requireNonNull(plugin, "plugin");
-		InputStream in = plugin.getResourceAsStream("/META-INF/atlas/registries.yml");
+		InputStream in = plugin.getResourceAsStream(RegistryHolderProcessor.RESOURCE_LOCATION);
 		if (in == null)
 			return;
 		Log logger = plugin.getLogger();
@@ -117,7 +117,7 @@ public class Registries {
 
 	public static void loadRegistryEntries(Plugin plugin) {
 		Objects.requireNonNull(plugin, "plugin");
-		InputStream in = plugin.getResourceAsStream("/META-INF/atlas/registry-entries.yml");
+		InputStream in = plugin.getResourceAsStream(RegistryValueProcessor.RESOURCE_LOCATION);
 		if (in == null)
 			return;
 		Log logger = plugin.getLogger();

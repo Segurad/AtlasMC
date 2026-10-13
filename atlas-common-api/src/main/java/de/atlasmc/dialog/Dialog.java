@@ -12,7 +12,7 @@ public interface Dialog extends NBTSerializable, Namespaced {
 	static final RegistryKey<Dialog> REGISTRY_KEY = Registries.getRegistryKey(Dialog.class);
 	
 	static final NBTCodec<Dialog>
-	NBT_HANDLER = NBTCodec
+	NBT_CODEC = NBTCodec
 					.builder(Dialog.class)
 					.searchKeyConstructor("type", Registries.getRegistry(DialogType.class), DialogType::createDialog, Dialog::getType)
 					.build();

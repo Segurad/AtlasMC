@@ -12,8 +12,6 @@
 		<module>atlas-node-api</module>
 		<module>atlas-node-core</module>
 		<module>atlas-network-core-common</module>
-		<module>atlas-network-core-master</module>
-		<module>atlas-network-core-minion</module>
 		<module>atlas-node-bootstrap</module>
 		<module>atlas-test</module>
 		<module>atlas-shade-plugin</module>

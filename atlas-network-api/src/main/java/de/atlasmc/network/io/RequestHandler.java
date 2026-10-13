@@ -1,15 +1,18 @@
 package de.atlasmc.network.io;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.util.annotation.NotNull;
 
 public interface RequestHandler<T> {
 	
+	@NotNull
 	Class<T> getType();
 	
 	/**
 	 * Codec for used by this handler
-	 * @return
+	 * @return codec
 	 */
+	@NotNull
 	StreamCodec<T> getCodec();
 	
 	/**

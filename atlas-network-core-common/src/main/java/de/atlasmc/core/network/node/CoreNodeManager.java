@@ -6,8 +6,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.core.network.CoreAtlasNode;
+import de.atlasmc.network.AtlasNode;
 import de.atlasmc.network.NodeManager;
 import de.atlasmc.tick.Tickable;
+import de.atlasmc.util.concurrent.future.Future;
 
 public class CoreNodeManager implements NodeManager, Tickable {
 	
@@ -31,6 +33,12 @@ public class CoreNodeManager implements NodeManager, Tickable {
 	public void tick() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Future<AtlasNode> loadNode(UUID uuid) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

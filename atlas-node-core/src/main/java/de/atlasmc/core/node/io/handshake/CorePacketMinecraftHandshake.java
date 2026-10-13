@@ -14,16 +14,19 @@ import de.atlasmc.io.protocol.handshake.HandshakePacketCodec;
 import de.atlasmc.node.event.socket.AsyncPlayerHandshakeEvent;
 import de.atlasmc.node.io.protocol.handshake.HandshakeData;
 import de.atlasmc.node.io.protocol.handshake.PacketMinecraftHandshake;
+import de.atlasmc.node.io.socket.NodeSocket;
 import io.netty.buffer.ByteBuf;
 
 public class CorePacketMinecraftHandshake extends HandshakePacketCodec<PacketMinecraftHandshake> {
 
 	@Override
 	public void handle(ConnectionHandler handler, PacketMinecraftHandshake packet) {
+		ServerSocketConnectionHandler h = (ServerSocketConnectionHandler) handler;
 		HandlerList.callEvent(
 				new AsyncPlayerHandshakeEvent(
-						true, 
-						(ServerSocketConnectionHandler) handler, 
+						true,
+						(NodeSocket) h.getSocket(),
+						h, 
 						new HandshakeData(
 								packet.getTimestamp(), 
 								packet.protocolVersion, 

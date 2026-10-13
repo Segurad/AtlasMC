@@ -10,9 +10,11 @@ import static de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_
 import static de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.ACTION_UPDATE_LISTED;
 
 import java.io.IOException;
+import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +30,6 @@ import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.node.Gamemode;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate;
 import de.atlasmc.node.io.protocol.play.PacketOutPlayerInfoUpdate.PlayerInfo;
-import de.atlasmc.util.EncryptionUtil;
 import de.atlasmc.util.codec.CodecContext;
 import de.atlasmc.util.enums.EnumUtil;
 import de.atlasmc.util.mojang.ProfileProperty;
@@ -67,7 +68,7 @@ public class CorePacketOutPlayerInfoUpdate implements PacketCodec<PacketOutPlaye
 				in.readBytes(rawKey);
 				PublicKey key = null;
 				try {
-					key = EncryptionUtil.publicKeyByBytes(rawKey);
+					key = publicKeyByBytes(rawKey);
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 					throw new ProtocolException("Exception while reading public key!", e);
 				}
@@ -92,6 +93,12 @@ public class CorePacketOutPlayerInfoUpdate implements PacketCodec<PacketOutPlaye
 				}
 			}
 		}
+	}
+	
+	private static PublicKey publicKeyByBytes(byte[] data) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		KeyFactory kf = KeyFactory.getInstance("RSA");
+		X509EncodedKeySpec publicSpec = new X509EncodedKeySpec(data);
+		return kf.generatePublic(publicSpec);
 	}
 
 	@Override

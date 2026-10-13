@@ -1,7 +1,6 @@
 package de.atlasmc.core.network.io;
 
 import de.atlasmc.network.NetworkType;
-import de.atlasmc.network.io.protocol.AbstractPacketRequestType.Action;
 import de.atlasmc.util.concurrent.future.CompletableFuture;
 
 public class CoreRequestFuture<V> extends CompletableFuture<V> {

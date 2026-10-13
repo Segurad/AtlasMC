@@ -1,7 +1,6 @@
 package de.atlasmc;
 
 import java.io.File;
-import java.security.KeyPair;
 
 import de.atlasmc.datarepository.DataRepositoryHandler;
 import de.atlasmc.log.Log;
@@ -10,6 +9,7 @@ import de.atlasmc.plugin.PluginManager;
 import de.atlasmc.scheduler.Scheduler;
 import de.atlasmc.tick.AtlasThread;
 import de.atlasmc.util.Builder;
+import de.atlasmc.util.secrets.SecretManager;
 
 public final class AtlasBuilder implements Builder<Boolean> {
 
@@ -17,7 +17,7 @@ public final class AtlasBuilder implements Builder<Boolean> {
 	private Log logger;
 	private File workDir;
 	private PluginManager pluginManager;
-	private KeyPair keyPair;
+	private SecretManager secrets;
 	private DataRepositoryHandler dataHandler;
 	private AtlasThread<Void> mainThread;
 	private Plugin system;
@@ -64,12 +64,12 @@ public final class AtlasBuilder implements Builder<Boolean> {
 		return this;
 	}
 
-	public KeyPair getKeyPair() {
-		return keyPair;
+	public SecretManager getSecretManager() {
+		return secrets;
 	}
-
-	public AtlasBuilder setKeyPair(KeyPair keyPair) {
-		this.keyPair = keyPair;
+	
+	public AtlasBuilder setSecretManager(SecretManager secrets) {
+		this.secrets = secrets;
 		return this;
 	}
 

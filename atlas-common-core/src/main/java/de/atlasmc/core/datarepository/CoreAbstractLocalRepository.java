@@ -27,7 +27,6 @@ import de.atlasmc.util.concurrent.future.Future;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.file.YamlConfiguration;
 import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
-import de.atlasmc.util.reference.WeakReference1;
 
 public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository implements LocalRepository, CacheHolder {
 	
@@ -35,7 +34,7 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 	private final File namespaceFile;
 	protected final Path dirPath; 
 	protected final Map<String, CoreLocalNamespace> namespaces;
-	protected final Map<NamespacedKey, WeakReference1<CoreRepositoryEntry, NamespacedKey>> entryCache;
+	protected final Map<NamespacedKey, CachedEntry> entryCache;
 	private final ReferenceQueue<Object> refQueue = new ReferenceQueue<Object>();
 	
 	private YamlConfiguration namespacesConfig;
@@ -139,7 +138,7 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 		} catch (IOException e) {
 			return new CompleteFuture<>(e);
 		}
-		entryCache.put(key, new WeakReference1<>(entry, refQueue, key));
+		entryCache.put(key, new CachedEntry(entry, refQueue, key));
 		return CompleteFuture.of(entry);
 	}
 	
@@ -155,7 +154,7 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 		} catch (IOException e) {
 			throw new RepositoryException("Error while loading entry: " + key, e);
 		}
-		entryCache.put(key, new WeakReference1<>(entry, refQueue, key));
+		entryCache.put(key, new CachedEntry(entry, refQueue, key));
 		return entry;
 	}
 	
@@ -235,12 +234,11 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 		return ns.update(entry, readonly);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void cleanUp() {
-		WeakReference1<?, NamespacedKey> ref = null;
-		while ((ref = (WeakReference1<?, NamespacedKey>) refQueue.poll()) != null) {
-			entryCache.remove(ref.value1, ref);
+		CachedEntry ref = null;
+		while ((ref = (CachedEntry) refQueue.poll()) != null) {
+			entryCache.remove(ref.key, ref);
 		}
 	}
 	
@@ -273,6 +271,17 @@ public abstract class CoreAbstractLocalRepository extends CoreAbstractRepository
 		namespaces.remove(namespace.getNamespace());
 		namespacesConfig.remove(namespace.getNamespace());
 		namespacesConfig.save(namespaceFile);
+	}
+	
+	private static class CachedEntry extends WeakReference<CoreRepositoryEntry> {
+
+		private final NamespacedKey key;
+		
+		public CachedEntry(CoreRepositoryEntry referent, ReferenceQueue<? super CoreRepositoryEntry> q, NamespacedKey key) {
+			super(referent, q);
+			this.key = key;
+		}
+		
 	}
 	
 }

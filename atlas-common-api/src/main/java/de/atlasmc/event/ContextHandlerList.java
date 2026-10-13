@@ -79,28 +79,41 @@ public class ContextHandlerList<T> extends HandlerList {
 	@Override
 	public synchronized void unregisterListener(Listener listener) {
 		Objects.requireNonNull("listener");
-		modLock.lock();
-		globalExecutors = super.internalUnregister(listener, globalExecutors);
-		super.internalUnregister(listener, contextExecutors);
-		modLock.unlock();
+		try {
+			modLock.lock();
+			globalExecutors = super.internalUnregister(listener, globalExecutors);
+			super.internalUnregister(listener, contextExecutors);
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 	@Override
 	public synchronized void unregisterAllListener(Plugin plugin) {
 		Objects.requireNonNull("plugin");
-		modLock.lock();
-		globalExecutors = super.internalUnregister(plugin, globalExecutors, true);
-		super.internalUnregister(plugin, contextExecutors, true);
-		modLock.unlock();
+		try {
+			modLock.lock();
+			if (defaultExecutor != null && defaultExecutor.plugin.getPlugin() == plugin)
+				defaultExecutor = null;
+			globalExecutors = super.internalUnregister(plugin, globalExecutors, true);
+			super.internalUnregister(plugin, contextExecutors, true);
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 	@Override
 	public synchronized void unregisterListener(PluginHandle plugin) {
 		Objects.requireNonNull("plugin");
-		modLock.lock();
-		globalExecutors = super.internalUnregister(plugin, globalExecutors, false);
-		super.internalUnregister(plugin, contextExecutors, false);
-		modLock.unlock();
+		try {
+			modLock.lock();
+			if (defaultExecutor != null && defaultExecutor.plugin == plugin)
+				defaultExecutor = null;
+			globalExecutors = super.internalUnregister(plugin, globalExecutors, false);
+			super.internalUnregister(plugin, contextExecutors, false);
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 }

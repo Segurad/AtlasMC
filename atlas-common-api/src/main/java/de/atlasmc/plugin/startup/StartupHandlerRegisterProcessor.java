@@ -33,8 +33,10 @@ import de.atlasmc.util.configuration.file.YamlConfigurationFactory;
 
 @SupportedAnnotationTypes({"de.atlasmc.plugin.startup.StartupHandlerRegister"})
 @SupportedSourceVersion(SourceVersion.RELEASE_25)
-public class StartupHandlerRegisterProcessor extends AbstractProcessor {
+public final class StartupHandlerRegisterProcessor extends AbstractProcessor {
 
+	public static final String RESOURCE_LOCATION = "/META-INF/atlas/startup-handlers.yml";
+	
 	private Configuration startup;
 	
 	@Override
@@ -80,7 +82,7 @@ public class StartupHandlerRegisterProcessor extends AbstractProcessor {
 		if (startup.getKeys().isEmpty())
 			return;
 		Filer filter = processingEnv.getFiler();
-		String path = "META-INF/atlas/startup-handlers.yml";
+		String path = RESOURCE_LOCATION.substring(1);
 		YamlConfiguration startupCfg = null;
 		try {
 			FileObject file = filter.getResource(StandardLocation.CLASS_OUTPUT, "", path);
