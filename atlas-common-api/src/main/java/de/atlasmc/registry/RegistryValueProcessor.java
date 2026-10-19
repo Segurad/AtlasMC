@@ -2,7 +2,6 @@ package de.atlasmc.registry;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -86,8 +85,9 @@ public final class RegistryValueProcessor extends AbstractProcessor {
 		YamlConfiguration registryCfg = null;
 		try {
 			FileObject file = filter.getResource(StandardLocation.CLASS_OUTPUT, "", path);
-			InputStream in = file.openInputStream();
-			registryCfg = YamlConfigurationFactory.INSTANCE.load(in);
+			try (InputStream in = file.openInputStream()) {
+				registryCfg = YamlConfigurationFactory.INSTANCE.load(in);
+			}
 		} catch(IOException e) {
 			// no file present
 		}
@@ -121,8 +121,9 @@ public final class RegistryValueProcessor extends AbstractProcessor {
 			return;
 		try {
 			FileObject file = filter.createResource(StandardLocation.CLASS_OUTPUT, "", path);
-			OutputStream out = file.openOutputStream();
-			registryCfg.save(out);
+			try (var out = file.openOutputStream()) {
+				registryCfg.save(out);
+			}
 		} catch (IOException e) {
 			processingEnv.getMessager().printMessage(Kind.ERROR, "Unable to create " + path + ", " + e);
 			return;

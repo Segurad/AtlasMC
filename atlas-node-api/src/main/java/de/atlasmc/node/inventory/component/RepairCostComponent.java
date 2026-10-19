@@ -1,17 +1,19 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.PrimitiveFieldCodecs;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface RepairCostComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<RepairCostComponent>
-	NBT_CODEC = NBTCodec
-					.builder(RepairCostComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.intField(ComponentType.REPAIR_COST.getNamespacedKey(), RepairCostComponent::getRepairCost, RepairCostComponent::setRepairCost, 0)
-					.build();
+	NBT_CODEC = PrimitiveFieldCodecs
+				.buildInt(RepairCostComponent.class)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(RepairCostComponent::getRepairCost)
+				.setter(RepairCostComponent::setRepairCost)
+				.build();
 	
 	int getRepairCost();
 	

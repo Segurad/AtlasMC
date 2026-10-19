@@ -12,9 +12,7 @@ public interface WritableBookContentComponent extends BookContentComponent<Strin
 	NBT_CODEC = NBTCodec
 					.builder(WritableBookContentComponent.class)
 					.include(BookContentComponent.NBT_CODEC)
-					.beginComponent(ComponentType.WRITABLE_BOOK_CONTENT.getNamespacedKey())
 					.codecList("pages", WritableBookContentComponent::hasPages, WritableBookContentComponent::getPages, Filterable.filterableCodec(NBTCodecs.STRING))
-					.endComponent()
 					.build();
 
 	@Override

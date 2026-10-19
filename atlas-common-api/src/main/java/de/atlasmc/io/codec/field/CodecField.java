@@ -15,7 +15,7 @@ public class CodecField<T, V> extends AbstractObjectField<T, V> {
 	
 	public CodecField(Function<T, V> get, BiConsumer<T, V> set, StreamCodec<V> codec) {
 		super(get, set);
-		this.codec = Objects.requireNonNull(codec);
+		this.codec = Objects.requireNonNull(codec, "codec");
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class CodecField<T, V> extends AbstractObjectField<T, V> {
 
 	@Override
 	public void deserialize(T type, ByteBuf buf, CodecContext context) throws IOException {
-		V value = codec.deserialize(buf);
+		V value = codec.deserialize(buf, context);
 		set.accept(type, value);
 	}
 

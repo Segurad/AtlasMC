@@ -54,10 +54,8 @@ public class Commands {
 	}
 	
 	public static void register(Command cmd, Plugin plugin) {
-		if (cmd == null)
-			throw new IllegalArgumentException("Command can not be null!");
-		if (plugin == null)
-			throw new IllegalArgumentException("Plugin can not be null!");
+		Objects.requireNonNull(cmd, "cmd");
+		Objects.requireNonNull(plugin, "plugin");		
 		if (commands.containsKey(cmd.getName()))
 			throw new IllegalArgumentException("Command with the given name already registered: " + cmd.getName());
 		commands.putIfAbsent(cmd.getName(), cmd);
@@ -88,9 +86,7 @@ public class Commands {
 	 * @throws ConfigurationException
 	 */
 	public static Command loadCommand(ConfigurationSection config) {
-		if (config == null)
-			throw new IllegalArgumentException("config can not be null!");
-		String cmdName = config.getString("name");
+		String cmdName = config.getString("name"); // implicit null
 		if (cmdName == null)
 			throw new ConfigurationException("\"name\" is not defined!", config);
 		Command command = new Command(cmdName);
@@ -136,7 +132,7 @@ public class Commands {
 	public static Collection<Command> loadCommands(File file) throws IOException {
 		Objects.requireNonNull(file, "file");
 		YamlConfiguration config = YamlConfigurationFactory.INSTANCE.load(file);
-		List<ConfigurationSection> rawCommands = config.getListOfType("commands", ConfigurationSection.class);
+		List<ConfigurationSection> rawCommands = config.getListOfType("commands", ConfigurationSection.class, List.of());
 		List<Command> commands = new ArrayList<>();
 		for (ConfigurationSection rawCommand : rawCommands) {
 			Command command = loadCommand(rawCommand);
@@ -243,14 +239,14 @@ public class Commands {
 		VarArgParser<?> parser = ConfigurationSerializable.deserialize(parserCfg, parserClass);
 		arg.setParser(parser);
 		// Load suggestion type
-		Object rawSuggestionType = config.getString("suggestion");
+		Object rawSuggestionType = config.get("suggestion");
 		if (rawSuggestionType != null) {
 			String suggestionKey = null;
 			ConfigurationSection suggestionCfg = null;
-			if (rawParser instanceof String key) {
+			if (rawSuggestionType instanceof String key) {
 				suggestionKey = key;
 				suggestionCfg = Configuration.of();
-			} else if (rawParser instanceof ConfigurationSection suggestionConfig) {
+			} else if (rawSuggestionType instanceof ConfigurationSection suggestionConfig) {
 				suggestionKey = suggestionConfig.getString("type");
 				suggestionCfg = suggestionConfig;
 			}
@@ -331,16 +327,19 @@ public class Commands {
 			for (String alias : aliases)
 				commandByAlias.remove(alias, cmd);
 		}
+		for (var entry : pluginCommands.entrySet()) {
+			entry.getValue().remove(cmd);
+		}
 		return true;
 	}
 	
 	public static CommandContext parseCommand(CommandSender sender, String command) {
-		if (sender == null)
-			throw new IllegalArgumentException("Sender can not be null!");
-		if (command == null)
-			throw new IllegalArgumentException("Command can not be unll!");
+		Objects.requireNonNull(sender, "sender");
+		Objects.requireNonNull(command, "command");
 		CommandStringReader reader = new CommandStringReader(command);
-		String rawCommand = reader.readUnquotedString();
+		String rawCommand = reader.tryReadUnquotedString();
+		if (rawCommand == null)
+			throw new CommandNotFoundException(command);
 		Command cmd = commands.get(rawCommand);
 		if (cmd == null)
 			cmd = commandByAlias.get(rawCommand);
@@ -359,7 +358,7 @@ public class Commands {
 			// lookup literals
 			if (currentArg.hasLiteralArgs()) {
 				
-				String rawArg = reader.readUnquotedString();
+				String rawArg = reader.tryReadUnquotedString();
 				LiteralCommandArg next = currentArg.getLiteralArg(rawArg);
 				if (next != null) {
 					String key = next.getArgKey();
@@ -411,11 +410,13 @@ public class Commands {
 		commands.sort((a, b) -> {
 			return a.getName().compareTo(b.getName());
 		});
-		int first = (page - 1) * linesPerPage;
-		int maxPages = Math.ceilDiv(commands.size(), linesPerPage);
-		first = Math.clamp(first, 0, commands.size()-1);
-		final int size = ((commands.size()-first) % linesPerPage) + 1;
-		List<Chat> lines = new ArrayList<>(size);
+		final int total = commands.size();
+		final int maxPages = Math.max(1, Math.ceilDiv(total, linesPerPage));
+		if (page < 1 || page > maxPages)
+		    throw new IllegalArgumentException("Page must be between 1 and " + maxPages + ": " + page);
+		final int first = (page - 1) * linesPerPage;
+		final int count = first >= total ? 0 : Math.min(linesPerPage, total - first);
+		List<Chat> lines = new ArrayList<>(count + 1);
 		lines.add(chat(
 				text("--- ").setColor(ChatColor.DARK_GRAY), 
 				text("Help").setColor(ChatColor.RED), 
@@ -428,8 +429,8 @@ public class Commands {
 				text("/").setColor(ChatColor.DARK_GRAY),
 				text(Integer.toString(maxPages)).setColor(ChatColor.RED),
 				text("] ---").setColor(ChatColor.DARK_GRAY)));
-		for (int i = 1; i < size; i++) {
-			Command cmd = commands.get(first++);
+		for (int i = 0; i < count; i++) {
+			Command cmd = commands.get(first+i);
 			String description = cmd.getCommandDescription();
 			if (description == null)
 				description = "-";

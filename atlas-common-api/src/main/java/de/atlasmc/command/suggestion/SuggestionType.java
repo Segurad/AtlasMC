@@ -12,9 +12,13 @@ public interface SuggestionType extends Namespaced, ConfigurationSerializable {
 	
 	public static final SuggestionType 
 	/**
+	 * Suggests ask server
+	 */
+	ASK_SERVER = new SimpleSuggestionType(NamespacedKey.of("minecraft:ask_server")),
+	/**
 	 * Suggests all available recipes
 	 */
-	ALL_RECIPES = new SimpleSuggestionType(NamespacedKey.of("minecraft:ask_recipes")),
+	ALL_RECIPES = new SimpleSuggestionType(NamespacedKey.of("minecraft:all_recipes")),
 	/**
      * Suggests all available sounds
      */

@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.NamespacedKey;
+import de.atlasmc.nbt.codec.CodecFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.util.annotation.NotNull;
 
@@ -11,11 +12,12 @@ public interface IdentifierComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<IdentifierComponent>
-	NBT_CODEC = NBTCodec
-					.builder(IdentifierComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.codec(ComponentType.IDENTIFIER.getNamespacedKey(), IdentifierComponent::getIdentifier, IdentifierComponent::setIdentifier, NamespacedKey.NBT_CODEC)
-					.build();
+	NBT_CODEC = CodecFieldCodec
+				.builder(IdentifierComponent.class, NamespacedKey.NBT_CODEC)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(IdentifierComponent::getIdentifier)
+				.setter(IdentifierComponent::setIdentifier)
+				.build();
 	
 	void setIdentifier(NamespacedKey id);
 	

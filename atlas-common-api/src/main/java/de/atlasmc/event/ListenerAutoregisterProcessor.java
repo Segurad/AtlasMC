@@ -64,8 +64,9 @@ public final class ListenerAutoregisterProcessor extends AbstractProcessor {
 		YamlConfiguration listenersCfg = null;
 		try {
 			FileObject file = filer.getResource(StandardLocation.CLASS_OUTPUT, "", path);
-			InputStream in = file.openInputStream();
-			listenersCfg = YamlConfigurationFactory.INSTANCE.load(in);
+			try (InputStream in = file.openInputStream()) {
+				listenersCfg = YamlConfigurationFactory.INSTANCE.load(in);
+			}
 		} catch(IOException e) {
 			// no file present
 		}

@@ -1,6 +1,7 @@
 package de.atlasmc.util.map.key;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class CharKeyBuffer extends CharKey {
 
@@ -18,7 +19,8 @@ public class CharKeyBuffer extends CharKey {
 	}
 	
 	public CharKeyBuffer(CharKey key) {
-		buf = Arrays.copyOf(key.getBuf(), key.length());
+		buf = Arrays.copyOfRange(key.getBuf(), key.getOffset(), key.getOffset() + key.length());
+		length = key.length();
 	}
 	
 	public CharKeyBuffer(char[] buf) {
@@ -27,6 +29,7 @@ public class CharKeyBuffer extends CharKey {
 	
 	public CharKeyBuffer(char[] buf, int offset, int length) {
 		buf = Arrays.copyOfRange(buf, offset, offset+length);
+		this.length = length;
 	}
 	
 	public CharKeyBuffer(CharSequence sequence) {
@@ -43,7 +46,8 @@ public class CharKeyBuffer extends CharKey {
 		if (length <= 0)
 			return;
 		ensureSize(length);
-		for (int i = offset; i < length; i++)
+		final var end = offset + length;
+		for (int i = offset; i < end; i++)
 			buf[this.length++] = sequence.charAt(i);
 	}
 	
@@ -81,8 +85,7 @@ public class CharKeyBuffer extends CharKey {
 
 	@Override
 	public char charAt(int index) {
-		if (index > length || index < 0)
-			throw new ArrayIndexOutOfBoundsException(index);
+		Objects.checkIndex(index, length);
 		return buf[index];
 	}
 

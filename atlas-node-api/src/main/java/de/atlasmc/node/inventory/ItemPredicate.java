@@ -24,8 +24,8 @@ public class ItemPredicate implements NBTSerializable, ItemComponentHolder, Pred
 					.builder(ItemPredicate.class)
 					.defaultConstructor(ItemPredicate::new)
 					.codec("items", ItemPredicate::getItems, ItemPredicate::setItems, DataSet.nbtCodec(ItemType.REGISTRY_KEY))
-					.codec("count", ItemPredicate::getCount, ItemPredicate::setCount, NBTCodecs.INT)
 					.codec("count", ItemPredicate::getRange, ItemPredicate::setRange, IntRange.NBT_CODEC)
+					.codec("count", ItemPredicate::getCount, ItemPredicate::setCount, NBTCodecs.INT)
 					.include(ItemComponentHolder.NBT_CODEC)
 					.mapTypeToCodec("predicates", ItemPredicate::hasPredicates, ItemPredicate::getPredicates, ItemComponentPredicate.NBT_HANDLER, ItemComponentPredicate::getType)
 					.build();

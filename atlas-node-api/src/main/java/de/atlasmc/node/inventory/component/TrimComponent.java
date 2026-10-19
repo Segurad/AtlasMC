@@ -18,10 +18,8 @@ public interface TrimComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(TrimComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.TRIM.getNamespacedKey())
 					.codec("pattern", TrimComponent::getTrimMaterial, TrimComponent::setTrimMaterial, Registries.registryValueNBTCodec(TrimMaterial.REGISTRY_KEY))
 					.codec("material", TrimComponent::getTrimPattern, TrimComponent::setTrimPattern, Registries.registryValueNBTCodec(TrimPattern.REGISTRY_KEY))
-					.endComponent()
 					.build();
 	
 	TrimMaterial getTrimMaterial();

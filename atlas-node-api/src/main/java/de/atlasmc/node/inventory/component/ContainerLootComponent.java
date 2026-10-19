@@ -13,9 +13,7 @@ public interface ContainerLootComponent extends ItemComponent, LootTableHolder {
 	NBT_CODEC = NBTCodec
 					.builder(ContainerLootComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.CONTAINER_LOOT.getNamespacedKey())
 					.include(LootTableHolder.NBT_CODEC)
-					.endComponent()
 					.build();
 	
 	@NotNull

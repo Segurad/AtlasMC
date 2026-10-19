@@ -86,8 +86,9 @@ public final class StartupHandlerRegisterProcessor extends AbstractProcessor {
 		YamlConfiguration startupCfg = null;
 		try {
 			FileObject file = filter.getResource(StandardLocation.CLASS_OUTPUT, "", path);
-			InputStream in = file.openInputStream();
-			startupCfg = YamlConfigurationFactory.INSTANCE.load(in);
+			try (InputStream in = file.openInputStream()) {
+				startupCfg = YamlConfigurationFactory.INSTANCE.load(in);
+			}
 		} catch(IOException e) {
 			// no file present
 		}
@@ -114,8 +115,9 @@ public final class StartupHandlerRegisterProcessor extends AbstractProcessor {
 			return;
 		try {
 			FileObject file = filter.createResource(StandardLocation.CLASS_OUTPUT, "", path);
-			OutputStream out = file.openOutputStream();
-			startupCfg.save(out);
+			try (OutputStream out = file.openOutputStream()) {
+				startupCfg.save(out);
+			}
 		} catch (IOException e) {
 			processingEnv.getMessager().printMessage(Kind.ERROR, "Unable to create " + path + ", " + e);
 			return;

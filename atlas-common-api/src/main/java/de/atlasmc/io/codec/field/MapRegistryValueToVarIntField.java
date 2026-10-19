@@ -28,6 +28,7 @@ public class MapRegistryValueToVarIntField<T, K extends IDHolder> extends Abstra
 			return true;
 		}
 		final var map = get.apply(type);
+		PacketUtil.writeVarInt(map.size(), buf);
 		for (var entry : map.object2IntEntrySet()) {
 			PacketUtil.writeVarInt(entry.getKey().getID(), buf);
 			PacketUtil.writeVarInt(entry.getIntValue(), buf);

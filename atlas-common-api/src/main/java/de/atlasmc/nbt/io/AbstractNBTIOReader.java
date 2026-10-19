@@ -16,6 +16,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 
 	private final boolean unnamedRoot;
 	private byte[] nameBuf = null;
+	private CharKeyBuffer stringBuf;
 
 	public AbstractNBTIOReader(boolean unnamedRoot) {
 		this.unnamedRoot = unnamedRoot;
@@ -281,10 +282,13 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	public String readStringTag() throws IOException {
 		prepareTag();
 		ensureTag(TagType.STRING);
-		byte[] buffer = new byte[ioReadShort()];
-		ioReadBytes(buffer);
+		CharKeyBuffer buf = stringBuf;
+		if (buf == null)
+			buf = stringBuf = new CharKeyBuffer();
+		readName(buf); // NBT strings are modified UTF-8 like names
+		final String value = buf.toString();
 		tagConsumed();
-		return new String(buffer);
+		return value;
 	}
 
 	@Override
@@ -342,9 +346,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 			return uuid;
 		}
 		case STRING: {
-			UUID uuid = UUID.fromString(readStringTag());
-			tagConsumed();
-			return uuid;
+			return UUID.fromString(readStringTag()); // readStringTag consumes the tag
 		}
 		// list of int will be ignored
 		default:
@@ -390,6 +392,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 				}
 				skipTag(true);
 			}
+			break;
 		case DOUBLE:
 			skipTag(8, skipPrepare);
 			break;
@@ -426,7 +429,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 			skipTag(2, skipPrepare);
 			break;
 		case STRING:
-			skipTag(ioReadShort(), skipPrepare);
+			skipTag(ioReadShort() & 0xFFFF, skipPrepare);
 			break;
 		case TAG_END:
 			readNextEntry(skipPrepare);
@@ -457,6 +460,7 @@ public abstract class AbstractNBTIOReader extends AbstractNBTStreamReader {
 	public void close() {
 		super.close();
 		nameBuf = null;
+		stringBuf = null;
 	}
 
 	/*

@@ -229,7 +229,7 @@ public interface ConfigurationSection {
 				}
 			} else {
 				if (!replace && dest.contains(key))
-					return;
+					continue;
 				dest.set(key, value);
 			}
 		}

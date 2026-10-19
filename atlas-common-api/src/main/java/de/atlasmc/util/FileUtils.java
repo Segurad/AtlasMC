@@ -103,6 +103,10 @@ public class FileUtils {
 		final Log log = plugin.getLogger();
 		for (String rawExtract : files) {
 			int delimeter = rawExtract.indexOf(':');
+			if (delimeter == -1) {
+				log.error("Invalid extraction format missing \":\" in: " + rawExtract);
+				continue;
+			}
 			String resourceSrc = rawExtract.substring(0, delimeter);
 			String resourceDest = rawExtract.substring(delimeter+1);
 			Path resourceDestPath = getSecurePath(destPath, resourceDest);
@@ -115,13 +119,16 @@ public class FileUtils {
 					continue;
 				}
 			}
-			InputStream in = plugin.getResourceAsStream(resourceSrc);
-			if (in == null) {
-				log.warn("Failed to extract resource: {} not found!", resourceSrc);
-				continue;
+			try (InputStream in = plugin.getResourceAsStream(resourceSrc)) {
+				if (in == null) {
+					log.warn("Failed to extract resource: {} not found!", resourceSrc);
+					continue;
+				}
+				Files.copy(in, resourceDestPath);
+				log.debug("Setup extracted resource: {}", resourceDestPath);
+			} catch (IOException e) {
+				log.error("Error while extracting resource: " + resourceSrc + " to: " + resourceDest, e);
 			}
-			Files.copy(in, resourceDestPath);
-			log.debug("Setup extracted resource: {}", resourceDestPath);
 		}
 	}
 	
@@ -134,7 +141,7 @@ public class FileUtils {
 	 */
 	@Nullable
 	public static Path getSecurePath(@NotNull Path parent, @NotNull String child) {
-		Path path = parent.resolve(child);
+		Path path = parent.resolve(child).normalize();
 		if (parent.equals(path))
 			return null;
 		return path.startsWith(parent) ? path : null;

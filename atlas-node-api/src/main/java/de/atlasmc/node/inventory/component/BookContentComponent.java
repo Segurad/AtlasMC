@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.chat.Filterable;
 import de.atlasmc.util.annotation.NotNull;
@@ -17,14 +18,12 @@ public interface BookContentComponent<T> extends ItemComponent {
 	}
 	
 	default boolean addPage(@NotNull Filterable<T> page) {
-		if (page == null)
-			throw new IllegalArgumentException("Page can not be null!");
+		Objects.requireNonNull(page, "page");
 		return getPages().add(page);
 	}
 	
 	default boolean removePage(@NotNull T page) {
-		if (page == null)
-			throw new IllegalArgumentException("Page can not be null!");
+		Objects.requireNonNull(page, "page");
 		if (hasPages()) {
 			final var pages = getPages();
 			final int size = pages.size();

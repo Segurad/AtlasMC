@@ -100,7 +100,7 @@ public class MojangAPI {
 	
 	@NotNull
 	public Future<PlayerInfo> playerByUUIDAsync(UUID uuid) {
-		return playerByNameAync(uuid.toString());
+		return playerByUUIDAsync(uuid.toString());
 	}
 	
 	@NotNull
@@ -258,7 +258,7 @@ public class MojangAPI {
 		final var future = new CompletableFuture<V>();
 		client.sendAsync(request, BodyHandlers.ofString())
 			.whenComplete((response, exception) -> {
-				if (response == null) {
+				if (exception != null) {
 					future.complete(null, exception);
 					return;
 				}
@@ -268,8 +268,12 @@ public class MojangAPI {
 					future.complete(null);
 					return;
 				case HTTP_OK:
-					var json = JsonParser.parseString(response.body());
-					future.complete(serializer.apply(json.getAsJsonObject()), exception);
+					try {
+						var json = JsonParser.parseString(response.body());
+						future.complete(serializer.apply(json.getAsJsonObject()), exception);
+					} catch(Exception e) {
+						future.complete(null, e);
+					}
 					return;
 				case HTTP_UNSUPPORTED_MEDIA_TYPE:
 					future.complete(null, new MojangAPIException("Missing media Content-Type: \"application/json\"", response));

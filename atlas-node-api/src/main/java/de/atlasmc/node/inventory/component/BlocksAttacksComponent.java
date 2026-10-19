@@ -18,7 +18,6 @@ public interface BlocksAttacksComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(BlocksAttacksComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.BLOCKS_ATTACKS.getNamespacedKey())
 					.floatField("block_delay_seconds", BlocksAttacksComponent::getBlockDelay, BlocksAttacksComponent::setBlockDelay, 0)
 					.floatField("disable_cooldown_scale", BlocksAttacksComponent::getDisableCooldownScale, BlocksAttacksComponent::setDisableCooldownScale, 1)
 					.codecList("damage_reductions", BlocksAttacksComponent::hasReduction, BlocksAttacksComponent::getReduction, DamageReduction.NBT_CODEC)
@@ -26,7 +25,6 @@ public interface BlocksAttacksComponent extends ItemComponent {
 					.codec("block_sound", BlocksAttacksComponent::getBlockSound, BlocksAttacksComponent::setBlockSound, Sound.NBT_CODEC)
 					.codec("disabled_sound", BlocksAttacksComponent::getDisabledSound, BlocksAttacksComponent::setDisabledSound, Sound.NBT_CODEC)
 					.codec("bypassed_by", BlocksAttacksComponent::getBypassedBy, BlocksAttacksComponent::setBypassedBy, TagKey.NBT_CODEC)
-					.endComponent()
 					.build();
 	
 	float getBlockDelay();
@@ -73,7 +71,7 @@ public interface BlocksAttacksComponent extends ItemComponent {
 		public static final NBTCodec<ItemDamage>
 		NBT_CODEC = NBTCodec
 						.builder(ItemDamage.class)
-						.setRedirectAfterConstruction(false)
+						.redirectAfterConstruction(false)
 						.floatField("threshold", ItemDamage::getThreashold, ItemDamage::setThreashold, 0)
 						.floatField("base", ItemDamage::getBase, ItemDamage::setBase, 0)
 						.floatField("factor", ItemDamage::getFactor, ItemDamage::setFactor, 0)

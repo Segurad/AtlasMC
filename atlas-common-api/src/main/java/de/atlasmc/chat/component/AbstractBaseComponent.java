@@ -15,6 +15,7 @@ import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.io.SNBTWriter;
+import de.atlasmc.util.CloneException;
 import de.atlasmc.util.annotation.NotNull;
 
 public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> implements ChatComponent {
@@ -180,17 +181,12 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	}
 	
 	@Override
-	public boolean hasChatColor() {
-		return color != null;
-	}
-	
-	@Override
 	public boolean hasColor() {
-		return color != null;
+		return color  != null;
 	}
 	
 	@Override
-	public String toJsonText() {
+	public String toSNBTText() {
 		StringWriter w = new StringWriter();
 		SNBTWriter writer = new SNBTWriter(w);
 		try {
@@ -212,7 +208,7 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	
 	@Override
 	public String toString() {
-		return toJsonText();
+		return toSNBTText();
 	}
 	
 	@Override
@@ -244,7 +240,7 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 
 	@Override
 	public String toText() {
-		return toJsonText();
+		return toSNBTText();
 	}
 
 	@Override
@@ -261,7 +257,7 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 	}
 
 	@Override
-	public boolean hasJson() {
+	public boolean hasSNBT() {
 		return true;
 	}
 
@@ -277,7 +273,7 @@ public abstract class AbstractBaseComponent<T extends AbstractBaseComponent<T>> 
 		try {
 			copy = (AbstractBaseComponent<T>) super.clone();
 		} catch (CloneNotSupportedException e) {
-			return null;
+			throw new CloneException(e);
 		}
 		if (this.extra != null) {
 			copy.extra = new ArrayList<>(this.extra.size());

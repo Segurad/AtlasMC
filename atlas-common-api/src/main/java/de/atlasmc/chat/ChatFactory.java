@@ -9,18 +9,18 @@ import de.atlasmc.util.annotation.NotNull;
 
 public interface ChatFactory {
 	
-	Chat asChat(CharSequence json, CharSequence legacy);
+	Chat asChat(CharSequence snbt, CharSequence legacy);
 	
 	/**
-	 * {@inheritDoc ChatUtil#jsonFromLegacy(CharSequence, char)}
+	 * {@inheritDoc ChatUtil#legacyToSNBT(CharSequence, char)}
 	 */
-	String legacyToJson(CharSequence text, char formatPrefix);
+	String legacyToSNBT(CharSequence text, char formatPrefix);
 	
-	String jsonToLegacy(CharSequence text, char formatPrefix);
+	String snbtToLegacy(CharSequence text, char formatPrefix);
 	
 	ChatComponent legacyToComponent(CharSequence legacy, char formatPrefix);
 	
-	ChatComponent jsonToComponent(CharSequence json);
+	ChatComponent snbtToComponent(CharSequence snbt);
 	
 	@NotNull
 	String componentToRawText(ChatComponent component);
@@ -29,7 +29,7 @@ public interface ChatFactory {
 	
 	String componentToConsole(ChatComponent component);
 
-	String jsonToRawText(String json);
+	String snbtToRawText(String snbt);
 
 	String legacyToRawText(String legacy, char formatPrefix);
 

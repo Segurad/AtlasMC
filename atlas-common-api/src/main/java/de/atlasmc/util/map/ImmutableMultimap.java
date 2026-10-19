@@ -25,9 +25,8 @@ public class ImmutableMultimap<K, V> extends AbstractMultimap<K, V> implements M
 			return Map.of();
 		Entry<K, Collection<V>>[] entries = new Entry[map.size()];
 		int i = 0;
-		map.forEach((k, v) -> { 
-			entries[i] = new SimpleImmutableEntry<>(k, List.copyOf(v)); 
-		});
+		for (var entry : map.entrySet())
+			entries[i++] = new SimpleImmutableEntry<>(entry.getKey(), List.copyOf(entry.getValue())); 
 		return (Map<V, Collection<V>>) Map.ofEntries(entries);
 	}
 	

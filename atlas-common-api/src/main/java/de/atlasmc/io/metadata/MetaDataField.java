@@ -29,9 +29,12 @@ public class MetaDataField<T> {
 	}
 
 	public void validateData(T data) {
-		if (data == null && !type.isOptional())
+		if (data == null) {
+			if (type.isOptional())
+				return;
 			throw new IllegalArgumentException("Data can not be null for non optional Type!");
-		else if (!type.getTypeClass().isInstance(data))
+		}
+		if (!type.getTypeClass().isInstance(data))
 			throw new IllegalArgumentException("Data incompatible with Type!");
 	}
 

@@ -12,7 +12,7 @@ public interface AbstractBlockPredicateComponent extends ItemComponent {
 	public static final StreamCodec<AbstractBlockPredicateComponent>
 	STREAM_CODEC = StreamCodec
 					.builder(AbstractBlockPredicateComponent.class)
-					.listCodec(AbstractBlockPredicateComponent::hasPredicates, AbstractBlockPredicateComponent::getPredicates, BlockPredicate.STREAM_CODEC)
+					.codecList(AbstractBlockPredicateComponent::hasPredicates, AbstractBlockPredicateComponent::getPredicates, BlockPredicate.STREAM_CODEC)
 					.build();
 	
 	List<BlockPredicate> getPredicates();

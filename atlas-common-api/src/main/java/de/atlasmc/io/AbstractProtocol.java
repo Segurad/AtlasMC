@@ -2,6 +2,11 @@ package de.atlasmc.io;
 
 import java.util.Arrays;
 
+/**
+ * Abstract base class for Protocols. only support protocols with continues ids!
+ * @param <I>
+ * @param <O>
+ */
 public abstract class AbstractProtocol<I extends PacketServerbound, O extends PacketClientbound> implements Protocol {
 	
 	private final PacketCodec<?>[] packetIn;

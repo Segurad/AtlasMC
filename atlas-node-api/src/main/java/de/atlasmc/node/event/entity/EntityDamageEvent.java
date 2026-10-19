@@ -43,7 +43,7 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
 		NBT_CODEC = NBTCodec
 						.builder(DamageReduction.class)
 						.defaultConstructor(DamageReduction::new)
-						.setRedirectAfterConstruction(false)
+						.redirectAfterConstruction(false)
 						.codec("type", DamageReduction::getTypes, DamageReduction::setTypes, DataSet.nbtCodec(DamageType.REGISTRY_KEY))
 						.floatField("base", DamageReduction::getBase, DamageReduction::setBase, 0)
 						.floatField("factor", DamageReduction::getFactor, DamageReduction::setFactor, 0)

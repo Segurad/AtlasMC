@@ -74,7 +74,7 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 			return false;
 		Collection<V> c = map.get(key);
 		if (c == null)
-			c = map.put(key, createCollection(Math.max(values.size(), defaultCollectionCapacity)));
+			map.put(key, c = createCollection(Math.max(values.size(), defaultCollectionCapacity)));
 		return c.addAll(values);
 	}
 
@@ -85,7 +85,7 @@ public abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
 			return false;
 		Collection<V> c = map.get(key);
 		if (c == null)
-			c = map.put(key, createCollection(defaultCollectionCapacity));
+			map.put(key, c = createCollection(defaultCollectionCapacity));
 		boolean b = false;
 		for (V value : values) {
 			if (c.add(value))

@@ -10,7 +10,7 @@ import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 
-final class OrElseCodec<T> implements NBTCodec<T> {
+public final class OrElseCodec<T> implements NBTCodec<T> {
 
 	private final List<TagType> tags;
 	private final Class<?> clazz;
@@ -19,9 +19,9 @@ final class OrElseCodec<T> implements NBTCodec<T> {
 	
 	@SuppressWarnings("unchecked")
 	public OrElseCodec(Class<T> clazz, NBTCodec<? extends T> a, NBTCodec<? extends T> b) {
-		this.clazz = Objects.requireNonNull(clazz);
-		this.a = (NBTCodec<T>) Objects.requireNonNull(a);
-		this.b = (NBTCodec<T>) Objects.requireNonNull(b);
+		this.clazz = Objects.requireNonNull(clazz, "clazz");
+		this.a = (NBTCodec<T>) Objects.requireNonNull(a, "a");
+		this.b = (NBTCodec<T>) Objects.requireNonNull(b, "b");
 		var list = new ArrayList<>(a.getTags());
 		for (var tag : b.getTags()) {
 			if (!list.contains(tag))

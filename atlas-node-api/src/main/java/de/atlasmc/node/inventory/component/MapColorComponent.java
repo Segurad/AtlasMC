@@ -2,6 +2,7 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.Color;
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.CodecFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.util.annotation.NotNull;
 
@@ -9,11 +10,12 @@ public interface MapColorComponent extends ItemComponent {
 
 	@NotNull
 	public static final NBTCodec<MapColorComponent>
-	NBT_CODEC = NBTCodec
-					.builder(MapColorComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.codec(ComponentType.MAP_COLOR.getNamespacedKey(), MapColorComponent::getColor, MapColorComponent::setColor, Color.NBT_CODEC)
-					.build();
+	NBT_CODEC = CodecFieldCodec
+				.builder(MapColorComponent.class, Color.NBT_CODEC)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(MapColorComponent::getColor)
+				.setter(MapColorComponent::setColor)
+				.build();
 	
 	public static final StreamCodec<MapColorComponent>
 	STREAM_CODEC = StreamCodec

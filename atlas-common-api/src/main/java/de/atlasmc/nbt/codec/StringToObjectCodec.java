@@ -10,16 +10,16 @@ import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 
-final class StringToObjectCodec<V> implements NBTCodec<V> {
+public final class StringToObjectCodec<V> implements NBTCodec<V> {
 
 	private final Class<V> clazz;
 	private final Function<String, V> stringToObject;
 	private final Function<V, String> objectToString;
 	
 	public StringToObjectCodec(Class<V> clazz, Function<String, V> stringToObject, Function<V, String> objectToString) {
-		this.clazz = Objects.requireNonNull(clazz);
-		this.stringToObject = Objects.requireNonNull(stringToObject);
-		this.objectToString = Objects.requireNonNull(objectToString);
+		this.clazz = Objects.requireNonNull(clazz, "clazz");
+		this.stringToObject = Objects.requireNonNull(stringToObject, "stringToObject");
+		this.objectToString = Objects.requireNonNull(objectToString, "stringToObject");
 	}
 	
 	@Override

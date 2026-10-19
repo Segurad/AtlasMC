@@ -11,6 +11,7 @@ public class NBTComponent extends AbstractBaseComponent<NBTComponent> {
 	public static final NBTCodec<NBTComponent>
 	NBT_CODEC = NBTCodec
 					.builder(NBTComponent.class)
+					.include(AbstractBaseComponent.NBT_CODEC)
 					.codec("source", NBTComponent::getSource, NBTComponent::setSource, STRING)
 					.codec("nbt", NBTComponent::getNbtPath, NBTComponent::setNbtPath, STRING)
 					.boolField("interpret", NBTComponent::isInterpret, NBTComponent::setInterpret, false)

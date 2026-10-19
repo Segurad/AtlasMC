@@ -73,6 +73,8 @@ public class CompleteFuture<V> implements Future<V> {
 
 	@Override
 	public V get() throws InterruptedException, ExecutionException {
+		if (cause != null)
+			throw new ExecutionException(cause);
 		return result;
 	}
 

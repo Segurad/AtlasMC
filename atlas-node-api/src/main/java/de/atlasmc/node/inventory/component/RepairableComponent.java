@@ -12,9 +12,7 @@ public interface RepairableComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(RepairableComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.REPAIRABLE.getNamespacedKey())
 					.codec("items", RepairableComponent::getItems, RepairableComponent::setItems, DataSet.nbtCodec(ItemType.REGISTRY_KEY))
-					.endComponent()
 					.build();
 	
 	DataSet<ItemType> getItems();

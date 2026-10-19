@@ -2,19 +2,20 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.io.codec.StreamSerializable;
+import de.atlasmc.nbt.codec.CodecTags;
+import de.atlasmc.nbt.codec.ConstructAndRedirectFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.nbt.codec.constructor.FieldKeyRegistryConstructor;
 import de.atlasmc.util.OpenCloneable;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface ItemComponent extends NBTSerializable, StreamSerializable, OpenCloneable {
 	
 	@NotNull
-	public static final NBTCodec<ItemComponent> 
-	NBT_CODEC = NBTCodec
-					.builder(ItemComponent.class)
-					.fieldKeyRegistryConstructor(ComponentType.REGISTRY_KEY, ComponentType::createItemComponent)
-					.build();
+	public static final ConstructAndRedirectFieldCodec<ItemComponent> 
+	NBT_CODEC = new ConstructAndRedirectFieldCodec<>(ItemComponent.class, 
+						new FieldKeyRegistryConstructor<>(ComponentType.REGISTRY_KEY, ComponentType::createItemComponent), null, CodecTags.ALL);
 	
 	@NotNull
 	public static final StreamCodec<ItemComponent>

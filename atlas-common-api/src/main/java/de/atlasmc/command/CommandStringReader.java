@@ -1,6 +1,9 @@
 package de.atlasmc.command;
 
+import java.util.Objects;
+
 import de.atlasmc.util.annotation.NotNull;
+import de.atlasmc.util.annotation.Nullable;
 
 public class CommandStringReader {
 	
@@ -8,9 +11,7 @@ public class CommandStringReader {
 	private int cursor;
 	
 	public CommandStringReader(String command) {
-		if (command == null)
-			throw new IllegalArgumentException("Command can not be null!");
-		this.command = command;
+		this.command = Objects.requireNonNull(command);
 	}
 	
 	public String getCommand() {
@@ -22,8 +23,7 @@ public class CommandStringReader {
 	}
 	
 	public void setCursor(int cursor) {
-		if (cursor < 0 || cursor > command.length())
-			throw new IllegalArgumentException("Cursor must be between 0 and " + (command.length()-1) + ": " + cursor);
+		Objects.checkIndex(cursor, command.length());
 		this.cursor = cursor;
 	}
 	
@@ -160,7 +160,7 @@ public class CommandStringReader {
 			if (escaped) {
 				if (next == terminator || next == '\\') {
 					builder.append(next);
-					escaped = true;
+					escaped = false;
 				} else {
 					throw new CommandSyntaxException(command, cursor-1, "Invaid escaped char: " + next);
 				}
@@ -186,6 +186,27 @@ public class CommandStringReader {
 		}
 		skip();
 		return readStringUntil(next);
+	}
+	
+	/**
+	 * Same as {@link #readUnquotedString()} but does not throw a exception if it is not a unquoted string
+	 * @return
+	 */
+	@Nullable
+	public String tryReadUnquotedString() {
+		final int start = cursor;
+		if (!canRead())
+			return null;
+		if (!isValidUnquotedChar(peek()))
+			return null;
+		while (canRead() && isValidUnquotedChar(peek())) {
+			skip();
+		}
+		if (canRead() && !Character.isWhitespace(peek())) {
+			cursor = start;
+			return null;
+		}
+		return command.substring(start, cursor);
 	}
 	
 	@NotNull

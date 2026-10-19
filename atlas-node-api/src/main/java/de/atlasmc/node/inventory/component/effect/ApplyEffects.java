@@ -23,7 +23,7 @@ public interface ApplyEffects extends ComponentEffect {
 	STREAM_CODEC = StreamCodec
 				.builder(ApplyEffects.class)
 				.include(ComponentEffect.STREAM_CODEC)
-				.listCodec(ApplyEffects::hasEffects, ApplyEffects::getEffects, PotionEffect.STREAM_CODEC)
+				.codecList(ApplyEffects::hasEffects, ApplyEffects::getEffects, PotionEffect.STREAM_CODEC)
 				.floatValue(ApplyEffects::getProbability, ApplyEffects::setProbability)
 				.build();
 	

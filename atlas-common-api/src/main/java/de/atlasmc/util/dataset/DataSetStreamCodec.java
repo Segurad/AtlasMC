@@ -1,10 +1,12 @@
 package de.atlasmc.util.dataset;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.io.PacketUtil;
+import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.registry.ProtocolRegistryValue;
 import de.atlasmc.registry.RegistryKey;
@@ -53,21 +55,26 @@ final class DataSetStreamCodec<T extends ProtocolRegistryValue> implements Strea
 	public DataSet<T> deserialize(DataSet<T> value, ByteBuf input, CodecContext context) throws IOException {
 		int size = PacketUtil.readVarInt(input);
 		if (size == 0) {
-			Tag<T> tag = Tags.getTag(NamespacedKey.STREAM_CODEC.deserialize(null, input, null));
+			NamespacedKey key = NamespacedKey.STREAM_CODEC.deserialize(null, input, context);
+			Tag<T> tag = Tags.getTag(key);
+			if (tag == null)
+				throw new ProtocolException("Unknown tag: " + key);
 			return DataSet.of(tag);
 		}
 		size--;
+		if (size < 0 || size > input.readableBytes()) // each id needs at least one byte
+			throw new ProtocolException("Invalid data set size: " + size);
 		if (size == 0)
 			return DataSet.of();
 		if (size == 1)
 			return DataSet.of(registry.getValue(PacketUtil.readVarInt(input)));
-		var values = new ProtocolRegistryValue[size];
+		final ArrayList<T> values = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
-			values[i] = registry.getValue(PacketUtil.readVarInt(input));
+			T v = registry.getValue(PacketUtil.readVarInt(input));
+			if (v != null)
+				values.add(v);
 		}
-		@SuppressWarnings("unchecked")
-		DataSet<T> set = (DataSet<T>) DataSet.of(values);
-		return set;
+		return DataSet.of(values);
 	}
 
 }

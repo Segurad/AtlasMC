@@ -15,12 +15,12 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 
-final class MapNamespacedToInt<K extends Namespaced> implements NBTCodec<Object2IntMap<K>> {
+public final class MapNamespacedToIntCodec<K extends Namespaced> implements NBTCodec<Object2IntMap<K>> {
 
 	private final Function<String, K> keySupplier;
 	
-	public MapNamespacedToInt(Function<String, K> keySupplier) {
-		this.keySupplier = Objects.requireNonNull(keySupplier);
+	public MapNamespacedToIntCodec(Function<String, K> keySupplier) {
+		this.keySupplier = Objects.requireNonNull(keySupplier, "keySupplier");
 	}
 	
 	@Override

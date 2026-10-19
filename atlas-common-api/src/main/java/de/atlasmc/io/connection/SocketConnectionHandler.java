@@ -136,12 +136,21 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 		if (compressionThreshold == threshold)
 			return;
 		compressionThreshold = threshold;
-		var compressor = new PacketCompressor(threshold);
 		if (hasCompression()) {
+			
+			var compressor = new PacketCompressor(threshold);
 			channel.pipeline()
 				.replace(CHANNEL_PIPE_PACKET_COMPRESSOR,
 						CHANNEL_PIPE_PACKET_COMPRESSOR, 
 						compressor);
+			
+		}
+		if (hasDecompression()) {
+			var decompressor = new PacketDecompressor(threshold);
+			channel.pipeline()
+			.replace(CHANNEL_PIPE_PACKET_DECOMPRESSOR,
+					CHANNEL_PIPE_PACKET_DECOMPRESSOR, 
+					decompressor);
 		}
 	}
 	
@@ -165,7 +174,7 @@ public class SocketConnectionHandler extends AbstractConnectionHandler {
 		if (hasDecompression() == enable)
 			return;
 		if (enable) {
-			var decompressor = new PacketDecompressor();
+			var decompressor = new PacketDecompressor(compressionThreshold);
 			channel.pipeline()
 				.addAfter(CHANNEL_PIPE_PACKET_LENGTH_DECODER,
 						CHANNEL_PIPE_PACKET_DECOMPRESSOR, 

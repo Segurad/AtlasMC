@@ -16,7 +16,7 @@ import de.atlasmc.util.codec.CodecContext;
  * NBTCodec for fields of {@link TagType#COMPOUND} that map object to the fields name.
  * @param <V>
  */
-final class MapFieldNameToCodec<V> implements NBTCodec<Map<String, V>> {
+public final class MapFieldNameToCodec<V> implements NBTCodec<Map<String, V>> {
 
 	private final NBTCodec<V> codec;
 	

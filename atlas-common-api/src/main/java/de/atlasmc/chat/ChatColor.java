@@ -94,6 +94,15 @@ public enum ChatColor implements EnumName, IDHolder, ColorValue {
 		case UNDERLINE:
 			component.setUnderlined(true);
 			break;
+		case RESET:
+			component.setBold(false)
+				.setItalic(false)
+				.setObfuscated(false)
+				.setStrikethrough(false)
+				.setUnderlined(false)
+				.setColor(null)
+				.setShadowColor(null);
+			break;
 		default:
 			component.setColor(this);
 			break;

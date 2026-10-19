@@ -2,31 +2,20 @@ package de.atlasmc.nbt.codec;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Supplier;
 
-import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.TagType;
-import de.atlasmc.nbt.codec.constructor.Constructor;
 import de.atlasmc.nbt.codec.field.NBTCompoundField;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 
-public class NBTCodecImpl<T> implements NBTCodec<T> {
+public class NBTCodecImpl<T> extends AbstractCodec<T> {
 
-	private final Class<T> type;
-	private final boolean redirectAfterConstruction;
-	private final Constructor<T> constructor;
-	private final Supplier<T> defaultConstrcutor;
 	private final NBTCompoundField<T> fields;
 	private final boolean isField;
 	
 	public NBTCodecImpl(NBTCodecBuilder<T> builder) {
-		this.type = Objects.requireNonNull(builder.getType());
-		this.redirectAfterConstruction = builder.isRedirectAfterConstruction();
-		this.constructor = builder.getConstructor();
-		this.defaultConstrcutor = builder.getDefaultConstructor();
+		super(builder);
 		this.fields = builder.buildFields();
 		this.isField = builder.isField();
 	}
@@ -55,7 +44,7 @@ public class NBTCodecImpl<T> implements NBTCodec<T> {
 			@SuppressWarnings("unchecked")
 			NBTCodec<T> handler = (NBTCodec<T>) serializable.getNBTCodec();
 			if (handler != this) {
-				return handler.serialize(value, output, context);
+				return handler.serializePartial(value, output, context);
 			}
 		}
 		if (constructor != null)
@@ -72,38 +61,26 @@ public class NBTCodecImpl<T> implements NBTCodec<T> {
 	}
 	
 	@Override
-	public T deserializePartial(T value, NBTReader input, CodecContext context) throws IOException {
-		if (value == null) { // initialize value using constructor or default constructor
-			if (constructor != null)
-				value = constructor.construct(input, context);
-			if (value == null && defaultConstrcutor != null) {
-				value = defaultConstrcutor.get();
-				if (value == null)
-					throw new NBTException("Unable to construct type!");
-			}
-		}
+	public T deserializePartial(T value, NBTReader reader, CodecContext context) throws IOException {
+		if (value == null)
+			value = construct(reader, context);
 		// redirect if required for correct deserialization of child implementations
 		if (redirectAfterConstruction && value instanceof NBTSerializable serializable) {
 			@SuppressWarnings("unchecked")
 			NBTCodec<T> handler = (NBTCodec<T>) serializable.getNBTCodec();
 			if (handler != this) {
-				return handler.deserializePartial(value, input, context);
+				return handler.deserializePartial(value, reader, context);
 			}
 		}
-		fields.deserializePartial(value, input, context);
+		fields.deserializePartial(value, reader, context);
 		return value;
-	}
-
-	@Override
-	public Class<T> getType() {
-		return type;
 	}
 	
 	void addToBuilder(NBTCodecBuilder<T> builder) {
 		if (constructor != null)
-			builder.setConstructor(constructor);
-		if (defaultConstrcutor != null)
-			builder.defaultConstructor(defaultConstrcutor);
+			builder.constructor(constructor);
+		if (defaultConstructor != null)
+			builder.defaultConstructor(defaultConstructor);
 		for (var field : fields.getFields()) {
 			builder.addField(field);
 		}

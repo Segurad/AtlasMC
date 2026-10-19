@@ -18,7 +18,7 @@ import de.atlasmc.util.map.ArrayListMultimap;
 import de.atlasmc.util.map.Multimap;
 import de.atlasmc.util.map.key.CharKey;
 
-final class MultimapTypeToCodec<K extends Namespaced, V> implements NBTCodec<Multimap<K, V>> {
+public final class MultimapTypeToCodec<K extends Namespaced, V> implements NBTCodec<Multimap<K, V>> {
 
 	private final Function<NamespacedKey, K> keySupplier;
 	private final NBTCodec<V> codec;
@@ -51,7 +51,6 @@ final class MultimapTypeToCodec<K extends Namespaced, V> implements NBTCodec<Mul
 				writer.writeEndTag();
 			}
 		}
-		writer.writeEndTag();
 		return true;
 	}
 

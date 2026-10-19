@@ -179,8 +179,8 @@ public abstract class AbstractNBTStreamReader extends AbstractNBTReader {
 	@Override
 	public void mark() {
 		markDepth = depth;
+		markList = list;
 		if (list != null) {
-			markList = list;
 			list.mark();
 		}
 		markName = name.toString();

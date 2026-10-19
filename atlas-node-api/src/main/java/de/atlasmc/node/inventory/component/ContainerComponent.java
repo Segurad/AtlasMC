@@ -1,5 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.CodecCollectionFieldCodec;
+import de.atlasmc.nbt.codec.MapSearchedIndexToCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.ItemStack;
 import de.atlasmc.node.inventory.ItemType;
@@ -11,11 +13,12 @@ public interface ContainerComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<ContainerComponent>
-	NBT_CODEC = NBTCodec
-					.builder(ContainerComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.typeListSearchIntIndexField(ComponentType.CONTAINER.getNamespacedKey(), "slot", ContainerComponent::hasItems, ContainerComponent::getItems, ItemStack.NBT_CODEC)
-					.build();
+	NBT_CODEC = CodecCollectionFieldCodec
+				.builder(ContainerComponent.class, new MapSearchedIndexToCodec<>("slot", "item", ItemStack.NBT_CODEC))
+				.include(ItemComponent.NBT_CODEC)
+				.hasData(ContainerComponent::hasItems)
+				.getter(ContainerComponent::getItems)
+				.build();
 	
 	@NotNull
 	Int2ObjectMap<ItemStack> getItems();

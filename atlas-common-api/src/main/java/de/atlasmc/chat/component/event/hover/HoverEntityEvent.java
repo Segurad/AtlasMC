@@ -17,7 +17,7 @@ public class HoverEntityEvent implements HoverEvent {
 					.include(HoverEvent.NBT_HANDLER)
 					.codec("name", HoverEntityEvent::getName, HoverEntityEvent::setName, ChatComponent.NBT_CODEC)
 					.codec("id", HoverEntityEvent::getType, HoverEntityEvent::setType, NamespacedKey.NBT_CODEC)
-					.codec("uuid", HoverEntityEvent::getUUID, HoverEntityEvent::setUUUID, NBTCodecs.UUID_CODEC)
+					.codec("uuid", HoverEntityEvent::getUUID, HoverEntityEvent::setUUID, NBTCodecs.UUID_CODEC)
 					.build();
 	
 	private ChatComponent name;
@@ -49,7 +49,7 @@ public class HoverEntityEvent implements HoverEvent {
 		return uuid;
 	}
 	
-	public void setUUUID(UUID uuid) {
+	public void setUUID(UUID uuid) {
 		this.uuid = uuid;
 	}
 

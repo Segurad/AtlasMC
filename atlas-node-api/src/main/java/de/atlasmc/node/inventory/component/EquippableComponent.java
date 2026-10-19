@@ -19,7 +19,6 @@ public interface EquippableComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(EquippableComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.EQUIPPABLE.getNamespacedKey())
 					.codec("slot", EquippableComponent::getSlot, EquippableComponent::setSlot, EnumUtil.enumStringNBTCodec(EquipmentSlot.class))
 					.codec("equip_sound", EquippableComponent::getEquipSound, EquippableComponent::setEquipSound, Sound.NBT_CODEC, EnumSound.ITEM_ARMOR_EQUIP_GENERIC)
 					.codec("asset_id", EquippableComponent::getAssetID, EquippableComponent::setAssetID, NamespacedKey.NBT_CODEC)
@@ -29,7 +28,6 @@ public interface EquippableComponent extends ItemComponent {
 					.boolField("damage_on_hurt", EquippableComponent::isDamageOnHurt, EquippableComponent::setDamageOnHurt, true)
 					.boolField("equip_on_interact", EquippableComponent::isEquipOnInteract, EquippableComponent::setEquipOnInteract, true)
 					.codec("camera_overlay", EquippableComponent::getCameraOverlay, EquippableComponent::setCameraOverlay, NamespacedKey.NBT_CODEC)
-					.endComponent()
 					.build();
 	
 	@NotNull

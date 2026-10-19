@@ -18,12 +18,10 @@ public interface CustomModelDataComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(CustomModelDataComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.CUSTOM_MODEL_DATA.getNamespacedKey())
 					.codecCollection("floats", CustomModelDataComponent::hasFloats, CustomModelDataComponent::getFloats, NBTCodecs.FLOAT_LIST)
 					.codecCollection("flags", CustomModelDataComponent::hasFlags, CustomModelDataComponent::getFlags, NBTCodecs.BOOLEAN_LIST)
 					.codecList("strings", CustomModelDataComponent::hasStrings, CustomModelDataComponent::getStrings, NBTCodecs.STRING)
 					.codecCollection("colors", CustomModelDataComponent::hasColors, CustomModelDataComponent::getColors, NBTCodecs.INT_COLLECTION)
-					.endComponent()
 					.build();
 	
 	@NotNull

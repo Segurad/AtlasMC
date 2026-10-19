@@ -17,7 +17,6 @@ public interface BucketEntityDataComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(BucketEntityDataComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.BUCKET_ENTITY_DATA.getNamespacedKey())
 					.boolField("NoAI", BucketEntityDataComponent::hasNoAI, BucketEntityDataComponent::setNoAI, false)
 					.boolField("Silent", BucketEntityDataComponent::isSilent, BucketEntityDataComponent::setSilent, false)
 					.boolField("NoGravity", BucketEntityDataComponent::hasNoGravity, BucketEntityDataComponent::setNoGravity, false)
@@ -28,7 +27,6 @@ public interface BucketEntityDataComponent extends ItemComponent {
 					.codec("Variant", BucketEntityDataComponent::getVariant, BucketEntityDataComponent::setVariant, EnumUtil.enumIntNBTCodec(Variant.class))
 					.longField("HuntingCooldown", BucketEntityDataComponent::getHuntingCooldown, BucketEntityDataComponent::setHuntingCooldown, 0)
 					.codec("type", BucketEntityDataComponent::getSalmonType, BucketEntityDataComponent::setSalmonType, EnumUtil.enumStringNBTCodec(Type.class))
-					.endComponent()
 					.build();
 
 	@NotNull

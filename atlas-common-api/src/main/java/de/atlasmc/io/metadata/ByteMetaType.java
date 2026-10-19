@@ -8,7 +8,7 @@ import io.netty.buffer.ByteBuf;
 public class ByteMetaType extends MetaDataType<Byte> {
 	
 	public ByteMetaType(int type) {
-		super(type, Number.class);
+		super(type, Byte.class);
 	}
 	
 	@Override

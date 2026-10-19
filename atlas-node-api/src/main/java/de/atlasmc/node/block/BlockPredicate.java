@@ -31,7 +31,7 @@ public class BlockPredicate implements NBTSerializable, StreamSerializable {
 					.optional(BlockPredicate::hasTypes)
 					.codec(BlockPredicate::getTypes, BlockPredicate::setTypes, DataSet.streamCodec(BlockType.REGISTRY_KEY))
 					.optional(BlockPredicate::hasStates)
-					.listCodec(BlockPredicate::hasStates, BlockPredicate::getStates, PropertyValuePredicate.STREAM_CODEC)
+					.codecList(BlockPredicate::hasStates, BlockPredicate::getStates, PropertyValuePredicate.STREAM_CODEC)
 					.optional(BlockPredicate::hasTile)
 					.codec(BlockPredicate::getTile, BlockPredicate::setTile, TileEntity.NBT_CODEC)
 					.staticBooleanValue(false) // TODO match data component

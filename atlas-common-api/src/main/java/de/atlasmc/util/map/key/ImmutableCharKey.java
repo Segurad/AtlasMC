@@ -39,7 +39,7 @@ final class ImmutableCharKey extends CharKey {
 	public CharKey subSequence(int start, int end) {
 		if (start < 0)
 			throw new IndexOutOfBoundsException(start);
-		if (end < 0 || end >= length())
+		if (end < 0 || end > length())
 			throw new IndexOutOfBoundsException(end);
 		return new SubCharKey(this, start, end);
 	}

@@ -96,10 +96,12 @@ public abstract class AbstractConcurrentPipeline<E> extends AbstractPipeline<E> 
 		if (index == -1)
 			return false;
 		var eName = getEntryName(name, entry);
-		ensureNotPresent(names, eName);
-		names = names.clone();
+		if (!old.equals(eName)) {
+			ensureNotPresent(names, eName);
+			names = names.clone();
+			names[index] = eName;
+		}
 		var entries = this.entries.clone();
-		names[index] = eName;
 		entries[index] = entry;
 		this.entries = entries;
 		this.names = names;

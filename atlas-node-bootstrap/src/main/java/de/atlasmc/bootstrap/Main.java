@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import de.atlasmc.Atlas;
 import de.atlasmc.AtlasBuilder;
@@ -219,14 +218,7 @@ public class Main {
 		} catch (StartupException e) {}
 		if (context.hasFailed()) {
 			Throwable cause = context.getCause();
-			log.error("Error while running startup! (stage: " + context.getStage() + ")", cause);
-			for (Consumer<Throwable> handler : context.getFailHandlers()) {
-				try {
-					handler.accept(cause);
-				} catch(Exception e) {
-					log.error("Error while running startup fail handler!", e);
-				}
-			}
+			log.error("Failed during startup! (stage: " + context.getStage() + ")", cause);
 			System.exit(1);
 		}
 		Atlas.getMainThread().runTask(() -> {
@@ -300,7 +292,7 @@ public class Main {
 		}
 	}
 	
-	private static void prepareStage(StartupContext context) {
+	private static void prepareStage(StartupContext context) throws StartupException {
 		if (context.hasFailed())
 			return;
 		Collection<StartupStageHandler> handlers = context.getStageHandlers();
@@ -317,7 +309,7 @@ public class Main {
 		}
 	}
 	
-	private static void runStage(StartupContext context) {
+	private static void runStage(StartupContext context) throws StartupException {
 		if (context.hasFailed())
 			return;
 		Collection<StartupStageHandler> handlers = context.getStageHandlers();
@@ -334,7 +326,7 @@ public class Main {
 		}
 	}
 	
-	private static void finalizeStage(StartupContext context) {
+	private static void finalizeStage(StartupContext context) throws StartupException {
 		if (context.hasFailed())
 			return;
 		Collection<StartupStageHandler> handlers = context.getStageHandlers();

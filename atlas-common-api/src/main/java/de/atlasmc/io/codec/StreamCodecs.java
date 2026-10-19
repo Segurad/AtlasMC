@@ -95,7 +95,7 @@ public class StreamCodecs {
 		
 		@Override
 		public Class<?> getType() {
-			return FloatList.class;
+			return BooleanList.class;
 		}
 		
 		@Override
@@ -129,7 +129,7 @@ public class StreamCodecs {
 		
 		@Override
 		public Class<?> getType() {
-			return FloatList.class;
+			return BooleanList.class;
 		}
 		
 		@Override
@@ -163,7 +163,7 @@ public class StreamCodecs {
 		
 		@Override
 		public Class<?> getType() {
-			return FloatList.class;
+			return IntCollection.class;
 		}
 		
 		@Override

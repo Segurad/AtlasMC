@@ -1,6 +1,7 @@
 package de.atlasmc.chat;
 
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class PlayerChatSignatureData {
@@ -34,7 +35,7 @@ public class PlayerChatSignatureData {
 	}
 	
 	public boolean matchSignature(byte[] signature) {
-		return this.signature.equals(signature);
+		return Arrays.equals(this.signature, signature);
 	}
 	
 }

@@ -82,10 +82,9 @@ public abstract class AbstractNBTIOWriter extends AbstractNBTWriter {
 	@Override
 	public void writeStringTag(CharSequence name, String value) throws IOException {
 		Objects.requireNonNull(value, "value");
+		ensureStringLength(value);
 		prepareTag(TagType.STRING, name);
-		byte[] buffer = value.getBytes();
-		ioWriteShort(buffer.length);
-		ioWriteBytes(buffer);
+		writeUTF(value);
 	}
 	
 	@Override

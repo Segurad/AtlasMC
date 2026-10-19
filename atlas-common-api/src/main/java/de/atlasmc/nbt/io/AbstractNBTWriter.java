@@ -108,4 +108,31 @@ public abstract class AbstractNBTWriter implements NBTWriter {
 			throw new IOException("Stream closed!");
 	}
 
+	/**
+	 * Returns the number of bytes required to encode the given string as modified UTF-8 as used by NBT
+	 * @param str
+	 * @return number of bytes
+	 */
+	protected static long getUTFLength(CharSequence str) {
+		final int strlen = str.length();
+		long utflen = strlen;
+		for (int i = 0; i < strlen; i++) {
+			int c = str.charAt(i);
+			if (c >= 0x80 || c == 0)
+				utflen += (c >= 0x800) ? 2 : 1;
+		}
+		return utflen;
+	}
+	
+	/**
+	 * Ensures that the given string can be stored as NBT string
+	 * @param value
+	 * @throws IllegalArgumentException if the encoded value is longer than 65535 bytes
+	 */
+	protected static void ensureStringLength(CharSequence value) {
+		final long length = getUTFLength(value);
+		if (length > 0xFFFF)
+			throw new IllegalArgumentException("Encoded string longer than max length: " + length + " > " + 0xFFFF);
+	}
+
 }

@@ -18,11 +18,15 @@ public class PacketLengthDecoder extends ByteToMessageDecoder {
 	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		int length = -1;
+		int length;
 		if (checkLength(in)) {
+			in.markReaderIndex();
 			length = readVarInt(in);
-		}
-		if (length == -1 || in.readableBytes() < length) {
+			if (in.readableBytes() < length) {
+				in.resetReaderIndex();
+				return;
+			}
+		} else {
 			return;
 		}
 		if (length > MAX_PACKET_LENGTH) {

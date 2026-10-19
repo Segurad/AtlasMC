@@ -1,17 +1,19 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.PrimitiveFieldCodecs;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface OminousBottleAmplifierComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<OminousBottleAmplifierComponent>
-	NBT_CODEC = NBTCodec
-					.builder(OminousBottleAmplifierComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.intField(ComponentType.OMINOUS_BOTTLE_AMPLIFIER.getNamespacedKey(), OminousBottleAmplifierComponent::getAmplifier, OminousBottleAmplifierComponent::setAmplifier, 0)
-					.build();
+	NBT_CODEC = PrimitiveFieldCodecs
+				.buildInt(OminousBottleAmplifierComponent.class)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(OminousBottleAmplifierComponent::getAmplifier)
+				.setter(OminousBottleAmplifierComponent::setAmplifier)
+				.build();
 	
 	int getAmplifier();
 	

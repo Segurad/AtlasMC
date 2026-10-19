@@ -57,9 +57,9 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 		// find section of key
 		while ((lastIndex = path.indexOf('.', searchIndex = lastIndex+1)) != -1) {
 			String nextPathKey = path.substring(searchIndex, lastIndex);
-			ConfigurationSection nextSection = getConfigurationSection(nextPathKey);
+			ConfigurationSection nextSection = section.getConfigurationSection(nextPathKey);
 			if (nextSection == null)
-				nextSection = createSection(nextPathKey);
+				nextSection = section.createSection(nextPathKey);
 			section = nextSection;
 		}
 		String key = path.substring(searchIndex);
@@ -71,7 +71,7 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 			internalSet(key, newSection);
 			return newSection;
 		}
-		return section.createSection(path);
+		return section.createSection(key);
 	}
 	
 	@Override
@@ -85,9 +85,9 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 		// find section of key
 		while ((lastIndex = path.indexOf('.', searchIndex = lastIndex+1)) != -1) {
 			String nextPathKey = path.substring(searchIndex, lastIndex);
-			ConfigurationSection nextSection = getConfigurationSection(nextPathKey);
+			ConfigurationSection nextSection = section.getConfigurationSection(nextPathKey);
 			if (nextSection == null)
-				nextSection = createSection(nextPathKey);
+				nextSection = section.createSection(nextPathKey);
 			section = nextSection;
 		}
 		String key = path.substring(searchIndex);
@@ -99,7 +99,7 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 			internalSet(key, newSection);
 			return newSection;
 		}
-		return section.createListSection(path);
+		return section.createListSection(key);
 	}
 
 	@Override
@@ -113,11 +113,11 @@ public abstract class AbstractConfigurationSection implements ConfigurationSecti
 		// find section of key
 		while ((lastIndex = path.indexOf('.', searchIndex = lastIndex+1)) != -1) {
 			String nextPathKey = path.substring(searchIndex, lastIndex);
-			ConfigurationSection nextSection = getConfigurationSection(nextPathKey);
+			ConfigurationSection nextSection = section.getConfigurationSection(nextPathKey);
 			if (nextSection == null) {
 				if (value == null)
 					return null; // avoid creating null path
-				nextSection = createSection(nextPathKey);
+				nextSection = section.createSection(nextPathKey);
 			}
 			section = nextSection;
 		}

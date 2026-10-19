@@ -3,6 +3,8 @@ package de.atlasmc.node.inventory.component;
 import java.util.Map;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.CodecCollectionFieldCodec;
+import de.atlasmc.nbt.codec.MapFieldNameToCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.map.MapIcon;
 import de.atlasmc.util.annotation.NotNull;
@@ -11,11 +13,12 @@ public interface MapDecorationComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<MapDecorationComponent>
-	NBT_CODEC = NBTCodec
-					.builder(MapDecorationComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.mapFieldNameToCodec(ComponentType.MAP_DECORATIONS.getNamespacedKey(), MapDecorationComponent::hasDecoration, MapDecorationComponent::getDecorations, MapIcon.NBT_CODEC)
-					.build();
+	NBT_CODEC = CodecCollectionFieldCodec
+				.builder(MapDecorationComponent.class, new MapFieldNameToCodec<>(MapIcon.NBT_CODEC))
+				.include(ItemComponent.NBT_CODEC)
+				.hasData(MapDecorationComponent::hasDecoration)
+				.getter(MapDecorationComponent::getDecorations)
+				.build();
 	
 	@NotNull
 	public static final StreamCodec<MapDecorationComponent>

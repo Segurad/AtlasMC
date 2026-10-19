@@ -126,8 +126,12 @@ public class TickingThread extends Thread implements WatchableThread {
 		return tick;
 	}
 	
-	public int getOversleeped() {
-		return (int) (System.currentTimeMillis() - nextTick);
+	/**
+	 * {@link System#nanoTime()} this thread has over sleeped
+	 * @return time
+	 */
+	public long getOversleeped() {
+		return System.nanoTime() - nextTick;
 	}
 	
 	public Log getLogger() {

@@ -2,6 +2,7 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.chat.Chat;
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.CodecFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.Nameable;
 import de.atlasmc.util.annotation.NotNull;
@@ -10,11 +11,12 @@ public interface CustomNameComponent extends ItemComponent, Nameable {
 	
 	@NotNull
 	public static final NBTCodec<CustomNameComponent>
-	NBT_CODEC = NBTCodec
-					.builder(CustomNameComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.codec(ComponentType.CUSTOM_NAME.getNamespacedKey(), CustomNameComponent::getCustomName, CustomNameComponent::setCustomName, Chat.NBT_CODEC)
-					.build();
+	NBT_CODEC = CodecFieldCodec
+				.builder(CustomNameComponent.class, Chat.NBT_CODEC)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(CustomNameComponent::getCustomName)
+				.setter(CustomNameComponent::setCustomName)
+				.build();
 	
 	@NotNull
 	public static final StreamCodec<CustomNameComponent>

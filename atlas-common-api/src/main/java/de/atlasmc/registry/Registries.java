@@ -139,7 +139,7 @@ public class Registries {
 		for (String key : config.getKeys()) {
 			ConfigurationSection regCfg = config.getConfigurationSection(key);
 			String rawClass = regCfg.getString("type");
-			Target target = Target.valueOf(regCfg.getString("target"));
+			Target target = Target.valueOf(regCfg.getString("target")); // implicit null and validity check
 			try {
 				Class<?> registryType = Class.forName(rawClass, true, plugin.getPlugin().getClass().getClassLoader());
 				createRegistry(NamespacedKey.of(key), registryType, target);
@@ -177,7 +177,7 @@ public class Registries {
 					entryValue = entryClass;
 				} else {
 					ConfigurationSection cfg = entryCfg.getConfigurationSection("configuration");
-					if (cfg != null && entryClass.isAssignableFrom(ConfigurationSerializable.class)) {
+					if (cfg != null && ConfigurationSerializable.class.isAssignableFrom(entryClass)) {
 						try {
 							entryValue = entryClass.getConstructor(ConfigurationSection.class).newInstance(cfg);
 						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
@@ -230,62 +230,64 @@ public class Registries {
 	public static void loadBulkRegistryEntries(PluginHandle plugin, String resource) throws IOException {
 		Objects.requireNonNull(plugin, "plugin");
 		Objects.requireNonNull(resource, "resource");
-		InputStream in = plugin.getPlugin().getResourceAsStream(resource);
-		if (in == null)
-			throw new IllegalArgumentException("No resource found: " + resource);
-		JsonReader reader = new JsonReader(new InputStreamReader(in));
-		reader.beginArray();
-		while (reader.hasNext()) {
-			JsonConfiguration config = JsonConfigurationFactory.INSTANCE.load(reader);
-			String key = config.getString("registry");
-			if (key == null)
-				throw new FactoryException("No registry key defined in resource: " + resource);
-			Registry<Object> registry = Registries.getRegistry(key);
-			if (registry == null)
-				throw new FactoryException("Unable to find registry: " + key);
-			Class<?> registryType = registry.getType();
-			Class<?> typeClass;
-			String rawType = config.getString("type");
-			try {
-				Class<?> clazz = Class.forName(rawType, true, plugin.getPlugin().getClass().getClassLoader());
-				typeClass = clazz;
-			} catch (ClassNotFoundException e) {
-				throw new FactoryException("Error while fetching class: " + rawType);
-			}
-			if (!registryType.isAssignableFrom(typeClass))
-				throw new FactoryException("Given type (" + rawType + ") is not compatiple with registry: " + registry.getNamespacedKey());
-			Constructor<?> constructor = null;
-			try {
-				constructor = typeClass.getConstructor(ConfigurationSection.class);
-			} catch (NoSuchMethodException | SecurityException e) {
-				throw new FactoryException("Error while fetching constructor of type: " + typeClass, e);
-			}
-			List<ConfigurationSection> configurations = config.getConfigurationList("configurations");
-			for (ConfigurationSection cfg : configurations) {
-				String name = cfg.getString("name");
-				boolean isDefault = cfg.getBoolean("default", false);
-				ConfigurationSection params = cfg.getConfigurationSection("parameters");
-				Object entry;
-				try {
-					entry = constructor.newInstance(params);
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException e) {
-					throw new FactoryException("Error while instaciating entry: " + name + " of type: " + typeClass, e);
-				}
-				if (name == null) {
-					if (entry instanceof Namespaced keyed) {
-						registry.register(plugin, keyed.getNamespacedKey(), entry);
-					} else {
-						throw new FactoryException("No name specified and entry is not instance of Namespaced!");
+		try (InputStream in = plugin.getPlugin().getResourceAsStream(resource)) {
+			if (in == null)
+				throw new IllegalArgumentException("No resource found: " + resource);
+			try (var reader = new JsonReader(new InputStreamReader(in))) {
+				reader.beginArray();
+				while (reader.hasNext()) {
+					JsonConfiguration config = JsonConfigurationFactory.INSTANCE.load(reader);
+					String key = config.getString("registry");
+					if (key == null)
+						throw new FactoryException("No registry key defined in resource: " + resource);
+					Registry<Object> registry = Registries.getRegistry(key);
+					if (registry == null)
+						throw new FactoryException("Unable to find registry: " + key);
+					Class<?> registryType = registry.getType();
+					Class<?> typeClass;
+					String rawType = config.getString("type");
+					try {
+						Class<?> clazz = Class.forName(rawType, true, plugin.getPlugin().getClass().getClassLoader());
+						typeClass = clazz;
+					} catch (ClassNotFoundException e) {
+						throw new FactoryException("Error while fetching class: " + rawType);
 					}
-				} else {
-					registry.register(plugin, name, entry);
+					if (!registryType.isAssignableFrom(typeClass))
+						throw new FactoryException("Given type (" + rawType + ") is not compatiple with registry: " + registry.getNamespacedKey());
+					Constructor<?> constructor = null;
+					try {
+						constructor = typeClass.getConstructor(ConfigurationSection.class);
+					} catch (NoSuchMethodException | SecurityException e) {
+						throw new FactoryException("Error while fetching constructor of type: " + typeClass, e);
+					}
+					List<ConfigurationSection> configurations = config.getConfigurationList("configurations");
+					for (ConfigurationSection cfg : configurations) {
+						String name = cfg.getString("name");
+						boolean isDefault = cfg.getBoolean("default", false);
+						ConfigurationSection params = cfg.getConfigurationSection("parameters");
+						Object entry;
+						try {
+							entry = constructor.newInstance(params);
+						} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+								| InvocationTargetException e) {
+							throw new FactoryException("Error while instaciating entry: " + name + " of type: " + typeClass, e);
+						}
+						if (name == null) {
+							if (entry instanceof Namespaced keyed) {
+								registry.register(plugin, keyed.getNamespacedKey(), entry);
+							} else {
+								throw new FactoryException("No name specified and entry is not instance of Namespaced!");
+							}
+						} else {
+							registry.register(plugin, name, entry);
+						}
+						if (isDefault)
+							registry.setDefault(entry);
+					}
 				}
-				if (isDefault)
-					registry.setDefault(entry);
+				reader.endArray();
 			}
 		}
-		reader.endArray();
 	}
 	
 	public static <T extends Namespaced> NBTCodec<T> registryValueNBTCodec(RegistryKey<T> key) {

@@ -1,25 +1,22 @@
 package de.atlasmc.io;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.BitSet;
 
-import de.atlasmc.NamespacedKey;
-import de.atlasmc.registry.ProtocolRegistry;
-import de.atlasmc.registry.ProtocolRegistryValue;
-import de.atlasmc.tag.Tag;
-import de.atlasmc.tag.Tags;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.annotation.Nullable;
-import de.atlasmc.util.dataset.DataSet;
-import de.atlasmc.util.dataset.SingleValueDataSet;
-import de.atlasmc.util.dataset.TagDataSet;
 import io.netty.buffer.ByteBuf;
 
 public class PacketUtil {
 	
 	public static final int 
-	MAX_PACKET_LENGTH = 2097151;
+	/**
+	 * Maximum length a packet may have when read or write
+	 */
+	MAX_PACKET_LENGTH = 2097151,
+	/**
+	 * Maximum length a packet may have in uncompressed state
+	 */
+	MAX_UNCOMPRESSED_LENGTH = 8388608;
 
 	public static final int VAR_SEGMENT_BITS = 0x7F;
 	public static final int VAR_CONTINUE_BIT = 0x80;
@@ -191,7 +188,9 @@ public class PacketUtil {
 	public static int readArrayLength(ByteBuf in, int max) {
 		int length = readVarInt(in);
 		if (length > max)
-			throw new ProtocolException("Invalid array length:" + length + " expected: " + max);
+			throw new ProtocolException("Invalid array length: " + length + " expected: " + max);
+		if (length < 0)
+			throw new ProtocolException("Invalid array length: " + length);
 		return length;
 	}
 	
@@ -231,7 +230,7 @@ public class PacketUtil {
 	public static BitSet readBitSet(ByteBuf in, int maxBits) {
 		int numberOfLongs = readVarInt(in);
 		if (maxBits > 0) {
-			int maxLongs = Math.max(maxBits / 64, 1);
+			int maxLongs = Math.ceilDiv(maxBits, 64);
 			if (numberOfLongs > maxLongs)
 				throw new IllegalArgumentException("Invalid number of longs for BitSet:" + numberOfLongs + " expected: " + maxLongs + " (" + maxBits + " bits)");
 		}
@@ -247,54 +246,6 @@ public class PacketUtil {
 		for (long l : data) {
 			out.writeLong(l);
 		}
-	}
-	
-	public static <T extends ProtocolRegistryValue> void writeDataSet(DataSet<T> set, ProtocolRegistry<T> registry, @NotNull ByteBuf out) throws IOException {
-		if (set == null) {
-			writeVarInt(1, out);
-			return;
-		}
-		if (set instanceof TagDataSet tagSet) {
-			writeVarInt(0, out);
-			NamespacedKey.STREAM_CODEC.serialize(tagSet.getTag().getNamespacedKey(), out);
-		} else if (set.size() == 0) {
-			writeVarInt(1, out);
-		} else if (set instanceof SingleValueDataSet<T> singleValue) {
-			writeVarInt(2, out);
-			writeVarInt(singleValue.getValue().getID(), out);
-		} else {
-			final int size = set.size() + 1;
-			writeVarInt(size, out);
-			for (T value : set)
-				writeVarInt(value.getID(), out);
-		}
-	}
-	
-	@NotNull
-	public static <T extends ProtocolRegistryValue> DataSet<T> readDataSet(ProtocolRegistry<T> registry, @NotNull ByteBuf in) throws IOException {
-		final int id = readVarInt(in);
-		if (id == 0) {
-			NamespacedKey key = NamespacedKey.STREAM_CODEC.deserialize(in);
-			Tag<T> tag = Tags.getTag(key);
-			if (tag == null)
-				throw new ProtocolException("Missing tag while reading data set: " + key);
-			return DataSet.of(tag);
-		}
-		final int count = id - 1;
-		if (count == 0)
-			return DataSet.of();
-		if (count == 1) {
-			T value = registry.getByID(id);
-			return DataSet.of(value);
-		}
-		ArrayList<T> values = new ArrayList<>(count);
-		for (int i = 0; i < count; i++) {
-			T value = registry.getByID(readVarInt(in));
-			if (value == null)
-				continue;
-			values.add(value);
-		}
-		return DataSet.of(values);
 	}
 	
 }

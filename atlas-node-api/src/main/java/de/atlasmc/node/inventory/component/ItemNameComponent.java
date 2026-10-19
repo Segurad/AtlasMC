@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.chat.Chat;
+import de.atlasmc.nbt.codec.CodecFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.util.annotation.NotNull;
 
@@ -8,11 +9,12 @@ public interface ItemNameComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<ItemNameComponent>
-	NBT_CODEC = NBTCodec
-					.builder(ItemNameComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.codec(ComponentType.ITEM_NAME.getNamespacedKey(), ItemNameComponent::getName, ItemNameComponent::setName, Chat.NBT_CODEC)
-					.build();
+	NBT_CODEC = CodecFieldCodec
+				.builder(ItemNameComponent.class, Chat.NBT_CODEC)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(ItemNameComponent::getName)
+				.setter(ItemNameComponent::setName)
+				.build();
 	
 	Chat getName();
 	

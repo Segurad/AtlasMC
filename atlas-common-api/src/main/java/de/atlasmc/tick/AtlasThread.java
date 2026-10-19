@@ -37,14 +37,16 @@ public class AtlasThread<T> extends TickingThread {
 		startupTasks.runTasks(this, "Error in startup task: ", -1);
 		if (running) {
 			synchronized (this) {
-				((CompletableFuture<Boolean>) startupFuture).complete(true);
+				if (startupFuture != null)
+					((CompletableFuture<Boolean>) startupFuture).complete(true);
 				startupFuture = CompleteFuture.getBooleanFuture(true);
 			}
 			super.run();
 		}
 		shutdownTasks.runTasks(this, "Error in shutdown task: ", -1);
 		synchronized (this) {
-			((CompletableFuture<Boolean>) shutdownFuture).complete(true);
+			if (shutdownFuture != null)
+				((CompletableFuture<Boolean>) shutdownFuture).complete(true);
 			shutdownFuture = CompleteFuture.getBooleanFuture(true);
 		}
 	}

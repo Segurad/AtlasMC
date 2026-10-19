@@ -40,8 +40,10 @@ public class CodecField<T, V> extends NBTField<T>{
 
 	@Override
 	public void deserialize(T type, NBTReader reader, CodecContext context) throws IOException {
-		if (serverOnly && context.clientSide)
+		if (serverOnly && context.clientSide) {
+			reader.skipTag();
 			return; // do not deserialize fields send by client that are server only
+		}
 		final NBTCodec<V> codec = this.codec;
 		V value = null;
 		if (codec.isReuseValue())

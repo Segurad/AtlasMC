@@ -13,9 +13,7 @@ public interface DamageResistantComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(DamageResistantComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.DAMAGE_RESISTANT.getNamespacedKey())
 					.codec("types", DamageResistantComponent::getDamageTypes, DamageResistantComponent::setDamageTypes, TagKey.NBT_CODEC)
-					.endComponent()
 					.build();
 	
 	@NotNull

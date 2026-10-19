@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
 
+import de.atlasmc.io.PacketUtil;
 import de.atlasmc.util.codec.CodecContext;
 import io.netty.buffer.ByteBuf;
 
@@ -27,13 +28,13 @@ final class VarIntToObjectCodec<T> implements StreamCodec<T> {
 
 	@Override
 	public boolean serialize(T value, ByteBuf output, CodecContext context) throws IOException {
-		output.writeInt(toInt.applyAsInt(value));
+		PacketUtil.writeVarInt(toInt.applyAsInt(value), output);
 		return true;
 	}
 
 	@Override
 	public T deserialize(T value, ByteBuf input, CodecContext context) throws IOException {
-		return toObject.apply(input.readInt());
+		return toObject.apply(PacketUtil.readVarInt(input));
 	}
 
 }

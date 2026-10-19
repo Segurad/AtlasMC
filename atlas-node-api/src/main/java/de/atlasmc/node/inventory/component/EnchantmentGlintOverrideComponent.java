@@ -2,17 +2,19 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.PrimitiveFieldCodecs;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface EnchantmentGlintOverrideComponent extends ItemComponent {
 
 	@NotNull
 	public static final NBTCodec<EnchantmentGlintOverrideComponent>
-	NBT_CODEC = NBTCodec
-					.builder(EnchantmentGlintOverrideComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.boolField(ComponentType.ENCHANTMENT_GLINT_OVERRIDE.getNamespacedKey(), EnchantmentGlintOverrideComponent::hasGlint, EnchantmentGlintOverrideComponent::setGlint)
-					.build();
+	NBT_CODEC = PrimitiveFieldCodecs
+				.buildBoolean(EnchantmentGlintOverrideComponent.class)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(EnchantmentGlintOverrideComponent::hasGlint)
+				.setter(EnchantmentGlintOverrideComponent::setGlint)
+				.build();
 	
 	@NotNull
 	public static final StreamCodec<EnchantmentGlintOverrideComponent>

@@ -204,6 +204,8 @@ public class ConcurrentLinkedList<E> extends AbstractCollection<E> {
 			node = prevValid(node);
 		}
 		Node<E> next = nextValid(node);
+		if (next != null && next.prev != node)
+			throw new IllegalStateException("Tried to insert in broken link!");
 		Node<E> newNode = new Node<>(entry, node, next);
 		node.next = newNode;
 		if (next != null) {

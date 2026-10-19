@@ -179,7 +179,7 @@ public class StreamCodecBuilder<T> implements Builder<StreamCodec<T>>{
 		return this;
 	}
 	
-	public <V> StreamCodecBuilder<T> listCodec(ToBooleanFunction<T> has, Function<T, List<V>> get, StreamCodec<V> codec) {
+	public <V> StreamCodecBuilder<T> codecList(ToBooleanFunction<T> has, Function<T, List<V>> get, StreamCodec<V> codec) {
 		return addField(new CodecListField<>(has, get, codec));
 	}
 	

@@ -2,16 +2,19 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.PrimitiveFieldCodecs;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface EnchantableComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<EnchantableComponent>
-	NBT_CODEC = NBTCodec
-					.builder(EnchantableComponent.class)
-					.intField(ComponentType.ENCHANTABLE.getNamespacedKey(), EnchantableComponent::getValue, EnchantableComponent::setValue)
-					.build();
+	NBT_CODEC = PrimitiveFieldCodecs
+				.buildInt(EnchantableComponent.class)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(EnchantableComponent::getValue)
+				.setter(EnchantableComponent::setValue)
+				.build();
 	
 	@NotNull
 	public static final StreamCodec<EnchantableComponent>

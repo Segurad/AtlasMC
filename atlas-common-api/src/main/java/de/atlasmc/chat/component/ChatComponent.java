@@ -90,12 +90,6 @@ public interface ChatComponent extends Chat, NBTSerializable {
 	 */
 	boolean hasColor();
 	
-	/**
-	 * Returns whether or not this Component has a {@link ChatColor}
-	 * @return true if has {@link ChatColor}
-	 */
-	boolean hasChatColor();
-	
 	ClickEvent getClickEvent();
 	
 	ChatComponent setClickEvent(ClickEvent event);
@@ -186,7 +180,7 @@ public interface ChatComponent extends Chat, NBTSerializable {
 	static HoverEntityEvent hoverEntity(NamespacedKey type, UUID uuid, ChatComponent name) {
 		HoverEntityEvent event = new HoverEntityEvent();
 		event.setType(type);
-		event.setUUUID(uuid);
+		event.setUUID(uuid);
 		event.setName(name);
 		return event;
 	}

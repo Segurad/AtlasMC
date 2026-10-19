@@ -1,6 +1,7 @@
 package de.atlasmc.util.map.key;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.atlasmc.util.NumberConversion;
@@ -30,20 +31,21 @@ public abstract class CharKey implements CharSequence {
 	protected CharKey() {}
 	
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		if (hash != 0)
 			return hash;
 		final int length = length();
 		final char[] buf = getBuf();
+		final int offset = getOffset();
 		int h = 0;
 		for (int i = 0; i < length; i++)
-			h = 31 * h + buf[i];
+			h = 31 * h + buf[offset + i];
 		hash = h;
 		return hash;
 	}
 	
 	@Override
-	public final boolean equals(Object obj) {
+	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
 		if (obj == this)
@@ -55,14 +57,16 @@ public abstract class CharKey implements CharSequence {
 		if (length != length())
 			return false;
 		final char[] buf = getBuf();
-		if (obj instanceof CharKey) {
-			final char[] otherBuf = ((CharKey) obj).getBuf();
+		final int offset = getOffset();
+		if (obj instanceof CharKey other) {
+			final char[] otherBuf = other.getBuf();
+			final int otherOffset = other.getOffset();
 			for (int i = 0; i < length; i++)
-				if (buf[i] != otherBuf[i])
+				if (buf[offset + i] != otherBuf[otherOffset + i])
 					return false;
 		} else 
 			for (int i = 0; i < length; i++)
-				if (buf[i] != sequence.charAt(i))
+				if (buf[offset + i] != sequence.charAt(i))
 					return false;
 		return true;
 	}
@@ -74,6 +78,14 @@ public abstract class CharKey implements CharSequence {
 	 * @return char array
 	 */
 	protected abstract char[] getBuf();
+	
+	/**
+	 * Returns the index of the first char of this key within {@link #getBuf()}
+	 * @return offset
+	 */
+	protected int getOffset() {
+		return 0;
+	}
 
 	/**
 	 * Returns the {@link CharSequence} as immutable {@link CharKey}
@@ -105,12 +117,14 @@ public abstract class CharKey implements CharSequence {
 
 	@Override
 	public String toString() {
-		return new String(getBuf(), 0, length());
+		return new String(getBuf(), getOffset(), length());
 	}
 	
 	@Override
 	public CharSequence subSequence(int start, int end) {
-		return new ImmutableCharKey(getBuf(), start, end);
+		Objects.checkFromToIndex(start, end, length());
+		final int offset = getOffset();
+		return new ImmutableCharKey(getBuf(), offset + start, offset + end);
 	}
 	
 }

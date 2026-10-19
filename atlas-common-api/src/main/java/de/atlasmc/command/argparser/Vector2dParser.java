@@ -5,12 +5,10 @@ import java.util.List;
 
 import de.atlasmc.NamespacedKey;
 import de.atlasmc.command.CommandStringReader;
-import de.atlasmc.command.CommandSyntaxException;
 import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.util.annotation.NotNull;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.buffer.ByteBuf;
-import static de.atlasmc.command.argparser.Vector3dParser.parseRelative;
 
 @RegistryValue(registry="atlas:command/var_arg_parser", key="minecraft:vec2")
 public class Vector2dParser implements VarArgParser<ArgumentVector2d> {
@@ -36,24 +34,13 @@ public class Vector2dParser implements VarArgParser<ArgumentVector2d> {
 
 	@Override
 	public ArgumentVector2d parse(CommandStringReader reader) {
-		final int start = reader.getCursor();
 		final ArgumentVector2d vec = new ArgumentVector2d();
-		boolean targetCentric = false; 
-		if (reader.canRead() && reader.peek() == '^') {
-			targetCentric = vec.targetCentric = true;
-			reader.skip();
-		}
-		// parse x
-		vec.relativeX = parseRelative(reader, targetCentric);
-		vec.x = reader.readDouble();
-		if (!reader.canRead() || reader.peek() != ' ')
-			throw new CommandSyntaxException(reader.getCommand(), start, "Expected 3 double arguments");
-		reader.skip();
-		// parse y 
-		vec.relativeY = parseRelative(reader, targetCentric);
-		vec.y = reader.readDouble();
-		if (!reader.canRead() || reader.peek() != ' ')
-			throw new CommandSyntaxException(reader.getCommand(), start, "Expected 3 double arguments");
+		final CoordinateReader coords = new CoordinateReader(reader, 2, "double");
+		vec.x = coords.readDouble();
+		vec.relativeX = coords.isRelative();
+		vec.y = coords.readDouble();
+		vec.relativeY = coords.isRelative();
+		vec.targetCentric = coords.isLocal();
 		return vec;
 	}
 

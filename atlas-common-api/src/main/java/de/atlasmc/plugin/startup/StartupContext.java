@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import de.atlasmc.log.Log;
@@ -71,7 +72,7 @@ public class StartupContext {
 	public static final String FINALIZE_STARTUP = "finalize-startup";
 	
 	private Multimap<String, StartupStageHandler> stageHandlers;
-	private Set<Consumer<Throwable>> failHandlers;
+	private Set<BiFunction<StartupContext, Throwable, Boolean>> failHandlers;
 	private Set<Consumer<String>> stageChangeHandlers;
 	private List<String> stages;
 	private List<String> stageView;
@@ -273,21 +274,38 @@ public class StartupContext {
 	}
 
 	/**
-	 * Fails the startup by throwing a {@link StartupException}
+	 * Fails the startup by throwing a {@link StartupException}.
+	 * @throws StartupException if no fail handler allows the startup to continue
+	 * @see #fail(Throwable)
 	 */
 	public void fail() {
 		fail(null);
 	}
 
 	/**
-	 * Fails the startup by throwing a {@link StartupException}
+	 * Fails the startup by throwing a {@link StartupException}.
+	 * All fail handlers are consulted first. If any handler allows the startup to continue
+	 * this method <b>returns normally</b> and the caller has to continue its work.
 	 * @param cause
+	 * @throws StartupException if no fail handler allows the startup to continue
 	 */
 	public void fail(Throwable cause) {
 		if (failed) {
 			throw new IllegalStateException("Startup already failed!");
 		}
-		this.failed = true;
+		var failed = true;
+		for (var handler : failHandlers) {
+			try {
+				if (handler.apply(this, cause)) {
+					failed = false;
+				}
+			} catch(Exception e) {
+				logger.error("Error in fail handler : " + handler.getClass(), e);
+			}
+		}
+		if (!failed)
+			return;
+		this.failed = failed;
 		this.cause = cause;
 		throw new StartupException("Failed startup in stage: " + getStage(), cause);
 	}
@@ -304,12 +322,21 @@ public class StartupContext {
 		stageHandlers.remove(stage, handler);
 	}
 	
-	public void addFailHandler(Consumer<Throwable> handler) {
-		failHandlers.add(handler);
+	/**
+	 * Adds a handler for handling fail states within a startup context.
+	 * If fail is called the context will consult the handler if it may continue.
+	 * Each handler is given the context and a throwable.
+	 * It need to return whether it is possible to continue.
+	 * If any handler returns the the startup may continue.
+	 * @param handler
+	 * @return
+	 */
+	public boolean addFailHandler(BiFunction<StartupContext, Throwable, Boolean> handler) {
+		return failHandlers.add(handler);
 	}
 	
-	public void removeFailHandler(Consumer<Throwable> handler) {
-		failHandlers.remove(handler);
+	public boolean removeFailHandler(BiFunction<StartupContext, Throwable, Boolean> handler) {
+		return failHandlers.remove(handler);
 	}
 	
 	public void addStageChangeHandler(Consumer<String> handler) {
@@ -320,7 +347,7 @@ public class StartupContext {
 		stageChangeHandlers.remove(handler);
 	}
 
-	public Collection<Consumer<Throwable>> getFailHandlers() {
+	public Collection<BiFunction<StartupContext, Throwable, Boolean>> getFailHandlers() {
 		return failHandlers;
 	}
 	

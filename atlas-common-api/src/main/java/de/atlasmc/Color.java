@@ -42,7 +42,7 @@ public final class Color implements ColorValue {
 				float g = input.readFloatTag();
 				float b = input.readFloatTag();
 				float a = input.getRestPayload() > 0 ? input.readFloatTag() : 0;
-				Color c = Color.fromRGB(Color.asARGB(r, g, b, a));
+				Color c = Color.fromARGB(Color.asARGB(r, g, b, a));
 				input.readNextEntry();
 				return c;
 			}
@@ -124,10 +124,10 @@ public final class Color implements ColorValue {
 		if (green < 0 || green > 255) 
 			throw new IllegalArgumentException("Green is not between 0 and 255: " + green);
 		if (blue < 0 || blue > 255) 
-			throw new IllegalArgumentException("Red is not between 0 and 255: " + blue);
+			throw new IllegalArgumentException("Blue is not between 0 and 255: " + blue);
 		this.r = (byte) red;
-		this.g = (byte) blue;
-		this.b = (byte) green;
+		this.g = (byte) green;
+		this.b = (byte) blue;
 		this.a = 0;
 		this.name = name != null ? name : "RGB";
 	}
@@ -138,22 +138,22 @@ public final class Color implements ColorValue {
 		if (green < 0 || green > 255) 
 			throw new IllegalArgumentException("Green is not between 0 and 255: " + green);
 		if (blue < 0 || blue > 255) 
-			throw new IllegalArgumentException("Red is not between 0 and 255: " + blue);
+			throw new IllegalArgumentException("Blue is not between 0 and 255: " + blue);
 		if (alpha < 0 || alpha > 255)
-			throw new IllegalArgumentException("Red is not between 0 and 255: " + alpha);
+			throw new IllegalArgumentException("Alpha is not between 0 and 255: " + alpha);
 		this.r = (byte) red;
-		this.g = (byte) blue;
-		this.b = (byte) green;
+		this.g = (byte) green;
+		this.b = (byte) blue;
 		this.a = (byte) alpha;
 		this.name = name != null ? name : "RGB";
 	}
 	
 	public Color(Color color) {
-		this(color.name, color.r, color.g, color.b, color.a);
+		this(color.name, color.r & 0xFF, color.g & 0xFF, color.b & 0xFF, color.a & 0xFF);
 	}
 	
 	private Color(String name, int rgb) {
-		this(name, (rgb & 0xFF0000) >> 16, (rgb & 0xFF00) >> 8, rgb & 0xFF, (rgb & 0xFF000000) >> 24);
+		this(name, (rgb & 0xFF0000) >> 16, (rgb & 0xFF00) >> 8, rgb & 0xFF, (rgb & 0xFF000000) >> 24 & 0xFF);
 	}
 	
 	@Nullable
@@ -177,16 +177,22 @@ public final class Color implements ColorValue {
 	}
 
 	public Color mixColors(Color... colors) {
-		int allR = r;
-		int allG = g;
-		int allB = b;
-		int allMax = Math.max(Math.max(r, g), b);
+		final int red = r & 0xFF;
+		final int green = g & 0xFF;
+		final int blue = b & 0xFF;
+		int allR = red;
+		int allG = green;
+		int allB = blue;
+		int allMax = Math.max(Math.max(red, green), blue);
 		
 		for (Color color : colors) {
-			allR += color.r;
-			allG += color.g;
-			allB += color.b;
-			allMax += Math.max(Math.max(color.r, color.g), color.b);
+			final int cr = color.r & 0xFF;
+			final int cg = color.g & 0xFF;
+			final int cb = color.b & 0xFF;
+			allR += cr;
+			allG += cg;
+			allB += cb;
+			allMax += Math.max(Math.max(cr, cg), cb);
 		}
 		
 		float averageR = (allR / (colors.length + 1));
@@ -195,13 +201,15 @@ public final class Color implements ColorValue {
 	    float averageMax = (allMax / (colors.length + 1));
 	    
 	    float maxOfAverage = Math.max(Math.max(averageR, averageG), averageB);
+	    if (maxOfAverage == 0)
+	    	return new Color(0, 0, 0);
 	    float gainFactor = averageMax / maxOfAverage;
 	    
-	    return new Color((int)(averageR * gainFactor), (int)(averageG * gainFactor), (int)(averageB * gainFactor));
+	    return new Color(Math.min(255, (int)(averageR * gainFactor)), Math.min(255, (int)(averageG * gainFactor)), Math.min(255, (int)(averageB * gainFactor)));
 	}
 
 	public String toRGBString() {
-		return "RGB:" + r + "," + g + "," + b;
+		return "RGB:" + (r & 0xFF) + "," + (g & 0xFF) + "," + (b & 0xFF);
 	}
 
 	@Override
@@ -214,12 +222,12 @@ public final class Color implements ColorValue {
 
 	@Override
 	public int asRGB() {
-		return (r << 8 | g) << 8 | b;
+		return (r & 0xFF) << 16 | (g & 0xFF) << 8 | (b & 0xFF);
 	}
 	
 	@Override
 	public int asARGB() {
-		return ((a << 8 | r) << 8 | g) << 8 | b;
+		return (a & 0xFF) << 24 | (r & 0xFF) << 16 | (g & 0xFF) << 8 | (b & 0xFF);
 	}
 
 	public static Color fromRGB(int color) {
@@ -282,19 +290,15 @@ public final class Color implements ColorValue {
 	}
 	
 	public static int asRGB(float r, float g, float b) {
-		return asARGB(r, g, b, 0) & 0xFFFFFFF;
+		return asARGB(r, g, b, 0) & 0xFFFFFF;
 	}
 	
 	public static int asARGB(float red, float green, float blue, float alpha) {
-		red = Math.clamp(0, red, 1.0f);
-		green = Math.clamp(0, green, 1.0f);
-		blue = Math.clamp(0, blue, 1.0f);
-		alpha = Math.clamp(0, green, 1.0f);
-		byte r = (byte) (red == 1.0 ? 255 : red * 256);
-		byte g = (byte) (green == 1.0 ? 255 : green * 256);
-		byte b = (byte) (blue == 1.0 ? 255 : blue * 256);
-		byte a = (byte) (alpha == 1.0 ? 255 : blue * 256);
-		return ((a << 8 | r) << 8 | g) << 8 | b;
+		final int r = Math.round(Math.clamp(red, 0f, 1f) * 255);
+		final int g = Math.round(Math.clamp(green, 0f, 1f) * 255);
+		final int b = Math.round(Math.clamp(blue, 0f, 1f) * 255);
+		final int a = Math.round(Math.clamp(alpha, 0f, 1f) * 255);
+		return a << 24 | r << 16 | g << 8 | b;
 	}
 
 	@Override

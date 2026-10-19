@@ -18,14 +18,16 @@ public class LongParser implements VarArgParser<Long> {
 	private final long min;
 	private final long max;
 	
-	public LongParser(int min, int max) {
+	public LongParser(long min, long max) {
+		if (min > max)
+	        throw new IllegalArgumentException("Min can not be greater than max: " + min + " > " + max);
 		this.min = min;
 		this.max = max;
 	}
 	
 	public LongParser(ConfigurationSection config) {
-		this.min = config.getLong("min", Long.MIN_VALUE);
-		this.max = config.getLong("max", Long.MAX_VALUE);
+		this(config.getLong("min", Long.MIN_VALUE),
+				config.getLong("max", Long.MAX_VALUE));
 	}
 	
 	@Override
@@ -56,11 +58,11 @@ public class LongParser implements VarArgParser<Long> {
 		buf.writeByte(0);
 		int flags = 0;
 		if (min != Long.MIN_VALUE) {
-			flags &= 0x1;
+			flags |= 0x1;
 			buf.writeLong(min);
 		}
 		if (max != Long.MAX_VALUE) {
-			flags &= 0x2;
+			flags |= 0x2;
 			buf.writeLong(max);
 		}
 		int next = buf.writerIndex();

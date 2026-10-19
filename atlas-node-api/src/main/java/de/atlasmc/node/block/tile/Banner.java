@@ -8,6 +8,7 @@ import de.atlasmc.io.codec.StreamSerializable;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.nbt.codec.OrElseCodec;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.node.Nameable;
 import de.atlasmc.util.annotation.NotNull;
@@ -111,7 +112,7 @@ public interface Banner extends TileEntity, Nameable {
 	
 	public static interface PatternType {
 		
-		public static final NBTCodec<PatternType> NBT_CODEC = NBTCodec.codecOrElse(PatternType.class, EnumPatternType.NBT_CODEC, ResourcePatternType.NBT_CODEC);
+		public static final NBTCodec<PatternType> NBT_CODEC = new OrElseCodec<>(PatternType.class, EnumPatternType.NBT_CODEC, ResourcePatternType.NBT_CODEC);
 		
 	}
 	

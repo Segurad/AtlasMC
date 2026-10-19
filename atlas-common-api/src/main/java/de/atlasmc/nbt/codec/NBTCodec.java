@@ -2,9 +2,6 @@ package de.atlasmc.nbt.codec;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.ToIntFunction;
 
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
@@ -45,8 +42,7 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 	}
 	
 	/**
-	 * Deserialize the the input to a object as partial field.
-	 * If {@link #isField()} a error is thrown.
+	 * Deserialize the the input to a object.
 	 * @param value the object deserialized to
 	 * @param input the input
 	 * @param context a arbitrary context for serialization
@@ -92,21 +88,6 @@ public interface NBTCodec<T> extends Codec<T, NBTReader, NBTWriter, CodecContext
 	@NotNull
 	public static <T> NBTCodecBuilder<T> builder(@NotNull Class<T> clazz) {
 		return new NBTCodecBuilder<>(clazz);
-	}
-	
-	@NotNull
-	public static <T> NBTCodec<T> codecOrElse(Class<T> clazz, NBTCodec<? extends T> a, NBTCodec<? extends T> b) {
-		return new OrElseCodec<>(clazz, a, b);
-	}
-	
-	@NotNull
-	public static <T> NBTCodec<T> byteToObject(Class<T> clazz, IntFunction<T> toObject, ToIntFunction<T> toByte) {
-		return new ByteToObjectCodec<>(clazz, toObject, toByte);
-	}
-	
-	@NotNull
-	public static <T> NBTCodec<T> stringToObject(Class<T> clazz, Function<String, T> toObject, Function<T, String> toString) {
-		return new StringToObjectCodec<>(clazz, toObject, toString);
 	}
 
 }

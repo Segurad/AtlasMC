@@ -16,7 +16,7 @@ import com.google.gson.stream.JsonWriter;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import de.atlasmc.util.configuration.ConfigurationSerializable;
 import de.atlasmc.util.configuration.ConfigurationSettings;
-import de.atlasmc.util.configuration.MemoryConfiguration;
+import de.atlasmc.util.configuration.MemoryConfigurationSection;
 
 public class JsonConfiguration extends FileConfiguration {
 	
@@ -164,7 +164,7 @@ public class JsonConfiguration extends FileConfiguration {
 				loadList(section, reader, childList);
 				break;
 			case BEGIN_OBJECT:
-				ConfigurationSection child = new MemoryConfiguration(section);
+				ConfigurationSection child = new MemoryConfigurationSection(section);
 				list.add(child);
 				reader.beginObject();
 				loadSection(child, reader);

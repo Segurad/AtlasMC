@@ -39,8 +39,12 @@ public class StreamCodecImpl<T> implements StreamCodec<T> {
 		if (constructor != null)
 			constructor.serialize(value, output, context);
 		if (fields != null) {
-			for (var field : fields) {
-				field.serialize(value, output, context);
+			final var fields = this.fields;
+			final var length = fields.length;
+			for (int i = 0; i < length; i++) {
+				var field = fields[i];
+				if (!field.serialize(value, output, context))
+					throw new CodecException("Failed to serialize field " + i + ": " + field.getClass() + " in codec of type: " + clazz);
 			}
 		}
 		return true;

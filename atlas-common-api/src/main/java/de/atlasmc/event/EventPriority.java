@@ -45,7 +45,7 @@ public enum EventPriority {
 		case IGNORE:
 			return true;
 		case PROCESS:
-			return true;
+			return false;
 		default:
 			throw new IllegalStateException();
 		}

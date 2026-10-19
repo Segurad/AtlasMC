@@ -11,6 +11,8 @@ import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.OrElseCodec;
+import de.atlasmc.nbt.codec.StringToObjectCodec;
 import de.atlasmc.nbt.io.NBTNIOReader;
 import de.atlasmc.nbt.io.NBTNIOWriter;
 import de.atlasmc.nbt.io.NBTReader;
@@ -62,7 +64,7 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 			default:
 				throw new NBTException("Expected list of type COMPOUND or STRING but was: " + listType);
 			}
-			return value;
+			return list;
 		}
 		
 		@Override
@@ -92,10 +94,10 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 	};
 	
 	@NotNull
-	public static final NBTCodec<Chat> RAW_NBT_CODEC = NBTCodec.stringToObject(Chat.class, ChatUtil::toChat, Chat::toText);
+	public static final NBTCodec<Chat> RAW_NBT_CODEC = new StringToObjectCodec<>(Chat.class, ChatUtil::toChat, Chat::toText);
 	
 	@NotNull
-	public static final NBTCodec<Chat> NBT_CODEC = NBTCodec.codecOrElse(Chat.class, RAW_NBT_CODEC, ChatComponent.NBT_CODEC);
+	public static final NBTCodec<Chat> NBT_CODEC = new OrElseCodec<>(Chat.class, ChatComponent.NBT_CODEC, RAW_NBT_CODEC);
 	
 	@NotNull
 	public static final StreamCodec<Chat>
@@ -109,7 +111,7 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 				}
 			} else {
 				try (NBTWriter writer = new NBTNIOWriter(output, true)) {
-					writer.writeStringTag(null, value.toJsonText());
+					writer.writeStringTag(null, value.toSNBTText());
 				}
 			}
 			return true;
@@ -143,15 +145,15 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 	String toLegacyText();
 	
 	/**
-	 * Always returns the text in json format.
-	 * @return text in json
+	 * Always returns the text in snbt format.
+	 * @return text in snbt
 	 */
 	@NotNull
-	String toJsonText();
+	String toSNBTText();
 	
 	/**
-	 * Returns the text in json format if present otherwise it will return in legacy format
-	 * @return text in json or legacy
+	 * Returns the text in snbt format if present otherwise it will return in legacy format
+	 * @return text in snbt or legacy
 	 */
 	@NotNull
 	String toText();
@@ -179,10 +181,10 @@ public interface Chat extends OpenCloneable, StreamSerializable {
 	
 	/**
 	 * Indicates whether or not legacy text is stored.
-	 * However calling {@link #toJsonText()} will always return json text
-	 * @return true if json is stored
+	 * However calling {@link #toSNBTText()} will always return snbt text
+	 * @return true if snbt is stored
 	 */
-	boolean hasJson();
+	boolean hasSNBT();
 	
 	/**
 	 * Whether or not the chat can be casted directly to {@link ChatComponent}

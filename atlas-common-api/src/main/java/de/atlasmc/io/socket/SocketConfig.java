@@ -120,9 +120,15 @@ public class SocketConfig implements ConfigurationSerializable {
 	
 	@Override
 	public <T extends ConfigurationSection> T toConfiguration(T config) {
-		config.addConfiguration(config);
+		config.addConfiguration(this.config);
 		return config;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends ConnectionConfig> T getConnectionConfig(String key) {
+		return (T) conConfigs.get(key);
+	}
+
 	
 	public static enum ChannelType {
 		
@@ -173,11 +179,6 @@ public class SocketConfig implements ConfigurationSerializable {
 			return NIO;
 		}
 		
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends ConnectionConfig> T getConnectionConfig(String key) {
-		return (T) conConfigs.get(key);
 	}
 
 }

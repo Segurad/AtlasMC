@@ -1,6 +1,5 @@
 package de.atlasmc.util;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -30,8 +29,10 @@ public class CharSequenceReader extends Reader {
 			throw new IllegalArgumentException("Cbuf can not be null!");
 		if (off < 0)
 			throw new IllegalArgumentException("Offset can not be lower than 0: " + off);
+		if (readerIndex >= source.length())
+			return -1;
 		int transfered = 0;
-		for (int i = off; i < cbuf.length && readerIndex < source.length(); readerIndex++, transfered++, i++) {
+		for (int i = off; i < off + len && readerIndex < source.length(); readerIndex++, transfered++, i++) {
 			cbuf[i] = source.charAt(readerIndex);
 		}
 		return transfered;
@@ -42,6 +43,8 @@ public class CharSequenceReader extends Reader {
 		ensureOpen();
 		if (target == null)
 			throw new IllegalArgumentException("Target can not be null!");
+		if (readerIndex >= source.length())
+			return -1;
 		int transfered = 0;
 		for (; readerIndex < source.length(); readerIndex++, transfered++) {
 			target.append(source.charAt(readerIndex));
@@ -58,7 +61,7 @@ public class CharSequenceReader extends Reader {
 	public int read() throws IOException {
 		ensureOpen();
 		if (readerIndex >= source.length())
-			throw new EOFException();
+			return -1;
 		return source.charAt(readerIndex++);
 	}
 	

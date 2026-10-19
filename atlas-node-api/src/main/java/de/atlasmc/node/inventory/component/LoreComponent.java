@@ -2,7 +2,10 @@ package de.atlasmc.node.inventory.component;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+
 import de.atlasmc.chat.Chat;
+import de.atlasmc.nbt.codec.CodecCollectionFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.util.annotation.NotNull;
 
@@ -10,11 +13,12 @@ public interface LoreComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<LoreComponent>
-	NBT_CODEC = NBTCodec
-					.builder(LoreComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.codecCollection(ComponentType.LORE.getNamespacedKey(), LoreComponent::hasLore, LoreComponent::getLore, Chat.CHAT_LIST_NBT_CODEC)
-					.build();
+	NBT_CODEC = CodecCollectionFieldCodec
+				.builder(LoreComponent.class, Chat.CHAT_LIST_NBT_CODEC)
+				.include(ItemComponent.NBT_CODEC)
+				.hasData(LoreComponent::hasLore)
+				.getter(LoreComponent::getLore)
+				.build();
 	
 	@NotNull
 	List<Chat> getLore();
@@ -22,14 +26,12 @@ public interface LoreComponent extends ItemComponent {
 	boolean hasLore();
 	
 	default boolean addLore(@NotNull Chat chat) {
-		if (chat == null)
-			throw new IllegalArgumentException("Chat can not be null!");
+		Objects.requireNonNull(chat, "chat");
 		return getLore().add(chat);
 	}
 	
 	default boolean removeLore(@NotNull Chat chat) {
-		if (chat == null)
-			throw new IllegalArgumentException("Chat can not be null!");
+		Objects.requireNonNull(chat, "chat");
 		if (hasLore())
 			return getLore().remove(chat);
 		return false;
@@ -39,8 +41,7 @@ public interface LoreComponent extends ItemComponent {
 	LoreComponent clone();
 
 	default void setLore(@NotNull Collection<Chat> lore) {
-		if (lore == null)
-			throw new IllegalArgumentException("Lore can not be null!");
+		Objects.requireNonNull(lore);
 		List<Chat> list = getLore();
 		list.clear();
 		list.addAll(lore);

@@ -3,6 +3,7 @@ package de.atlasmc.node.inventory.component;
 import java.util.List;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.TagType;
+import de.atlasmc.nbt.codec.CodecFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.tag.NBT;
 import de.atlasmc.util.AtlasUtil;
@@ -12,11 +13,12 @@ public interface CustomDataComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<CustomDataComponent>
-	NBT_CODEC = NBTCodec
-					.builder(CustomDataComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.codec(ComponentType.CUSTOM_DATA.getNamespacedKey(), CustomDataComponent::getData, CustomDataComponent::setData, NBT.rawFieldNBTCodec(List.of(TagType.COMPOUND, TagType.STRING)))
-					.build();
+	NBT_CODEC = CodecFieldCodec
+				.builder(CustomDataComponent.class, NBT.rawFieldNBTCodec(List.of(TagType.COMPOUND, TagType.STRING)))
+				.include(ItemComponent.NBT_CODEC)
+				.getter(CustomDataComponent::getData)
+				.setter(CustomDataComponent::setData)
+				.build();
 	
 	@NotNull
 	public static final StreamCodec<CustomDataComponent>

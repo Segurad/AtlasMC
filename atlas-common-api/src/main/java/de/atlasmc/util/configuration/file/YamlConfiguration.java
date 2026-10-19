@@ -61,19 +61,19 @@ public class YamlConfiguration extends FileConfiguration {
 
 	@Override
 	public void loadFromString(String data) {
-		Map<?, ?> input = yaml.load(data);
+		Map<?, ?> input = getYaml().load(data);
 		mapToSection(input, this);
 	}
 	
 	@Override
 	public void load(InputStream in) throws IOException {
-		Map<?, ?> input = yaml.load(in);
+		Map<?, ?> input = getYaml().load(in);
 		mapToSection(input, this);
 	}
 	
 	@Override
 	public void load(Reader in) throws IOException {
-		Map<?, ?> input = yaml.load(in);
+		Map<?, ?> input = getYaml().load(in);
 		mapToSection(input, this);
 	}
 

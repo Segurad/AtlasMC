@@ -14,13 +14,11 @@ public interface LodestoneTrackerComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(LodestoneTrackerComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.LODESTONE_TRACKER.getNamespacedKey())
 					.beginComponent("target", LodestoneTrackerComponent::hasTarget)
 					.codec("pos", LodestoneTrackerComponent::getLocation, LodestoneTrackerComponent::setLocation, NBTCodecs.VECTOR_3I)
 					.codec("dimension", LodestoneTrackerComponent::getDimension, LodestoneTrackerComponent::setDimension, NamespacedKey.NBT_CODEC)
 					.endComponent()
 					.boolField("tracked", LodestoneTrackerComponent::isTracked, LodestoneTrackerComponent::setTracked, true)
-					.endComponent()
 					.build();
 	
 	boolean hasTarget();

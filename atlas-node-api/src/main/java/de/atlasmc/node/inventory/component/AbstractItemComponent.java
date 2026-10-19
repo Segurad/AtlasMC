@@ -1,5 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
+import java.util.Objects;
+
 import de.atlasmc.util.CloneException;
 
 public abstract class AbstractItemComponent implements ItemComponent {
@@ -7,9 +9,7 @@ public abstract class AbstractItemComponent implements ItemComponent {
 	protected final ComponentType type;
 	
 	public AbstractItemComponent(ComponentType type) {
-		if (type == null)
-			throw new IllegalArgumentException("Type can not be null!");
-		this.type = type;
+		this.type = Objects.requireNonNull(type, "type");
 	}
 	
 	@Override

@@ -19,8 +19,8 @@ public class Tag<T> implements Namespaced, Iterable<T> {
 	
 	public Tag(@NotNull NamespacedKey identifier, @NotNull Class<?> type) {
 		this.identifier = Objects.requireNonNull(identifier, "identifier");
-		this.values = ConcurrentHashMap.newKeySet();
 		this.type = Objects.requireNonNull(type, "type");
+		this.values = ConcurrentHashMap.newKeySet();
 	}
 	
 	@Override
@@ -46,9 +46,8 @@ public class Tag<T> implements Namespaced, Iterable<T> {
 	}
 	
 	public boolean add(T element) {
-		if (element == null)
-			throw new IllegalArgumentException("Element can not be null!");
-		if (type.isInstance(element))
+		Objects.requireNonNull(element, "element");
+		if (!type.isInstance(element))
 			throw new IllegalArgumentException("Element is not compatiple with this tag(" + type.getName() + "): " + element.getClass().getName());
 		return values.add(element);
 	}

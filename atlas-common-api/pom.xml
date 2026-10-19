@@ -39,7 +39,7 @@
 								<annotationProcessor>de.atlasmc.registry.RegistryHolderProcessor</annotationProcessor>
 								<annotationProcessor>de.atlasmc.registry.RegistryValueProcessor</annotationProcessor>
 								<annotationProcessor>de.atlasmc.plugin.startup.StartupHandlerRegisterProcessor</annotationProcessor>
-								<annotationProcesspr>de.atlasmc.event.ListenerAutoregisterProcessor</annotationProcesspr>
+								<annotationProcessor>de.atlasmc.event.ListenerAutoregisterProcessor</annotationProcessor>
 							</annotationProcessors>
 						</configuration>
 					</execution>

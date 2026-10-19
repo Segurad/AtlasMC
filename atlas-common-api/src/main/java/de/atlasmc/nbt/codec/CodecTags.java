@@ -25,6 +25,11 @@ public class CodecTags {
 	LIST_STRING = List.of(TagType.LIST, TagType.STRING),
 	INT_LIST = List.of(TagType.INT, TagType.LIST),
 	INT_ARRAY_STRING = List.of(TagType.INT_ARRAY, TagType.STRING),
-	COMPOUND_STRING = List.of(TagType.COMPOUND, TagType.STRING);
+	COMPOUND_STRING = List.of(TagType.COMPOUND, TagType.STRING),
+	/**
+	 * All tags except {@link TagType#TAG_END}
+	 */
+	ALL = List.of(TagType.COMPOUND, TagType.BYTE, TagType.SHORT, TagType.INT, TagType.LONG, TagType.FLOAT, TagType.DOUBLE,
+			TagType.BYTE_ARRAY, TagType.STRING, TagType.LIST, TagType.INT_ARRAY, TagType.LONG_ARRAY);
 
 }

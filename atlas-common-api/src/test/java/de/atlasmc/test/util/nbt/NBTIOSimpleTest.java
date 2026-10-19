@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +17,8 @@ import de.atlasmc.nbt.io.NBTNIOReader;
 import de.atlasmc.nbt.io.NBTNIOWriter;
 import de.atlasmc.nbt.io.NBTObjectReader;
 import de.atlasmc.nbt.io.NBTReader;
-import de.atlasmc.nbt.io.SNBTReader;
+import de.atlasmc.nbt.io.SNBTIOReader;
+import de.atlasmc.nbt.io.SNBTStringReader;
 import de.atlasmc.nbt.io.SNBTWriter;
 import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.nbt.tag.NBT;
@@ -66,6 +68,21 @@ public class NBTIOSimpleTest {
 		SIMPLE_TYPES_STRUCTURE = root;
 	}
 	
+	private static String SIMPLE_STRING_STRUCTURE;
+	
+	private String readTestString() throws IOException {
+		if (SIMPLE_STRING_STRUCTURE != null)
+			return SIMPLE_STRING_STRUCTURE;
+		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.snbt");
+		BufferedReader bufreader = new BufferedReader(new InputStreamReader(in));
+        StringBuilder result = new StringBuilder();
+        String line;
+        while ((line = bufreader.readLine()) != null) {
+            result.append(line);
+        }
+        return SIMPLE_STRING_STRUCTURE = result.toString();
+	}
+	
 	@Test
 	public void testNBTIOReader() throws IOException {
 		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.nbt");
@@ -82,18 +99,17 @@ public class NBTIOSimpleTest {
 		//traceReader(reader);
 		testReader(reader, SIMPLE_TYPES_STRUCTURE);
 	}
-
-
+	
 	@Test
-	public void testSNBTReader() throws IOException {
-		InputStream in = NBTIOSimpleTest.class.getResourceAsStream("/nbt/simple_types.snbt");
-		BufferedReader bufreader = new BufferedReader(new InputStreamReader(in));
-        StringBuilder result = new StringBuilder();
-        String line;
-        while ((line = bufreader.readLine()) != null) {
-            result.append(line);
-        }
-		SNBTReader reader = new SNBTReader(result.toString());
+	public void testSNBTIOReader() throws IOException {
+		var reader = new SNBTIOReader(new StringReader(readTestString()));
+		//traceReader(reader);
+		testReader(reader, SIMPLE_TYPES_STRUCTURE);
+	}
+	
+	@Test
+	public void testSNBTStringReader() throws IOException {
+		var reader = new SNBTStringReader(readTestString());
 		//traceReader(reader);
 		testReader(reader, SIMPLE_TYPES_STRUCTURE);
 	}

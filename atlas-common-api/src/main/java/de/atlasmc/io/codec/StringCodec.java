@@ -43,13 +43,25 @@ public class StringCodec implements StreamCodec<String> {
 		return readString(in, MAX_LENGTH);
 	}
 	
+	/**
+	 * Reads a UTF-8 string prefixed with its byte length.
+	 * The max length is the max number of chars (UTF-16 code units) like in the minecraft protocol.
+	 * @param in
+	 * @param maxLength max number of chars
+	 * @return string or null if the length is 0
+	 */
 	public static String readString(ByteBuf in, int maxLength) {
 		int len = PacketUtil.readVarInt(in);
 		if (len == 0) 
 			return null;
-		if (len > maxLength) 
-			throw new CodecException("Invalid String length:" + len + " expected: " + maxLength);
-		return in.readString(len, StandardCharsets.UTF_8);
+		if (len < 0 || len > maxLength * 3) 
+			throw new CodecException("Invalid String byte length: " + len + " expected max: " + (maxLength * 3));
+		if (len > in.readableBytes())
+			throw new CodecException("String byte length " + len + " exceeds readable bytes: " + in.readableBytes());
+		String value = in.readString(len, StandardCharsets.UTF_8);
+		if (value.length() > maxLength)
+			throw new CodecException("String was longer than max length " + maxLength + ": " + value.length());
+		return value;
 	}
 	
 	public static void writeString(String value, ByteBuf out) {
@@ -61,13 +73,10 @@ public class StringCodec implements StreamCodec<String> {
 			PacketUtil.writeVarInt(0, out);
 			return;
 		}
-		int maxBytes = ByteBufUtil.utf8MaxBytes(value);
-		ByteBuf buf = out.alloc().buffer(maxBytes);
-		int bytes = ByteBufUtil.writeUtf8(buf, value);
-		if (bytes > maxLength)
-			throw new CodecException("String was longer than max length " + maxLength + ": " + bytes);
-		PacketUtil.writeVarInt(bytes, out);
-		out.writeBytes(buf);
+		if (value.length() > maxLength)
+			throw new CodecException("String was longer than max length " + maxLength + ": " + value.length());
+		PacketUtil.writeVarInt(ByteBufUtil.utf8Bytes(value), out);
+		ByteBufUtil.writeUtf8(out, value);
 	}
 	
 }

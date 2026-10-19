@@ -19,13 +19,12 @@ public interface ConsumableComponent extends ItemComponent {
 	public static final NBTCodec<ConsumableComponent>
 	NBT_CODEC = NBTCodec
 					.builder(ConsumableComponent.class)
-					.beginComponent(ComponentType.CONSUMABLE.getNamespacedKey())
+					.include(ItemComponent.NBT_CODEC)
 					.floatField("consume_seconds", ConsumableComponent::getConsumeSeconds, ConsumableComponent::setConsumeSeconds, 1.6f)
 					.codec("animation", ConsumableComponent::getAnimation, ConsumableComponent::setAnimation, EnumUtil.enumStringNBTCodec(Animation.class), Animation.EAT)
 					.codec("sound", ConsumableComponent::getSound, ConsumableComponent::setSound, Sound.NBT_CODEC, EnumSound.ENTITY_GENERIC_EAT)
 					.boolField("has_consume_particles", ConsumableComponent::hasParticles, ConsumableComponent::setParticles)
 					.codecList("on_consume_effects", ConsumableComponent::hasEffects, ConsumableComponent::getEffects, ComponentEffect.NBT_CODEC)
-					.endComponent()
 					.build();
 	
 	@NotNull
@@ -37,7 +36,7 @@ public interface ConsumableComponent extends ItemComponent {
 					.varIntEnum(ConsumableComponent::getAnimation, ConsumableComponent::setAnimation, Animation.class)
 					.varIntEnumOrCodec(ConsumableComponent::getSound, ConsumableComponent::setSound, EnumSound.class, ResourceSound.STREAM_CODEC)
 					.booleanValue(ConsumableComponent::hasParticles, ConsumableComponent::setParticles)
-					.listCodec(ConsumableComponent::hasEffects, ConsumableComponent::getEffects, ComponentEffect.STREAM_CODEC)
+					.codecList(ConsumableComponent::hasEffects, ConsumableComponent::getEffects, ComponentEffect.STREAM_CODEC)
 					.build();
 	
 	float getConsumeSeconds();

@@ -43,7 +43,7 @@ public class CodecListField<T, V> extends AbstractCollectionField<T, List<V>> {
 			throw new CodecException("Invalid list size:" + size + " expected: " + maxValues);
 		PacketUtil.writeVarInt(size, buf);
 		for (int i = 0; i < size; i++) {
-			codec.serialize(list.get(i), buf);
+			codec.serialize(list.get(i), buf, context);
 		}
 		return true;
 	}

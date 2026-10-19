@@ -2,7 +2,6 @@ package de.atlasmc.registry;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -61,7 +60,7 @@ public final class RegistryHolderProcessor extends AbstractProcessor {
 					if (registries.contains(key)) {
 						ConfigurationSection other = registries.getConfigurationSection(key);
 						String otherTarget = other.getString("target");
-						String otherType = other.getString(type);
+						String otherType = other.getString("type");
 						String message = "Another type (" + otherType + " : " + otherTarget + ") with the given registry key is already present: " + key;
 						log.printMessage(Kind.ERROR, message, ele, mirror);
 					}
@@ -85,8 +84,9 @@ public final class RegistryHolderProcessor extends AbstractProcessor {
 		YamlConfiguration registryCfg = null;
 		try {
 			FileObject file = filer.getResource(StandardLocation.CLASS_OUTPUT, "", path);
-			InputStream in = file.openInputStream();
-			registryCfg = YamlConfigurationFactory.INSTANCE.load(in);
+			try (InputStream in = file.openInputStream()) {
+				registryCfg = YamlConfigurationFactory.INSTANCE.load(in);
+			}
 		} catch(IOException e) {
 			// no file present
 		}
@@ -117,8 +117,9 @@ public final class RegistryHolderProcessor extends AbstractProcessor {
 			return;
 		try {
 			FileObject file = filer.createResource(StandardLocation.CLASS_OUTPUT, "", path);
-			OutputStream out = file.openOutputStream();
-			registryCfg.save(out);
+			try (var out = file.openOutputStream()) {
+					registryCfg.save(out);
+			}
 		} catch (IOException e) {
 			processingEnv.getMessager().printMessage(Kind.ERROR, "Unable to create " + path + ", " + e);
 			return;

@@ -27,17 +27,20 @@ public class ContextHandlerList<T> extends HandlerList {
 	
 	@Override
 	public void registerExecutor(EventExecutor executor, Object... handleroptions) {
+		Objects.requireNonNull(executor, "executor");
+		boolean registered = false;
 		if (handleroptions != null) {
 			for (Object o : handleroptions) {
-				if (clazz.isInstance(o)) {
-					@SuppressWarnings("unchecked")
-					T context = (T) o;
-					registerExecutor(context, executor);
-				} else {
-					registerExecutor(executor);
-				}
+				if (!clazz.isInstance(o))
+					continue;
+				@SuppressWarnings("unchecked")
+				T context = (T) o;
+				registerExecutor(context, executor);
+				registered = true;
 			}
-		} else registerExecutor(executor);
+		}
+		if (!registered) // no context present register global
+			registerExecutor(executor);
 	}
 	
 	/**

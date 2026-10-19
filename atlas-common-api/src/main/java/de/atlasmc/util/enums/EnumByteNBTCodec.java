@@ -12,7 +12,7 @@ import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 
-final class EnumByteNBTCodec<V, E extends Enum<?> & IDHolder> implements NBTCodec<V> {
+final class EnumByteNBTCodec<E extends Enum<?> & IDHolder> implements NBTCodec<E> {
 
 	private final Class<E> clazz;
 	
@@ -21,20 +21,16 @@ final class EnumByteNBTCodec<V, E extends Enum<?> & IDHolder> implements NBTCode
 	}
 
 	@Override
-	public boolean serialize(CharSequence key, V value, NBTWriter writer, CodecContext context) throws IOException {
+	public boolean serialize(CharSequence key, E value, NBTWriter writer, CodecContext context) throws IOException {
 		if (!clazz.isInstance(value))
 			return false;
-		@SuppressWarnings("unchecked")
-		E enumValue = (E) value;
-		writer.writeByteTag(key, enumValue.getID());
+		writer.writeByteTag(key, value.getID());
 		return true;
 	}
 
 	@Override
-	public V deserialize(V value, NBTReader reader, CodecContext context) throws IOException {
-		@SuppressWarnings("unchecked")
-		V v = (V) EnumUtil.getByID(clazz, reader.readByteTag() & 0xFF);
-		return v;
+	public E deserialize(E value, NBTReader reader, CodecContext context) throws IOException {
+		return EnumUtil.getByID(clazz, reader.readByteTag() & 0xFF);
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package de.atlasmc.tag;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -32,27 +33,26 @@ public class Tags {
 	}
 	
 	public static <T extends ProtocolRegistryValue> ProtocolTag<T> createTag(NamespacedKey key, ProtocolRegistry<T> registry) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (registry == null)
-			throw new IllegalArgumentException("Registry can not be null!");
-		modifyLock.lock();
-		Tag<?> rawTag = tags.get(key);
-		if (rawTag != null) {
-			if (!(rawTag instanceof ProtocolTag)) {
-				modifyLock.unlock();
-				throw new IllegalStateException("Tag present but was not ProtocolTag: " + key.toString());
+		Objects.requireNonNull(key, "key");
+		Objects.requireNonNull(registry, "registry");
+		try {
+			modifyLock.lock();
+			Tag<?> rawTag = tags.get(key);
+			if (rawTag != null) {
+				if (!(rawTag instanceof ProtocolTag)) {
+					throw new IllegalStateException("Tag present but was not ProtocolTag: " + key.toString());
+				}
+				@SuppressWarnings("unchecked")
+				ProtocolTag<T> tag = (ProtocolTag<T>) rawTag;
+				return tag;
 			}
-			@SuppressWarnings("unchecked")
-			ProtocolTag<T> tag = (ProtocolTag<T>) rawTag;
-			modifyLock.unlock();
+			ProtocolTag<T> tag = new ProtocolTag<T>(key, registry);
+			tags.put(key, tag);
+			registryTags.put(registry.getNamespacedKey(), tag);
 			return tag;
+		} finally {
+			modifyLock.unlock();
 		}
-		ProtocolTag<T> tag = new ProtocolTag<T>(key, registry);
-		tags.put(key, tag);
-		registryTags.put(registry.getNamespacedKey(), tag);
-		modifyLock.unlock();
-		return tag;
 	}
 	
 	public static <T> Tag<T> createTag(NamespacedKey key, Registry<T> registry) {
@@ -62,24 +62,24 @@ public class Tags {
 	}
 	
 	private static <T> Tag<T> createTag(NamespacedKey key, Class<?> clazz, Registry<T> registry) {
-		if (key == null)
-			throw new IllegalArgumentException("Key can not be null!");
-		if (clazz == null)
-			throw new IllegalArgumentException("Class can not be null!");
-		modifyLock.lock();
-		Tag<?> rawTag = tags.get(key);
-		if (rawTag != null) {
-			@SuppressWarnings("unchecked")
-			Tag<T> tag = (Tag<T>) rawTag;
-			modifyLock.unlock();
+		Objects.requireNonNull(key, "key");
+		Objects.requireNonNull(clazz, "clazz");
+		try {
+			modifyLock.lock();
+			Tag<?> rawTag = tags.get(key);
+			if (rawTag != null) {
+				@SuppressWarnings("unchecked")
+				Tag<T> tag = (Tag<T>) rawTag;
+				return tag;
+			}
+			Tag<T> tag = new Tag<T>(key, clazz);
+			tags.put(key, tag);
+			if (registry != null)
+				registryTags.put(registry.getNamespacedKey(), tag);
 			return tag;
+		} finally {
+			modifyLock.unlock();
 		}
-		Tag<T> tag = new Tag<T>(key, clazz);
-		tags.put(key, tag);
-		if (registry != null)
-			registryTags.put(registry.getNamespacedKey(), tag);
-		modifyLock.unlock();
-		return tag;
 	}
 	
 	public static <T extends Tag<?>> T getTag(NamespacedKey key) {

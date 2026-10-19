@@ -11,10 +11,8 @@ public interface UseCooldownComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(UseCooldownComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.USE_COOLDOWN.getNamespacedKey())
 					.floatField("seconds", UseCooldownComponent::getSeconds, UseCooldownComponent::setSeconds)
 					.codec("cooldown_group", UseCooldownComponent::getGroup, UseCooldownComponent::setGroup, NamespacedKey.NBT_CODEC)
-					.endComponent()
 					.build();
 					
 	

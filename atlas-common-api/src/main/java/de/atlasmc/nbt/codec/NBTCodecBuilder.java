@@ -1,36 +1,22 @@
 package de.atlasmc.nbt.codec;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import de.atlasmc.NamespacedKey.Namespaced;
-import de.atlasmc.nbt.codec.constructor.Constructor;
-import de.atlasmc.nbt.codec.constructor.FieldKeyConstructor;
-import de.atlasmc.nbt.codec.constructor.FieldKeyRegistryConstructor;
-import de.atlasmc.nbt.codec.constructor.SearchFieldEnumConstructor;
-import de.atlasmc.nbt.codec.constructor.SearchFieldRegistryConstructor;
 import de.atlasmc.nbt.codec.field.NBTCompoundField;
 import de.atlasmc.nbt.codec.field.NBTCompoundFieldBuilder;
 import de.atlasmc.nbt.codec.field.NBTField;
-import de.atlasmc.registry.RegistryKey;
+import de.atlasmc.util.AtlasUtil;
 import de.atlasmc.util.Builder;
 import de.atlasmc.util.annotation.NotNull;
-import de.atlasmc.util.enums.EnumName;
 import de.atlasmc.util.function.ToBooleanFunction;
 
-public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NBTCodecBuilder<T>>, Builder<NBTCodec<T>> {
+public class NBTCodecBuilder<T> extends AbstractCodecBuilder<T, NBTCodecBuilder<T>> implements AbstractNBTCompoundFieldBuilder<T, NBTCodecBuilder<T>>, Builder<NBTCodec<T>> {
 	
-	private final Class<T> clazz;
-	private Constructor<T> constructor;
-	private Supplier<T> defaultConstructor;
-	private Boolean redirectAfterConstruction;
 	private Boolean isField;
 	
 	protected final NBTCompoundFieldBuilder<T> root = new NBTCompoundFieldBuilder<T>().setKey("root");
 	protected NBTCompoundFieldBuilder<T> builder = root;
 	
 	protected NBTCodecBuilder(@NotNull Class<T> clazz) {
-		this.clazz = clazz;
+		super(clazz);
 	}
 	
 	public boolean isField() {
@@ -56,31 +42,6 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 		return root.build();
 	}
 	
-	public Class<T> getType() {
-		return clazz;
-	}
-	
-	public Constructor<T> getConstructor() {
-		return constructor;
-	}
-	
-	public Supplier<T> getDefaultConstructor() {
-		return defaultConstructor;
-	}
-	
-	public void setConstructor(Constructor<T> constructor) {
-		this.constructor = constructor;
-	}
-	
-	public boolean isRedirectAfterConstruction() {
-		return redirectAfterConstruction == null ? constructor != null && NBTSerializable.class.isAssignableFrom(clazz) : redirectAfterConstruction;
-	}
-	
-	public NBTCodecBuilder<T> setRedirectAfterConstruction(Boolean redirectAfterConstruction) {
-		this.redirectAfterConstruction = redirectAfterConstruction;
-		return this;
-	}
-	
 	@Override
 	public NBTCodec<T> build() {
 		return new NBTCodecImpl<>(getThis());
@@ -90,39 +51,8 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 	public NBTCodecBuilder<T> include(@NotNull NBTCodec<? super T> include) {
 		if (!(include instanceof NBTCodecImpl codec))
 			throw new IllegalArgumentException("Codec must be instanceof NBTCodecImpl!");
-		if (!codec.getType().isAssignableFrom(clazz))
-			throw new IllegalArgumentException("Codec type: " + codec.getType() + " is not assignable from type: " + clazz);
+		AtlasUtil.requireAssignable(codec.getType(), type);
 		codec.addToBuilder(this);
-		return this;
-	}
-	
-	public NBTCodecBuilder<T> constructor(Constructor<T> constructor) {
-		this.constructor = constructor;
-		return this;
-	}
-	
-	public NBTCodecBuilder<T> fieldKeyConstructor(Function<String, T> constructor) {
-		this.constructor = new FieldKeyConstructor<>(constructor);
-		return this;
-	}
-	
-	public <K> NBTCodecBuilder<T> fieldKeyRegistryConstructor(RegistryKey<K> registry, Function<K, T> constructor) {
-		this.constructor = new FieldKeyRegistryConstructor<>(registry, constructor);
-		return this;
-	}
-	
-	public <K extends Namespaced> NBTCodecBuilder<T> searchKeyConstructor(CharSequence keyField, RegistryKey<K> registry, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
-		this.constructor = new SearchFieldRegistryConstructor<>(keyField, registry, constructor, keyReverseSupplier);
-		return this;
-	}
-	
-	public <K extends Enum<K> & EnumName> NBTCodecBuilder<T> searchKeyEnumConstructor(CharSequence keyField, Class<K> clazz, Function<K, T> constructor, Function<T, K> keyReverseSupplier) {
-		this.constructor = new SearchFieldEnumConstructor<>(keyField, clazz, constructor, keyReverseSupplier);
-		return this;
-	}
-	
-	public NBTCodecBuilder<T> defaultConstructor(Supplier<T> defaultConstructor) {
-		this.defaultConstructor = defaultConstructor;
 		return this;
 	}
 	
@@ -141,6 +71,28 @@ public class NBTCodecBuilder<T> implements AbstractNBTCompoundFieldBuilder<T, NB
 	@Override
 	public NBTCodecBuilder<T> getThis() {
 		return this;
+	}
+
+	@Override
+	public NBTCodecBuilder<T> setHasData(ToBooleanFunction<T> has) {
+		builder.setHasData(has);
+		return this;
+	}
+
+	@Override
+	public ToBooleanFunction<T> getHasData() {
+		return builder.getHasData();
+	}
+
+	@Override
+	public NBTCodecBuilder<T> setAllowNoData(boolean allow) {
+		builder.setAllowNoData(allow);
+		return this;
+	}
+
+	@Override
+	public boolean isAllowNoData() {
+		return builder.isAllowNoData();
 	}
 
 }

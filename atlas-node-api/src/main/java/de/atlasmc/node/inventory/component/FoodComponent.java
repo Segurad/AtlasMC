@@ -11,11 +11,9 @@ public interface FoodComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(FoodComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.FOOD.getNamespacedKey())
 					.intField("nutrition", FoodComponent::getNutrition, FoodComponent::setNutrition, 0)
 					.floatField("saturation", FoodComponent::getSaturation, FoodComponent::setSaturation, 0)
 					.boolField("can_always_eat", FoodComponent::isAlwaysEatable, FoodComponent::setAlwaysEatable, false)
-					.endComponent()
 					.build();
 	
 	@NotNull

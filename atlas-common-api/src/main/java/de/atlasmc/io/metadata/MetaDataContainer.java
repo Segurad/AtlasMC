@@ -80,9 +80,8 @@ public class MetaDataContainer implements Iterable<MetaData<?>> {
 	
 	public void setChanged(MetaDataField<?> field) {
 		var metaData = this.data[field.getIndex()];
-		metaData.changed = changed;
-		if (changed)
-			this.changed = true;
+		metaData.changed = true;
+		this.changed = true;
 	}
 	
 	/**
@@ -163,7 +162,7 @@ public class MetaDataContainer implements Iterable<MetaData<?>> {
 	public List<MetaDataInfo<Object>> getNonDefaultData() {
 		List<MetaDataInfo<Object>> data = null;
 		for (var meta : this.data) {
-			if (meta.isDefault())
+			if (meta == null || meta.isDefault())
 				continue;
 			if (data == null)
 				data = new ArrayList<>();
@@ -184,7 +183,7 @@ public class MetaDataContainer implements Iterable<MetaData<?>> {
 			return null;
 		var data = new ArrayList<MetaDataInfo<Object>>();
 		for (MetaData<?> meta : this.data) {
-			if (!meta.changed)
+			if (meta == null || !meta.changed)
 				continue;
 			@SuppressWarnings("unchecked")
 			var info = (MetaDataInfo<Object>) meta.info();

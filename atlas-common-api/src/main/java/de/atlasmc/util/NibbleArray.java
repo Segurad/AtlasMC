@@ -1,5 +1,7 @@
 package de.atlasmc.util;
 
+import java.util.Objects;
+
 import de.atlasmc.util.annotation.NotNull;
 
 public class NibbleArray {
@@ -32,8 +34,7 @@ public class NibbleArray {
 	}
 	
 	public int getNibble(int index) {
-		if (index < 0 || index >= capacity)
-			throw new ArrayIndexOutOfBoundsException(index);
+		Objects.checkIndex(index, capacity);
 		byte bytee = values[index >> 1];
 		if ((index & 0x1) == 1)
 			bytee >>= 4;
@@ -41,13 +42,12 @@ public class NibbleArray {
 	}
 	
 	public void setNibble(int index, int value) {
-		if (index < 0 || index >= capacity)
-			throw new ArrayIndexOutOfBoundsException(index);
+		Objects.checkIndex(index, capacity);
 		byte bytee = values[index >> 1];
 		if ((index & 0x1) == 1)
-			bytee = (byte) (bytee & 0xF | (value & 0xF << 4));
+			bytee = (byte) ((bytee & 0x0F) | ((value & 0xF) << 4));
 		else
-			bytee = (byte) (bytee & 0xF0 | value & 0xF);
+			bytee = (byte) ((bytee & 0xF0) | (value & 0xF));
 		values[index >> 1] = bytee;
 	}
 	

@@ -9,7 +9,7 @@ import de.atlasmc.io.connection.ConnectionHandler;
 public interface IOExceptionHandler {
 	
 	/**
-	 * Exception handler that will log the exception and return true
+	 * Exception handler that will log the exception and return false
 	 */
 	public static final IOExceptionHandler LOG_ONLY = (con, cause) -> { 
 		con.getLogger().error("Error in connection: " + con.getRemoteAddress(), cause);

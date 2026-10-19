@@ -7,9 +7,12 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import de.atlasmc.plugin.PluginHandle;
@@ -25,12 +28,13 @@ public final class MethodEventExecutor extends EventExecutor {
 		super(plugin, eventClass, ignoreCancelled, priority, action, listener);
 		Objects.requireNonNull(method, "method");
 		try {
-			Lookup lookup = MethodHandles.privateLookupIn(listener.getClass(), MethodHandles.lookup());
+			final Class<?> declaringClass = method.getDeclaringClass();
+			Lookup lookup = MethodHandles.privateLookupIn(declaringClass, MethodHandles.lookup());
 			MethodHandle handle = lookup.unreflect(method);
 			CallSite site = LambdaMetafactory.metafactory(
 					lookup, 
 					"accept", 
-					MethodType.methodType(Consumer.class, listener.getClass()), 
+					MethodType.methodType(Consumer.class, declaringClass), 
 					MethodType.methodType(void.class, Object.class), 
 					handle, 
 					MethodType.methodType(void.class, eventClass));
@@ -50,20 +54,31 @@ public final class MethodEventExecutor extends EventExecutor {
 	 */
 	public static List<EventExecutor> getExecutors(PluginHandle plugin, Listener listener) {
 		List<EventExecutor> executors = null;
-		for (Method method : listener.getClass().getDeclaredMethods()) {
-			EventHandler handler = method.getAnnotation(EventHandler.class);
-			if (handler == null) 
-				continue;
-			if (method.getParameterCount() != 1) 
-				continue;
-			Class<?>[] params = method.getParameterTypes();
-			@SuppressWarnings("unchecked")
-			Class<? extends Event> eventClass = (Class<? extends Event>) params[0];
-			if (!Event.class.isAssignableFrom(eventClass)) 
-				continue;
-			if (executors == null)
-				executors = new ArrayList<>();
-			executors.add(new MethodEventExecutor(plugin, eventClass, method, handler.priority(), handler.ignoreHandled(), handler.ignoreCancelled(), listener));
+		Set<String> visited = null; // signatures of methods already handled by a subclass
+		for (Class<?> clazz = listener.getClass(); clazz != null && clazz != Object.class; clazz = clazz.getSuperclass()) {
+			for (Method method : clazz.getDeclaredMethods()) {
+				if (method.isBridge() || method.isSynthetic() || Modifier.isStatic(method.getModifiers()))
+					continue;
+				if (method.getParameterCount() != 1) 
+					continue;
+				Class<?>[] params = method.getParameterTypes();
+				if (!Modifier.isPrivate(method.getModifiers())) {
+					if (visited == null)
+						visited = new HashSet<>();
+					if (!visited.add(method.getName() + params[0].getName()))
+						continue; // overridden by a subclass
+				}
+				EventHandler handler = method.getAnnotation(EventHandler.class);
+				if (handler == null) 
+					continue;
+				if (!Event.class.isAssignableFrom(params[0])) 
+					continue;
+				@SuppressWarnings("unchecked")
+				Class<? extends Event> eventClass = (Class<? extends Event>) params[0];
+				if (executors == null)
+					executors = new ArrayList<>();
+				executors.add(new MethodEventExecutor(plugin, eventClass, method, handler.priority(), handler.ignoreHandled(), handler.ignoreCancelled(), listener));
+			}
 		}
 		return executors == null ? List.of() : executors;
 	}

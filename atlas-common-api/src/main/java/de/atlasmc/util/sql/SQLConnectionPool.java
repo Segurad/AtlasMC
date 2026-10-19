@@ -72,28 +72,44 @@ public class SQLConnectionPool {
 		return con.getConnection();
 	}
 	
-	public synchronized Connection getConnection(long timeout, TimeUnit unit) throws SQLException, InterruptedException {
-		ensureOpen();
-		PoolEntry con = null;
-		final long maxIdleTime = System.currentTimeMillis() - maxIdleTimeout;
-		do {
-			con = consAvailable.poll();
-			if (con == null) {
-				if (maxSize == 0 || size < maxSize) { // can create new connections
-					con = createConnection();
-				} else if (timeout > 0) { // blocks until new connection is available
-					con = consAvailable.poll(timeout, unit);
-				} else {
-					return null;
+	/**
+	 * Returns a connection or waits up to the given timeout for a connection to become available.
+	 * The pool lock is not held while waiting.
+	 * @param timeout
+	 * @param unit
+	 * @return connection or null if no connection was available within the timeout
+	 * @throws SQLException
+	 * @throws InterruptedException
+	 */
+	public Connection getConnection(long timeout, TimeUnit unit) throws SQLException, InterruptedException {
+		final long deadline = System.nanoTime() + unit.toNanos(timeout);
+		while (true) {
+			Connection connection = getConnection(); // non blocking
+			if (connection != null)
+				return connection;
+			final long remaining = deadline - System.nanoTime();
+			if (remaining <= 0)
+				return null;
+			ensureOpen();
+			final BlockingQueue<PoolEntry> available = consAvailable;
+			PoolEntry con = available.poll(remaining, TimeUnit.NANOSECONDS); // wait without holding the pool lock
+			if (con == null)
+				return null;
+			synchronized (this) {
+				if (closed) {
+					try {
+						con.con.close();
+					} catch (SQLException e) {}
+					throw new SQLException("Pool is closed!");
 				}
+				if (con.lastActive < System.currentTimeMillis() - maxIdleTimeout) {
+					con.discard();
+					continue;
+				}
+				consFetched.add(con);
+				return con.getConnection();
 			}
-			if (con.lastActive < maxIdleTime) {
-				con.discard();
-				con = null;
-			}
-		} while (con == null);
-		consFetched.add(con);
-		return con.getConnection();
+		}
 	}
 	
 	private synchronized PoolEntry createConnection() throws SQLException {

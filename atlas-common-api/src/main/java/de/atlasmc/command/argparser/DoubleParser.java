@@ -19,13 +19,15 @@ public class DoubleParser implements VarArgParser<Double> {
 	private final double max;
 	
 	public DoubleParser(double min, double max) {
+		if (min > max)
+	        throw new IllegalArgumentException("Min can not be greater than max: " + min + " > " + max);
 		this.min = min;
 		this.max = max;
 	}
 	
 	public DoubleParser(ConfigurationSection config) {
-		this.min = config.getDouble("min", Double.MIN_VALUE);
-		this.max = config.getDouble("max", Double.MAX_VALUE);
+		this(config.getDouble("min", -Double.MAX_VALUE), 
+				config.getDouble("max", Double.MAX_VALUE));
 	}
 	
 	@Override
@@ -60,12 +62,12 @@ public class DoubleParser implements VarArgParser<Double> {
 		int index = buf.writerIndex();
 		buf.writeByte(0);
 		int flags = 0;
-		if (min != Integer.MIN_VALUE) {
-			flags &= 0x1;
+		if (min != -Double.MAX_VALUE) {
+			flags |= 0x1;
 			buf.writeDouble(min);
 		}
-		if (max != Integer.MAX_VALUE) {
-			flags &= 0x2;
+		if (max != Double.MAX_VALUE) {
+			flags |= 0x2;
 			buf.writeDouble(max);
 		}
 		int next = buf.writerIndex();
@@ -76,7 +78,7 @@ public class DoubleParser implements VarArgParser<Double> {
 
 	@Override
 	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
-		if (min != Double.MIN_VALUE)
+		if (min != -Double.MAX_VALUE)
 			configuration.set("min", min);
 		if (max != Double.MAX_VALUE)
 			configuration.set("max", max);

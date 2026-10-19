@@ -3,10 +3,11 @@ package de.atlasmc.node.sound;
 import de.atlasmc.NamespacedKey.Namespaced;
 import de.atlasmc.io.codec.StreamCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.OrElseCodec;
 
 public interface Sound extends Namespaced {
 
-	public static final NBTCodec<Sound> NBT_CODEC = NBTCodec.codecOrElse(Sound.class, EnumSound.NBT_CODEC, ResourceSound.NBT_CODEC);
+	public static final NBTCodec<Sound> NBT_CODEC = new OrElseCodec<>(Sound.class, EnumSound.NBT_CODEC, ResourceSound.NBT_CODEC);
 	
 	public static final StreamCodec<Sound> STREAM_CODEC = StreamCodec.varIntEnumOrCodec(Sound.class, EnumSound.class, ResourceSound.STREAM_CODEC);
 	

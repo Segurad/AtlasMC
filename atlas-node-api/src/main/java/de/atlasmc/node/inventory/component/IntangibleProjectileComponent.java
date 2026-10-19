@@ -10,8 +10,6 @@ public interface IntangibleProjectileComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(IntangibleProjectileComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.INTANGIBLE_PROJECTILE.getNamespacedKey())
-					.endComponent()
 					.build();
 	
 	@Override

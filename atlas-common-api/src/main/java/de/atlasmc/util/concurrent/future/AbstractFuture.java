@@ -5,6 +5,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import de.atlasmc.Atlas;
+
 /**
  * Base implementation for atlas futures
  * @param <V>
@@ -42,10 +44,9 @@ public class AbstractFuture<V> implements Future<V> {
 			return resultOrThrow();
 		}
 		synchronized (this) {
-			if (isDone()) {
-				return resultOrThrow();
-			}
-			wait();
+			while (!isDone()) {
+				wait();
+            }
 			return resultOrThrow();
 		}
 	}
@@ -64,12 +65,14 @@ public class AbstractFuture<V> implements Future<V> {
 		synchronized (this) {
 			if (isDone())
 				return resultOrThrow();
-			int nanos = 0;
-			if (unit.ordinal() < TimeUnit.MILLISECONDS.ordinal()) {
-				long val = TimeUnit.NANOSECONDS.convert(nanos, unit);
-				nanos = (int) (val % 1000000);
-			};
-			wait(TimeUnit.MILLISECONDS.convert(timeout, unit), nanos);
+			final long deadline = System.nanoTime() + unit.toNanos(timeout);
+			long remaining;
+			while (!isDone()) {
+				remaining = deadline - System.nanoTime();
+				if (remaining <= 0)
+					throw new TimeoutException();
+				TimeUnit.NANOSECONDS.timedWait(this, remaining);
+			}
 			return resultOrThrow();
 		}
 	}
@@ -153,16 +156,24 @@ public class AbstractFuture<V> implements Future<V> {
 				@SuppressWarnings("unchecked")
 				Iterable<FutureListener<V>> listeners = (Iterable<FutureListener<V>>) listener;
 				for (FutureListener<V> l : listeners) {
-					l.complete(this);
+					completeListener(l);
 				}
 			} else {
 				@SuppressWarnings("unchecked")
 				FutureListener<V> l = (FutureListener<V>) listener;
-				l.complete(this);
+				completeListener(l);
 			}
 			this.listener = null;
 		}
 		notifyAll();
+	}
+	
+	private void completeListener(FutureListener<V> listener) {
+		try {
+			listener.complete(this);
+		} catch(Exception e) {
+			Atlas.getLogger().error("Exception by future listener on completion: " + listener.getClass().getName(), e);
+		}
 	}
 
 }

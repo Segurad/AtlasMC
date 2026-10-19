@@ -3,6 +3,7 @@ package de.atlasmc.nbt.tag;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.TagType;
@@ -62,8 +63,7 @@ public final class ListTag extends AbstractCollectionTag<ListTag, List<NBT>> imp
 	
 	@Override
 	protected void add(NBT data) {
-		if (data == null) 
-			throw new IllegalArgumentException("NBT can not be null!");
+		Objects.requireNonNull(data, "data");
 		if (datatype == null)
 			datatype = data.getType();
 		if (datatype != data.getType()) 

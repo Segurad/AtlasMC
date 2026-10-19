@@ -8,7 +8,7 @@ import io.netty.buffer.ByteBuf;
 public class LongMetaType extends MetaDataType<Long> {
 	
 	public LongMetaType(int type) {
-		super(type, Number.class);
+		super(type, Long.class);
 	}
 	
     @Override

@@ -14,8 +14,8 @@ public class HasOptionalField<T> extends StreamField<T> {
 	private final StreamField<T> field;
 	
 	public HasOptionalField(ToBooleanFunction<T> has, StreamField<T> field) {
-		this.has = Objects.requireNonNull(has);
-		this.field = Objects.requireNonNull(field);
+		this.has = Objects.requireNonNull(has, "has");
+		this.field = Objects.requireNonNull(field, "field");
 	}
 	
 	@Override
@@ -32,8 +32,9 @@ public class HasOptionalField<T> extends StreamField<T> {
 
 	@Override
 	public void deserialize(T type, ByteBuf buf, CodecContext context) throws IOException {
-		// TODO Auto-generated method stub
-		
+		if (!buf.readBoolean())
+			return;
+		field.deserialize(type, buf, context);
 	}
 
 }

@@ -16,7 +16,7 @@ public class ThreadWatchdog extends TickingThread {
 
 	private static ThreadWatchdog DOG = new ThreadWatchdog();
 	private static final Set<WatchableThread> watched;
-	private static final long DIE_AFTER = TimeUnit.SECONDS.toMillis(60);
+	private static final long DIE_AFTER = TimeUnit.SECONDS.toNanos(60);
 	
 	static {
 		watched = ConcurrentHashMap.newKeySet();
@@ -32,16 +32,16 @@ public class ThreadWatchdog extends TickingThread {
 	protected void tick(int tick) {
 		if (watched.isEmpty())
 			return;
-		long time = System.currentTimeMillis() - DIE_AFTER;
+		final long now = System.nanoTime();
 		ArrayList<Thread> dead = null;
 		for (WatchableThread ref : watched) {
 			Thread thread = ref.getThread();
 			if (thread.getState() == State.TERMINATED) {
 				watched.remove(ref);
-				logger.debug("Removing terminated Thread: {} ID {} | State {}", thread.getName(), thread.threadId());
+				logger.debug("Removing terminated Thread: {} ID {} | State {}", thread.getName(), thread.threadId(), thread.getState());
 				continue;
 			}
-			if (ref.lastHeartBeat() > time)
+			if (now - ref.lastHeartBeat() < DIE_AFTER)
 				continue;
 			if (dead == null)
 				dead = new ArrayList<>();

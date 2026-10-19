@@ -1,17 +1,19 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.PrimitiveFieldCodecs;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface MaxStackSizeComponent extends ItemComponent {
 
 	@NotNull
 	public static final NBTCodec<MaxStackSizeComponent>
-	NBT_CODEC = NBTCodec
-					.builder(MaxStackSizeComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.intField(ComponentType.MAX_STACK_SIZE.getNamespacedKey(), MaxStackSizeComponent::getMaxStackSize, MaxStackSizeComponent::setMaxStackSize, 0)
-					.build();
+	NBT_CODEC = PrimitiveFieldCodecs
+				.buildInt(MaxStackSizeComponent.class)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(MaxStackSizeComponent::getMaxStackSize)
+				.setter(MaxStackSizeComponent::setMaxStackSize)
+				.build();
 	
 	int getMaxStackSize();
 	

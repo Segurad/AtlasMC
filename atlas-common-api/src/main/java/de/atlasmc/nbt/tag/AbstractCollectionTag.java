@@ -198,14 +198,14 @@ public abstract class AbstractCollectionTag<T extends AbstractCollectionTag<T, C
 	
 	@Override
 	public void setData(Object data) {
-		this.data.clear();
-		if (data instanceof Collection list) {
+		if (data instanceof NBT nbt) {
+			add(nbt);
+		} else if (data instanceof Collection list) {
+			this.data.clear();
 			for (Object obj : list) {
 				if (obj instanceof NBT nbt)
 					add(nbt);
 			}
-		} else if (data instanceof NBT nbt) {
-			add(nbt);
 		}
 	}
 	

@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.atlasmc.util.ConcurrentLinkedList;
 import de.atlasmc.util.annotation.ThreadSafe;
 
 @ThreadSafe
@@ -31,8 +30,8 @@ public class CopyOnWriteArrayListMultimap<K, V> extends AbstractConcurrentMultim
 	}
 
 	@Override
-	public ConcurrentLinkedList<V> get(K key) {
-		return (ConcurrentLinkedList<V>) super.get(key);
+	public CopyOnWriteArrayList<V> get(K key) {
+		return (CopyOnWriteArrayList<V>) super.get(key);
 	}
 
 	@Override

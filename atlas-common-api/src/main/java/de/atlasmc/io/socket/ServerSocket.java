@@ -44,7 +44,7 @@ public class ServerSocket implements Closeable {
 	}
 	
 	public synchronized boolean isOpen() {
-		return channel != null && !channel.isOpen();
+		return channel != null && channel.isOpen();
 	}
 	
 	public InetSocketAddress getHost() {

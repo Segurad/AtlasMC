@@ -5,7 +5,7 @@ import java.util.Iterator;
 public class ArrayIterator<E> implements Iterator<E> {
 
 	private final E[] array;
-	private int index = -1;
+	private int index = 0;
 	private final int end;
 	private final boolean canRemove;
 	
@@ -29,15 +29,14 @@ public class ArrayIterator<E> implements Iterator<E> {
 	public E next() {
 		if (!hasNext())
 			throw new IndexOutOfBoundsException();
-		index++;
-		return array[index];
+		return array[index++];
 
 	}
 
 	@Override
 	public void remove() {
-		if (canRemove)
-			array[index] = null;
+		if (canRemove && index > 0)
+			array[index-1] = null;
 	}
 	
 }

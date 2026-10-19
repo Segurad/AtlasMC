@@ -29,7 +29,7 @@ public class LiteralCommandArg extends CommandArg {
 	public void removeAlias(String alias) {
 		if (aliases == null) 
 			return;
-		getAliases().add(alias);
+		getAliases().remove(alias);
 	}
 
 	public boolean hasAliases() {

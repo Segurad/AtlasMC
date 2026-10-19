@@ -21,13 +21,15 @@ public class IntParser implements VarArgParser<Integer> {
 	private final int max;
 	
 	public IntParser(int min, int max) {
+		if (min > max)
+	        throw new IllegalArgumentException("Min can not be greater than max: " + min + " > " + max);
 		this.min = min;
 		this.max = max;
 	}
 	
 	public IntParser(ConfigurationSection config) {
-		this.min = config.getInt("min", Integer.MIN_VALUE);
-		this.max = config.getInt("max", Integer.MAX_VALUE);
+		this(config.getInt("min", Integer.MIN_VALUE),
+				config.getInt("max", Integer.MAX_VALUE));
 	}
 	
 	@Override
@@ -58,11 +60,11 @@ public class IntParser implements VarArgParser<Integer> {
 		buf.writeByte(0);
 		int flags = 0;
 		if (min != Integer.MIN_VALUE) {
-			flags &= 0x1;
+			flags |= 0x1;
 			buf.writeInt(min);
 		}
 		if (max != Integer.MAX_VALUE) {
-			flags &= 0x2;
+			flags |= 0x2;
 			buf.writeInt(max);
 		}
 		int next = buf.writerIndex();
@@ -78,9 +80,9 @@ public class IntParser implements VarArgParser<Integer> {
 	
 	@Override
 	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
-		if (min != Double.MIN_VALUE)
+		if (min != Integer.MIN_VALUE)
 			configuration.set("min", min);
-		if (max != Double.MAX_VALUE)
+		if (max != Integer.MAX_VALUE)
 			configuration.set("max", max);
 		return configuration;
 	} 

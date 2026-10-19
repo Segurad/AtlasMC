@@ -29,7 +29,7 @@ public class CharBuffer implements CharSequence {
 	
 	public void append(CharSequence chars, int offset, int length) {
 		ensureSize(length);
-		for (int i = offset; i < length; i++) {
+		for (int i = offset; i < offset + length; i++) {
 			buf[writerIndex++] = chars.charAt(i);
 		}
 	}
@@ -40,7 +40,7 @@ public class CharBuffer implements CharSequence {
 	
 	public void append(char[] chars, int offset, int length) {
 		ensureSize(length);
-		for (int i = offset; i < length; i++) {
+		for (int i = offset; i < offset + length; i++) {
 			buf[writerIndex++] = chars[i];
 		}
 	}

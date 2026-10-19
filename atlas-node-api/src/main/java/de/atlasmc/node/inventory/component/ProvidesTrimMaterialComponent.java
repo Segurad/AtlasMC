@@ -1,5 +1,6 @@
 package de.atlasmc.node.inventory.component;
 
+import de.atlasmc.nbt.codec.CodecFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.inventory.component.TrimComponent.TrimMaterial;
 import de.atlasmc.registry.Registries;
@@ -9,10 +10,11 @@ public interface ProvidesTrimMaterialComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<ProvidesTrimMaterialComponent>
-	NBT_CODEC = NBTCodec
-					.builder(ProvidesTrimMaterialComponent.class)
+	NBT_CODEC = CodecFieldCodec
+					.builder(ProvidesTrimMaterialComponent.class, Registries.registryValueNBTCodec(TrimMaterial.REGISTRY_KEY))
 					.include(ItemComponent.NBT_CODEC)
-					.codec(ComponentType.PROVIDES_TRIM_MATERIAL.getNamespacedKey(), ProvidesTrimMaterialComponent::getMaterial, ProvidesTrimMaterialComponent::setMaterial, Registries.registryValueNBTCodec(TrimMaterial.REGISTRY_KEY))
+					.getter(ProvidesTrimMaterialComponent::getMaterial)
+					.setter(ProvidesTrimMaterialComponent::setMaterial)
 					.build();
 	
 	TrimMaterial getMaterial();

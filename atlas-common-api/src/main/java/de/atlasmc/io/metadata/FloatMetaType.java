@@ -8,7 +8,7 @@ import io.netty.buffer.ByteBuf;
 public class FloatMetaType extends MetaDataType<Float> {
 	
 	public FloatMetaType(int type) {
-		super(type, Number.class, false);
+		super(type, Float.class, false);
 	}
 	
 	@Override

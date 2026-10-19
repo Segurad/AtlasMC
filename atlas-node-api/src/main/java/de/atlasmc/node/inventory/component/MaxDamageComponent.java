@@ -1,17 +1,19 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.PrimitiveFieldCodecs;
 import de.atlasmc.util.annotation.NotNull;
 
 public interface MaxDamageComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<MaxDamageComponent>
-	NBT_CODEC = NBTCodec
-					.builder(MaxDamageComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.intField(ComponentType.MAX_DAMAGE.getNamespacedKey(), MaxDamageComponent::getMaxDamage, MaxDamageComponent::setMaxDamage, 0)
-					.build();
+	NBT_CODEC = PrimitiveFieldCodecs
+				.buildInt(MaxDamageComponent.class)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(MaxDamageComponent::getMaxDamage)
+				.setter(MaxDamageComponent::setMaxDamage)
+				.build();
 	
 	int getMaxDamage();
 	

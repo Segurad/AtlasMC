@@ -26,12 +26,7 @@ public class CompoundTag extends AbstractCollectionTag<CompoundTag, List<NBT>> {
 				return nbt;
 		}
 		return null;
-	}
-
-	@Override
-	public void setData(Object data) {
-		addTag((NBT) data);
-	}
+	}	
 
 	@Override
 	public Iterator<NBT> iterator() {

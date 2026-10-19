@@ -11,29 +11,25 @@ import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
 
-final class EnumStringNBTCodec<V, E extends Enum<?> & EnumName> implements NBTCodec<V> {
+final class EnumStringNBTCodec<E extends Enum<?> & EnumName> implements NBTCodec<E> {
 
 	private final Class<E> clazz;
 	
 	public EnumStringNBTCodec(Class<E> clazz) {
-		this.clazz = Objects.requireNonNull(clazz);
+		this.clazz = Objects.requireNonNull(clazz, "class");
 	}
 
 	@Override
-	public boolean serialize(CharSequence key, V value, NBTWriter writer, CodecContext context) throws IOException {
+	public boolean serialize(CharSequence key, E value, NBTWriter writer, CodecContext context) throws IOException {
 		if (!clazz.isInstance(value))
 			return false;
-		@SuppressWarnings("unchecked")
-		E enumValue = (E) value;
-		writer.writeStringTag(key, enumValue.getName());
+		writer.writeStringTag(key, value.getName());
 		return true;
 	}
 
 	@Override
-	public V deserialize(V value, NBTReader reader, CodecContext context) throws IOException {
-		@SuppressWarnings("unchecked")
-		V v = (V) EnumUtil.getByName(clazz, reader.readStringTag());
-		return v;
+	public E deserialize(E value, NBTReader reader, CodecContext context) throws IOException {
+		return EnumUtil.getByName(clazz, reader.readStringTag());
 	}
 	
 	@Override

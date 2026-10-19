@@ -62,7 +62,7 @@ public class MetaData<T> {
 	 * @return true if changed
 	 */
 	boolean setData(T data) {
-		if (!Objects.equals(this.data, data))
+		if (Objects.equals(this.data, data))
 			return false;
 		field.validateData(data);
 		this.data = data;

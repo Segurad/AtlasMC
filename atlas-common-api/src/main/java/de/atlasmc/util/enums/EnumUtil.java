@@ -77,15 +77,15 @@ public class EnumUtil {
 		return getData(clazz).byName.get(name);
 	}
 	
-	public static <T, E extends Enum<?> & IDHolder> NBTCodec<T> enumIntNBTCodec(Class<E> clazz) {
+	public static <E extends Enum<?> & IDHolder> NBTCodec<E> enumIntNBTCodec(Class<E> clazz) {
 		return new EnumIntNBTCodec<>(clazz);
 	}
 	
-	public static <T, E extends Enum<?> & IDHolder> NBTCodec<T> enumByteNBTCodec(Class<E> clazz) {
+	public static <E extends Enum<?> & IDHolder> NBTCodec<E> enumByteNBTCodec(Class<E> clazz) {
 		return new EnumByteNBTCodec<>(clazz);
 	}
 	
-	public static <T, E extends Enum<?> & EnumName> NBTCodec<T> enumStringNBTCodec(Class<E> clazz) {
+	public static <E extends Enum<?> & EnumName> NBTCodec<E> enumStringNBTCodec(Class<E> clazz) {
 		return new EnumStringNBTCodec<>(clazz);
 	}
 	
@@ -142,7 +142,7 @@ public class EnumUtil {
 		 */
 		@Nullable
 		public final T getByID(int id) {
-			return byID == null ? id > values.size() ? null : values.get(id) : byID.get(id);
+			return byID == null ? id >= values.size() ? null : values.get(id) : byID.get(id);
 		}
 		
 		/**

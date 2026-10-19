@@ -101,10 +101,6 @@ public interface NBT extends OpenCloneable, NBTHolder {
 		return new CompoundTag(name);
 	}
 	
-	public static HoldingCompoundTag createCompoundTag(String name, NBTHolder holder) {
-		return new HoldingCompoundTag(name, holder);
-	}
-	
 	public static IntArrayTag createIntArrayTag(String name, int[] data) {
 		return new IntArrayTag(name, data);
 	}

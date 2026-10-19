@@ -10,8 +10,6 @@ public interface GliderComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(GliderComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.GLIDER.getNamespacedKey())
-					.endComponent()
 					.build();
 	
 	@Override

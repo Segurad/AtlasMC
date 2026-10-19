@@ -1,19 +1,19 @@
 package de.atlasmc.nbt.codec.field;
 
 import java.io.IOException;
+import java.util.function.ObjIntConsumer;
 import java.util.function.ToIntFunction;
 
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.NumberConversion;
 import de.atlasmc.util.codec.CodecContext;
-import de.atlasmc.util.function.ObjShortConsumer;
 
-public class ShortField<T> extends AbstractPrimitiveField<T, ToIntFunction<T>, ObjShortConsumer<T>> {
+public class ShortField<T> extends AbstractPrimitiveField<T, ToIntFunction<T>, ObjIntConsumer<T>> {
 
 	private final short defaultValue;
 	
-	public ShortField(PrimitiveFieldBuilder<T, ToIntFunction<T>, ObjShortConsumer<T>> builder) {
+	public ShortField(PrimitiveFieldBuilder<T, ToIntFunction<T>, ObjIntConsumer<T>> builder) {
 		super(builder);
 		this.defaultValue = NumberConversion.toShort(builder.getDefaultValue());
 	}

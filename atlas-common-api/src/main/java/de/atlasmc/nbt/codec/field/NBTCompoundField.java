@@ -3,6 +3,7 @@ package de.atlasmc.nbt.codec.field;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
@@ -19,20 +20,22 @@ public class NBTCompoundField<T> extends NBTField<T> {
 	private final byte[] skips;
 	private final Map<CharKey, NBTField<T>>[] typeFields;
 	private final ToBooleanFunction<T> has;
+	private final boolean allowNoData;
 
 	public NBTCompoundField(NBTCompoundFieldBuilder<T> builder) {
 		super(builder);
 		this.has = builder.has;
-		this.fields = builder.buildFieldsArray();
+		this.fields = Objects.requireNonNull(builder.buildFieldsArray(), "fields");
 		this.count = fields.length;
-		this.typeFields = builder.buildTypeFieldsArray();
-		this.skips = builder.buildSkipArray();
+		this.typeFields = Objects.requireNonNull(builder.buildTypeFieldsArray(), "typeFields");
+		this.skips = Objects.requireNonNull(builder.buildSkipArray(), "skips");
+		this.allowNoData = builder.allowNoData;
 	}
 
 	@Override
 	public boolean serialize(T value, NBTWriter writer, CodecContext context) throws IOException {
 		if (has != null && !has.applyAsBoolean(value))
-			return true;
+			return allowNoData;
 		if (serverOnly && context.clientSide)
 			return true;
 		writer.writeCompoundTag(key);
@@ -43,12 +46,11 @@ public class NBTCompoundField<T> extends NBTField<T> {
 	
 	public boolean serializePartial(T value, @NotNull NBTWriter writer, CodecContext context) throws IOException {
 		if (has != null && !has.applyAsBoolean(value))
-			return true;
+			return allowNoData;
 		for (int i = 0; i < count; i++) {
 			final NBTField<T> field = fields[i];
-			field.serialize(value, writer, context);
-			byte skip = skips[i];
-			i += skip;
+			if (field.serialize(value, writer, context))
+				i += skips[i];
 		}
 		return true;
 	}
@@ -87,7 +89,8 @@ public class NBTCompoundField<T> extends NBTField<T> {
 		builder
 		.setKey(key)
 		.setServerOnly(serverOnly)
-		.setHasData(has);
+		.setHasData(has)
+		.setAllowNoData(allowNoData);
 		for (var field : fields) {
 			builder.addField(field);
 		}

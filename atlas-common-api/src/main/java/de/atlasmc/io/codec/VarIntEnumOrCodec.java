@@ -35,6 +35,7 @@ final class VarIntEnumOrCodec<T, E extends Enum<E> & IDHolder> implements Stream
 		if (clazz.isInstance(value) && value instanceof IDHolder v) {
 			int id = v.getID();
 			PacketUtil.writeVarInt(id + 1, output);
+			return true;
 		}
 		if (!codec.getType().isInstance(value))
 			throw new CodecException("Codec: " + codec.getType() + " is incompatible with type: " + value.getClass());

@@ -13,9 +13,8 @@ public interface DeathProtectionComponent extends ItemComponent {
 	public static final NBTCodec<DeathProtectionComponent>
 	NBT_CODEC = NBTCodec
 					.builder(DeathProtectionComponent.class)
-					.beginComponent(ComponentType.DEATH_PROTECTION.getNamespacedKey())
+					.include(ItemComponent.NBT_CODEC)
 					.codecList("death_effects", DeathProtectionComponent::hasEffects, DeathProtectionComponent::getEffects, ComponentEffect.NBT_CODEC)
-					.endComponent()
 					.build();
 	
 	@NotNull
@@ -23,7 +22,7 @@ public interface DeathProtectionComponent extends ItemComponent {
 	STREAM_CODEC = StreamCodec
 					.builder(DeathProtectionComponent.class)
 					.include(ItemComponent.STREAM_CODEC)
-					.listCodec(DeathProtectionComponent::hasEffects, DeathProtectionComponent::getEffects, ComponentEffect.STREAM_CODEC)
+					.codecList(DeathProtectionComponent::hasEffects, DeathProtectionComponent::getEffects, ComponentEffect.STREAM_CODEC)
 					.build();
 	
 	List<ComponentEffect> getEffects();

@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.CodecFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.DyeColor;
 import de.atlasmc.util.annotation.NotNull;
@@ -10,11 +11,12 @@ public interface BaseColorComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<BaseColorComponent>
-	NBT_CODEC = NBTCodec
-					.builder(BaseColorComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.codec(ComponentType.BASE_COLOR.getNamespacedKey(), BaseColorComponent::getColor, BaseColorComponent::setColor, EnumUtil.enumStringNBTCodec(DyeColor.class))
-					.build();
+	NBT_CODEC = CodecFieldCodec
+				.builder(BaseColorComponent.class, EnumUtil.enumStringNBTCodec(DyeColor.class))
+				.include(ItemComponent.NBT_CODEC)
+				.getter(BaseColorComponent::getColor)
+				.setter(BaseColorComponent::setColor)
+				.build();
 	
 	@NotNull
 	public static final StreamCodec<BaseColorComponent>

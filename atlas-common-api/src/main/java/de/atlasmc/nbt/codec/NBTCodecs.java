@@ -15,8 +15,11 @@ import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.util.codec.CodecContext;
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
+import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntList;
 
@@ -144,11 +147,6 @@ public class NBTCodecs {
 			if (listType != TagType.DOUBLE)
 				throw new NBTException("Expected list of type DOUBLE but was: " + listType);
 			Vector3d vec = value != null ? value : new Vector3d();
-			if (listType == TagType.TAG_END || input.getNextPayload() == 0) {
-				input.readNextEntry();
-				input.readNextEntry();
-				return vec;
-			}
 			input.readNextEntry();
 			vec.x = input.readDoubleTag();
 			vec.y = input.readDoubleTag();
@@ -190,11 +188,6 @@ public class NBTCodecs {
 			if (listType != TagType.FLOAT)
 				throw new NBTException("Expected list of type FLOAT but was: " + listType);
 			Vector3f vec = value != null ? value : new Vector3f();
-			if (listType == TagType.TAG_END || input.getNextPayload() == 0) {
-				input.readNextEntry();
-				input.readNextEntry();
-				return vec;
-			}
 			input.readNextEntry();
 			vec.x = input.readFloatTag();
 			vec.y = input.readFloatTag();
@@ -234,6 +227,8 @@ public class NBTCodecs {
 		public Vector3i deserialize(Vector3i value, NBTReader input, CodecContext context) throws IOException {
 			final Vector3i vec = value != null ? value : new Vector3i();
 			int[] data = input.readIntArrayTag();
+			if (data.length != 3)
+				throw new NBTException("Exspected int array of length 3 for vector3i but was: " + data.length);
 			vec.x = data[0];
 			vec.y = data[1];
 			vec.z = data[2];
@@ -291,19 +286,20 @@ public class NBTCodecs {
 		@Override
 		public Quaternionf deserialize(Quaternionf value, NBTReader input, CodecContext context) throws IOException {
 			final TagType listType = input.getListType();
-			if (listType != TagType.FLOAT)
-				throw new NBTException("Expected list of type FLOAT but was: " + listType);
 			final Quaternionf vec = value != null ? value : new Quaternionf();
 			if (listType == TagType.TAG_END || input.getNextPayload() == 0) {
 				input.readNextEntry();
 				input.readNextEntry();
 				return vec;
 			}
+			if (listType != TagType.FLOAT)
+				throw new NBTException("Expected list of type FLOAT but was: " + listType);
 			input.readNextEntry();
-			vec.w = input.readFloatTag();
+			// quaternions are stored as [x, y, z, w]
 			vec.x = input.readFloatTag();
 			vec.y = input.readFloatTag();
 			vec.z = input.readFloatTag();
+			vec.w = input.readFloatTag();
 			input.readNextEntry();
 			return vec;
 		}
@@ -311,10 +307,10 @@ public class NBTCodecs {
 		@Override
 		public boolean serialize(CharSequence key, Quaternionf value, NBTWriter output, CodecContext context) throws IOException {
 			output.writeListTag(key, TagType.FLOAT, 4);
-			output.writeFloatTag(null, value.w);
 			output.writeFloatTag(null, value.x);
 			output.writeFloatTag(null, value.y);
 			output.writeFloatTag(null, value.z);
+			output.writeFloatTag(null, value.w);
 			return true;
 		}
 		
@@ -332,7 +328,14 @@ public class NBTCodecs {
 		}
 		
 		@Override
+		public boolean isReuseValue() {
+			return true;
+		}
+		
+		@Override
 		public FloatList deserialize(FloatList value, NBTReader input, CodecContext context) throws IOException {
+			if (value == null)
+				value = new FloatArrayList();
 			final TagType listType = input.getListType();
 			if (listType == TagType.TAG_END || input.getNextPayload() == 0) {
 				input.readNextEntry();
@@ -399,7 +402,14 @@ public class NBTCodecs {
 		}
 		
 		@Override
+		public boolean isReuseValue() {
+			return true;
+		}
+		
+		@Override
 		public BooleanList deserialize(BooleanList value, NBTReader input, CodecContext context) throws IOException {
+			if (value == null)
+				value = new BooleanArrayList();
 			TagType listType = input.getListType();
 			if (listType == TagType.TAG_END || input.getNextPayload() == 0) {
 				input.readNextEntry();
@@ -438,12 +448,18 @@ public class NBTCodecs {
 		
 		@Override
 		public Class<?> getType() {
-			// TODO Auto-generated method stub
-			return null;
+			return IntCollection.class;
+		}
+		
+		@Override
+		public boolean isReuseValue() {
+			return true;
 		}
 		
 		@Override
 		public IntCollection deserialize(IntCollection value, NBTReader input, CodecContext context) throws IOException {
+			if (value == null)
+				value = new IntArrayList();
 			switch(input.getType()) {
 			case INT_ARRAY:
 				int[] array = input.readIntArrayTag();
@@ -471,15 +487,17 @@ public class NBTCodecs {
 					break;
 				case LIST:
 					input.readNextEntry(); // enter outer list
-					if (input.getListType() != TagType.FLOAT)
-						throw new NBTException("Invalid list type: " + input.getListType());
-					input.readNextEntry(); // enter float list
-					float r = input.readFloatTag();
-					float g = input.readFloatTag();
-					float b = input.readFloatTag();
-					value.add(Color.asRGB(r, g, b));
-					input.readNextEntry(); // leaf inner list
-					input.readNextEntry(); // leaf outer list
+					while (input.getRestPayload() > 0) {
+						if (input.getListType() != TagType.FLOAT)
+							throw new NBTException("Invalid list type: " + input.getListType());
+						input.readNextEntry(); // enter float list
+						float r = input.readFloatTag();
+						float g = input.readFloatTag();
+						float b = input.readFloatTag();
+						value.add(Color.asRGB(r, g, b));
+						input.readNextEntry(); // leave inner list
+					}
+					input.readNextEntry(); // leave outer list
 					break;
 				default:
 					throw new NBTException("Unxecpected list type: " + listType);

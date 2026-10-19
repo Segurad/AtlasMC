@@ -51,7 +51,10 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 	}
 	
 	public void save(OutputStream out) throws IOException {
-		save(new OutputStreamWriter(out));
+		try (var writer = new OutputStreamWriter(out)) {
+			save(writer);
+			writer.flush();
+		}
 	}
 	
 	public void save(Writer writer) throws IOException {
@@ -110,7 +113,7 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 		String clazz = section.getString(ConfigurationSerializable.DEFAULT_TYPE_KEY);
 		if (clazz == null)
 			return section;
-		return ConfigurationSerializable.deserialize(section, clazz, getSettings().getLaoder());
+		return ConfigurationSerializable.deserialize(section, clazz, getSettings().getLoader());
 	}
 	
 	private void remapList(List<?> list, ListConfigurationSection listSection) {

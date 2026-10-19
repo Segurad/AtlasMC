@@ -12,7 +12,6 @@ import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.CodecTags;
 import de.atlasmc.util.function.ObjBooleanConsumer;
 import de.atlasmc.util.function.ObjFloatConsumer;
-import de.atlasmc.util.function.ObjShortConsumer;
 import de.atlasmc.util.function.ToBooleanFunction;
 import de.atlasmc.util.function.ToFloatFunction;
 
@@ -103,7 +102,7 @@ public class PrimitiveFieldBuilder<T, G, S> extends NBTFieldBuilder<T, Primitive
 	public NBTField<T> build() {
 		return switch (type) {
 		case BYTE -> new ByteField<T>((PrimitiveFieldBuilder<T, ToIntFunction<T>, ObjIntConsumer<T>>) this);
-		case SHORT -> new ShortField<T>((PrimitiveFieldBuilder<T, ToIntFunction<T>, ObjShortConsumer<T>>) this);
+		case SHORT -> new ShortField<T>((PrimitiveFieldBuilder<T, ToIntFunction<T>, ObjIntConsumer<T>>) this);
 		case INT -> new IntField<T>((PrimitiveFieldBuilder<T, ToIntFunction<T>, ObjIntConsumer<T>>) this);
 		case LONG -> new LongField<T>((PrimitiveFieldBuilder<T, ToLongFunction<T>, ObjLongConsumer<T>>) this);
 		case FLOAT -> new FloatField<T>((PrimitiveFieldBuilder<T, ToFloatFunction<T>, ObjFloatConsumer<T>>) this);

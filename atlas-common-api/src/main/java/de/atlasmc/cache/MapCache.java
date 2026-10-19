@@ -73,7 +73,7 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 			return null;
 		final int currentTick = this.currentTick;
 		V value = entry.value;
-		if (value == null || entry.newttl < currentTick) {
+		if (value == null || entry.newttl < currentTick) { // try restore dangling entry
 			value = entry.get();
 			if (value != null) { // resurrect entry
 				entry.newttl = currentTick + entry.ttlIncrement;
@@ -156,13 +156,12 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 			var entry = it.next();
 			if (entry.ttl >= currentTick)
 				break;
-			entry.value = null;
-			if (!entry.refersTo(null))
-				continue;
 			it.remove();
+			if (entry.refersTo(null))
+				continue;
 			int newttl = entry.newttl;
 			if (newttl < currentTick) {
-				map.remove(entry.key, entry);
+				entry.value = null;
 				continue;
 			}
 			entry.ttl = newttl;
@@ -175,6 +174,8 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 	}
 	
 	private void insertTTL(CacheEntry<K, V> insert) {
+		if (insert.value == null)
+			throw new IllegalStateException("Cache entry explicit reference is cleared!");
 		LinkedListIterator<CacheEntry<K, V>> it = ttlList.iterator();
 		int ttl = insert.ttl;
 		while (it.hasNext()) {
@@ -295,11 +296,12 @@ public class MapCache<K, V> extends AbstractMap<K, V> implements CacheHolder {
 			return get();
 		}
 
+		/**
+		 * Can't update reference
+		 */
 		@Override
 		public V setValue(V value) {
-			V old = this.value;
-			this.value = value;
-			return old;
+			throw new UnsupportedOperationException();
 		}
 		
 	}

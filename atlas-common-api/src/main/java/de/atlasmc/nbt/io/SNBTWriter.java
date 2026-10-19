@@ -124,17 +124,47 @@ public class SNBTWriter extends AbstractNBTWriter {
 		if (value == null)
 			throw new IllegalArgumentException("Value can not be null!");
 		prepareTag(TagType.STRING, name);
+		writeQuoted(value);
+		removeList();
+	}
+	
+	/**
+	 * Writes the given value as quoted and escaped string
+	 * @param value
+	 * @throws IOException
+	 */
+	private void writeQuoted(CharSequence value) throws IOException {
 		out.write('"');
-		for (int i = 0; i < value.length(); i++) {
+		final int length = value.length();
+		for (int i = 0; i < length; i++) {
 			char c = value.charAt(i);
-			if (c < 0x1f) {
-				out.write(REPLACEMENT_CHARS[c]);
+			String replacement = c < REPLACEMENT_CHARS.length ? REPLACEMENT_CHARS[c] : null;
+			if (replacement != null) {
+				out.write(replacement);
 			} else {
 				out.write(c);
 			}
 		}
 		out.write('"');
-		removeList();
+	}
+	
+	/**
+	 * Returns whether or not the given key can be written without quotes
+	 * @param key
+	 * @return true if no quotes are required
+	 */
+	private static boolean isUnquotedKey(CharSequence key) {
+		final int length = key.length();
+		for (int i = 0; i < length; i++) {
+			char c = key.charAt(i);
+			if ((c >= '0' && c <= '9')
+					|| (c >= 'a' && c <= 'z')
+					|| (c >= 'A' && c <= 'Z')
+					|| c == '_' || c == '-' || c == '.' || c == '+')
+				continue;
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -260,8 +290,12 @@ public class SNBTWriter extends AbstractNBTWriter {
 			return;
 		final int length = name.length();
 		if (length > 0) {
-			for (int i = 0; i < length; i++)
-				out.write(name.charAt(i));
+			if (isUnquotedKey(name)) {
+				for (int i = 0; i < length; i++)
+					out.write(name.charAt(i));
+			} else {
+				writeQuoted(name);
+			}
 		} else {
 			if (type == TagType.COMPOUND && depth == -1)
 				return;

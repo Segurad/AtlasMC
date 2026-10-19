@@ -95,7 +95,7 @@ public class Filterable<T> implements OpenCloneable {
 
 		@Override
 		public boolean serialize(CharSequence key, Filterable<T> value, NBTWriter output, CodecContext context) throws IOException {
-			if (value.hasFiltered()) {
+			if (!value.hasFiltered()) {
 				codec.serialize(key, value.raw, output, context);
 			} else {
 				output.writeCompoundTag(key);

@@ -33,15 +33,15 @@ public final class ChatUtil {
 			throw new IllegalArgumentException("Chat can not be null!");
 		if (chat.length() == 0)
 			return EMPTY;
-		if (chat.charAt(0) == ' ')
-			return ONE_SPACE;
 		if (chat.charAt(0) == '{')
 			return toChat(chat, null);
+		if (chat.charAt(0) == ' ' && chat.length() == 1)
+			return ONE_SPACE;
 		return toChat(null, chat);
 	}
 	
-	public static Chat toChat(CharSequence json, CharSequence legacy) {
-		return FACTORY.asChat(json, legacy);
+	public static Chat toChat(CharSequence snbt, CharSequence legacy) {
+		return FACTORY.asChat(snbt, legacy);
 	}
 	
 	public static List<Chat> toChat(List<String> text) {
@@ -53,16 +53,16 @@ public final class ChatUtil {
 		return chat;
 	}
 	
-	public static String legacyToJson(CharSequence msg) {
-		return legacyToJson(msg, DEFAULT_CHAT_FORMAT_PREFIX);
+	public static String legacyToSNBT(CharSequence msg) {
+		return legacyToSNBT(msg, DEFAULT_CHAT_FORMAT_PREFIX);
 	}
 	
-	public static String jsonToLegacy(CharSequence json) {
-		return jsonToLegacy(json, DEFAULT_CHAT_FORMAT_PREFIX);
+	public static String snbtToLegacy(CharSequence snbt) {
+		return snbtToLegacy(snbt, DEFAULT_CHAT_FORMAT_PREFIX);
 	}
 	
-	public static String jsonToLegacy(CharSequence json, char formatPrefix) {
-		return FACTORY.jsonToLegacy(json, formatPrefix);
+	public static String snbtToLegacy(CharSequence snbt, char formatPrefix) {
+		return FACTORY.snbtToLegacy(snbt, formatPrefix);
 	}
 	
 	/**
@@ -91,23 +91,23 @@ public final class ChatUtil {
 	 * <li>§n = <u>underline</u></li>
 	 * <li>§o = <i>italic</i></li>
 	 * <li>§r = reset formating</li>
-	 * <li>§x = rgb input (&x000000)</li>
+	 * <li>§x = rgb input ($x000000)</li>
 	 * </ul>
 	 * @param text
 	 * @param formatPrefix the char used to identify a format input
-	 * @return the text as json
+	 * @return the text as snbt
 	 */
-	public static String legacyToJson(CharSequence text, char formatPrefix) {
-		return FACTORY.legacyToJson(text, formatPrefix);
+	public static String legacyToSNBT(CharSequence text, char formatPrefix) {
+		return FACTORY.legacyToSNBT(text, formatPrefix);
 	}
 	
 	/**
-	 * Converts a json {@link CharSequence} to a {@link ChatComponent}
-	 * @param json
+	 * Converts a snbt {@link CharSequence} to a {@link ChatComponent}
+	 * @param snbt
 	 * @return
 	 */
-	public static ChatComponent jsonToComponent(CharSequence json) {
-		return FACTORY.jsonToComponent(json);
+	public static ChatComponent snbtToComponent(CharSequence snbt) {
+		return FACTORY.snbtToComponent(snbt);
 	}
 	
 	public static ChatComponent legacyToComponent(CharSequence legacy) {
@@ -145,8 +145,8 @@ public final class ChatUtil {
 		EMPTY = factory.asChat("{\"text\":\"\"}", "");
 	}
 
-	public static String jsonToRawText(String json) {
-		return FACTORY.jsonToRawText(json);
+	public static String snbtToRawText(String snbt) {
+		return FACTORY.snbtToRawText(snbt);
 	}
 
 	public static String legacyToRawText(String legacy) {

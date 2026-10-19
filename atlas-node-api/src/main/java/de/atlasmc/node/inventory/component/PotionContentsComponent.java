@@ -2,7 +2,9 @@ package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.Color;
 import de.atlasmc.chat.Chat;
+import de.atlasmc.nbt.codec.CodecFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
+import de.atlasmc.nbt.codec.OrElseCodec;
 import de.atlasmc.node.potion.PotionData;
 import de.atlasmc.node.potion.PotionEffect;
 import de.atlasmc.registry.Registries;
@@ -12,17 +14,22 @@ public interface PotionContentsComponent extends AbstractPotionEffectComponent {
 	
 	@NotNull
 	public static final NBTCodec<PotionContentsComponent>
-	NBT_CODEC = NBTCodec
+	NBT_CODEC = new OrElseCodec<>(PotionContentsComponent.class,
+					NBTCodec
 					.builder(PotionContentsComponent.class)
 					.include(AbstractPotionEffectComponent.NBT_CODEC)
-					.beginComponent(ComponentType.POTION_CONTENTS.getNamespacedKey(), PotionContentsComponent::hasCustomData)
+					.setHasData(PotionContentsComponent::hasCustomData)
+					.setAllowNoData(false)
 					.codec("potion", PotionContentsComponent::getPotionData, PotionContentsComponent::setPotionData, Registries.registryValueNBTCodec(PotionData.REGISTRY_KEY))
 					.codec("custom_color", PotionContentsComponent::getCustomColor, PotionContentsComponent::setCustomColor, Color.NBT_CODEC)
 					.codec("custom_name", PotionContentsComponent::getCustomName, PotionContentsComponent::setCustomName, Chat.NBT_CODEC)
 					.codecList("custom_effects", PotionContentsComponent::hasEffects, PotionContentsComponent::getEffects, PotionEffect.NBT_CODEC)
-					.endComponent()
-					.codec(ComponentType.POTION_CONTENTS.getNamespacedKey(), PotionContentsComponent::getPotionData, PotionContentsComponent::setPotionData, Registries.registryValueNBTCodec(PotionData.REGISTRY_KEY))
-					.build();
+					.build(),
+					CodecFieldCodec
+					.builder(PotionContentsComponent.class, Registries.registryValueNBTCodec(PotionData.REGISTRY_KEY))
+					.getter(PotionContentsComponent::getPotionData)
+					.setter(PotionContentsComponent::setPotionData)
+					.build());
 	
 	PotionData getPotionData();
 	

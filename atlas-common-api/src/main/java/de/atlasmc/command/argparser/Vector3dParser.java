@@ -31,33 +31,22 @@ public class Vector3dParser implements VarArgParser<ArgumentVector3d> {
 
 	@Override
 	public ArgumentVector3d parse(CommandStringReader reader) {
-		final int start = reader.getCursor();
 		final ArgumentVector3d vec = new ArgumentVector3d();
-		boolean targetCentric = false; 
-		if (reader.canRead() && reader.peek() == '^') {
-			targetCentric = vec.targetCentric = true;
-			reader.skip();
-		}
-		// parse x
-		vec.relativeX = parseRelative(reader, targetCentric);
-		vec.x = reader.readDouble();
-		if (!reader.canRead() || reader.peek() != ' ')
-			throw new CommandSyntaxException(reader.getCommand(), start, "Expected 3 double arguments");
-		reader.skip();
-		// parse y 
-		vec.relativeY = parseRelative(reader, targetCentric);
-		vec.y = reader.readDouble();
-		if (!reader.canRead() || reader.peek() != ' ')
-			throw new CommandSyntaxException(reader.getCommand(), start, "Expected 3 double arguments");
-		reader.skip();
-		// parse z
-		vec.relativeZ = parseRelative(reader, targetCentric);
-		vec.z = reader.readDouble();
-		if (!reader.canRead() || reader.peek() != ' ')
-			throw new CommandSyntaxException(reader.getCommand(), start, "Expected 3 double arguments");
+		final CoordinateReader coords = new CoordinateReader(reader, 3, "double");
+		vec.x = coords.readDouble();
+		vec.relativeX = coords.isRelative();
+		vec.y = coords.readDouble();
+		vec.relativeY = coords.isRelative();
+		vec.z = coords.readDouble();
+		vec.relativeZ = coords.isRelative();
+		vec.targetCentric = coords.isLocal();
 		return vec;
 	}
 	
+	/**
+	 * @deprecated use {@link CoordinateReader} which also handles local coordinates per component
+	 */
+	@Deprecated
 	public static boolean parseRelative(CommandStringReader reader, boolean targetCentric) {
 		if (reader.canRead() && reader.peek() == '~' ) {
 			if (targetCentric)

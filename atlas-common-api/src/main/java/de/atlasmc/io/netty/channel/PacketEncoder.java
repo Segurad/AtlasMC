@@ -3,6 +3,7 @@ package de.atlasmc.io.netty.channel;
 import de.atlasmc.io.Packet;
 import de.atlasmc.io.PacketCodec;
 import de.atlasmc.io.PacketUtil;
+import de.atlasmc.io.ProtocolException;
 import de.atlasmc.io.connection.ConnectionHandler;
 import de.atlasmc.io.connection.SocketConnectionHandler;
 import io.netty.buffer.ByteBuf;
@@ -26,6 +27,8 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 		
 		@SuppressWarnings("unchecked")
 		PacketCodec<Packet> io = (PacketCodec<Packet>) handler.getProtocol().getCodecClientboundByDefault(msg.getDefaultID());
+		if (io == null)
+			throw new ProtocolException("Missing codec for packet " + msg.getClass() + "(" + msg.getDefaultID() + ")");
 		PacketUtil.writeVarInt(io.getPacketID(), out);
 		io.serialize(msg, out, handler);
 		

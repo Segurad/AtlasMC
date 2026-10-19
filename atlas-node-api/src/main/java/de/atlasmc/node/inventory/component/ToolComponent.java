@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTSerializable;
@@ -16,12 +17,10 @@ public interface ToolComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(ToolComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.TOOL.getNamespacedKey())
 					.floatField("default_mining_speed", ToolComponent::getDefaultMinigSpeed, ToolComponent::setDefaultMinigSpeed, 1)
 					.intField("damage_per_block", ToolComponent::getDamagePerBlock, ToolComponent::setDamagePerBlock, 1)
 					.boolField("can_destroy_blocks_in_creative", ToolComponent::canDestroyBlocksInCreative, ToolComponent::setDestroyBlockInCreative, true)
 					.codecList("rules", ToolComponent::hasRules, ToolComponent::getRules, Rule.NBT_CODEC)
-					.endComponent()
 					.build();
 	
 	float getDefaultMinigSpeed();
@@ -44,14 +43,12 @@ public interface ToolComponent extends ItemComponent {
 	ToolComponent clone();
 	
 	default boolean addRule(Rule rule) {
-		if (rule == null)
-			throw new IllegalArgumentException("Rule can not be null!");
+		Objects.requireNonNull(rule, "rule");
 		return getRules().add(rule);
 	}
 	
 	default boolean removeRule(Rule rule) {
-		if (rule == null)
-			throw new IllegalArgumentException("Rule can not be null!");
+		Objects.requireNonNull(rule, "rule");
 		if (hasRules())
 			return getRules().remove(rule);
 		return false;

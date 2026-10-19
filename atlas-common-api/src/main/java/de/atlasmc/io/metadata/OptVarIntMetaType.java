@@ -9,7 +9,7 @@ import io.netty.buffer.ByteBuf;
 public final class OptVarIntMetaType extends MetaDataType<Integer> {
 	
 	public OptVarIntMetaType(int type) {
-		super(type, Number.class, true);
+		super(type, Integer.class, true);
 	}
 	
     @Override

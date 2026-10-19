@@ -39,7 +39,7 @@ final class RegistryValueNBTCodec<V extends Namespaced> implements NBTCodec<V> {
 
 	@Override
 	public Class<?> getType() {
-		return registry.get().getClass();
+		return registry.get().getType();
 	}
 
 }

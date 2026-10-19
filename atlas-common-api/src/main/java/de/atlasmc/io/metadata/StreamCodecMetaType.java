@@ -26,12 +26,12 @@ public class StreamCodecMetaType<T> extends MetaDataType<T> {
 
 	@Override
 	public T read(ByteBuf in, CodecContext context) throws IOException {
-		return codec.deserialize(in, CodecContext.DEFAULT_CLIENT);
+		return codec.deserialize(in, context);
 	}
 
 	@Override
 	public void write(T data, ByteBuf out, CodecContext context) throws IOException {
-		codec.serialize(data, out);
+		codec.serialize(data, out, context);
 	}
 	
 	@SuppressWarnings("unchecked")

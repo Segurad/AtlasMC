@@ -13,9 +13,9 @@ public abstract class AbstractCollectionField<T, C, V> extends NBTField<T> {
 	
 	public AbstractCollectionField(AbstractCollectionFieldBuilder<T, C, V, ?> builder) {
 		super(builder);
-		this.hasData = Objects.requireNonNull(builder.getHasData());
-		this.getter = Objects.requireNonNull(builder.getGetter());
-		this.fieldType = Objects.requireNonNull(builder.getFieldType());
+		this.hasData = Objects.requireNonNull(builder.getHasData(), "hasData");
+		this.getter = Objects.requireNonNull(builder.getGetter(), "getter");
+		this.fieldType = Objects.requireNonNull(builder.getFieldType(), "fieldType");
 	}
 
 }

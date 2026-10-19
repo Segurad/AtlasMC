@@ -1,6 +1,7 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.CodecFieldCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.block.tile.TileEntity;
 import de.atlasmc.util.annotation.NotNull;
@@ -9,11 +10,12 @@ public interface BlockEntityComponent extends ItemComponent {
 	
 	@NotNull
 	public static final NBTCodec<BlockEntityComponent>
-	NBT_CODEC = NBTCodec
-					.builder(BlockEntityComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.codec(ComponentType.BLOCK_ENTITY_DATA.getNamespacedKey(), BlockEntityComponent::getTileEntity, BlockEntityComponent::setTileEntity, TileEntity.NBT_CODEC)
-					.build();
+	NBT_CODEC = CodecFieldCodec
+				.builder(BlockEntityComponent.class, TileEntity.NBT_CODEC)
+				.include(ItemComponent.NBT_CODEC)
+				.getter(BlockEntityComponent::getTileEntity)
+				.setter(BlockEntityComponent::setTileEntity)
+				.build();
 	
 	@NotNull
 	public static final StreamCodec<BlockEntityComponent>

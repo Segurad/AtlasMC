@@ -22,18 +22,18 @@ public class CoreChat implements Chat {
 		if (legacy == null) {
 			synchronized (this) {
 				if (legacy == null)
-					legacy = ChatUtil.jsonToLegacy(json);
+					legacy = ChatUtil.snbtToLegacy(json);
 			}
 		}
 		return legacy;
 	}
 	
 	@Override
-	public String toJsonText() {
+	public String toSNBTText() {
 		if (json == null) {
 			synchronized (this) {
 				if (json == null)
-					json = ChatUtil.legacyToJson(json);
+					json = ChatUtil.legacyToSNBT(json);
 			}
 		}
 		return json;
@@ -86,7 +86,7 @@ public class CoreChat implements Chat {
 	}
 
 	@Override
-	public boolean hasJson() {
+	public boolean hasSNBT() {
 		return json != null;
 	}
 	
@@ -102,7 +102,7 @@ public class CoreChat implements Chat {
 	@Override
 	public String toRawText() {
 		if (json != null)
-			return ChatUtil.jsonToRawText(json);
+			return ChatUtil.snbtToRawText(json);
 		if (legacy != null)
 			return ChatUtil.legacyToRawText(legacy);
 		return "";

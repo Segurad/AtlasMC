@@ -1,5 +1,6 @@
 package de.atlasmc.util.dataset;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
@@ -13,7 +14,7 @@ public final class CollectionDataSet<T extends Namespaced> extends AbstractDataS
 
 	@SafeVarargs
 	public CollectionDataSet(T... values) {
-		this.values = Set.of(values);
+		this.values = Set.copyOf(Arrays.asList(values)); // copyOf allows duplicates
 	}
 	
 	public CollectionDataSet(Collection<T> values) {

@@ -1,6 +1,8 @@
 package de.atlasmc.node.inventory.component;
 
 import de.atlasmc.io.codec.StreamCodec;
+import de.atlasmc.nbt.codec.CodecCollectionFieldCodec;
+import de.atlasmc.nbt.codec.MultimapTypeToCodec;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.node.attribute.Attribute;
 import de.atlasmc.node.attribute.AttributeModifier;
@@ -11,11 +13,12 @@ public interface AttributeModifiersComponent extends ItemComponent, Attributeabl
 	
 	@NotNull
 	public static final NBTCodec<AttributeModifiersComponent>
-	NBT_CODEC = NBTCodec
-					.builder(AttributeModifiersComponent.class)
-					.include(ItemComponent.NBT_CODEC)
-					.multimapTypeToCodec(ComponentType.ATTRIBUTE_MODIFIERS.getNamespacedKey(), AttributeModifiersComponent::hasAttributeModifiers, AttributeModifiersComponent::getAttributeModifiers, AttributeModifier.NBT_CODEC, "id", Attribute::getByName)
-					.build();
+	NBT_CODEC = CodecCollectionFieldCodec
+				.builder(AttributeModifiersComponent.class, new MultimapTypeToCodec<>("id", Attribute::getByName, AttributeModifier.NBT_CODEC))
+				.include(ItemComponent.NBT_CODEC)
+				.hasData(AttributeModifiersComponent::hasAttributeModifiers)
+				.getter(AttributeModifiersComponent::getAttributeModifiers)
+				.build();
 	
 	@NotNull
 	public static final StreamCodec<AttributeModifiersComponent>

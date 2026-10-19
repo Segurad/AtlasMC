@@ -9,11 +9,11 @@ import io.netty.buffer.ByteBuf;
 public final class VarIntMetaType extends MetaDataType<Integer> {
 
 	public VarIntMetaType(int type) {
-		super(type, Number.class);
+		super(type, Integer.class);
 	}
 	
 	public VarIntMetaType(int type, boolean optional) {
-		super(type, Number.class, optional);
+		super(type, Integer.class, optional);
 	}
 
 	@Override

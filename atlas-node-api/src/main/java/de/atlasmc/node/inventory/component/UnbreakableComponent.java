@@ -10,8 +10,6 @@ public interface UnbreakableComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(UnbreakableComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.UNBREAKABLE.getNamespacedKey())
-					.endComponent()
 					.build();
 
 	@Override

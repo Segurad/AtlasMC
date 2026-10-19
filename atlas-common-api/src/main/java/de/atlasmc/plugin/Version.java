@@ -62,7 +62,7 @@ public final class Version implements Comparable<Version> {
 		result = Integer.compare(minor, o.minor);
 		if (result != 0)
 			return result;
-		return Integer.compare(patch, patch);
+		return Integer.compare(patch, o.patch);
 	}
 	
 	@Override

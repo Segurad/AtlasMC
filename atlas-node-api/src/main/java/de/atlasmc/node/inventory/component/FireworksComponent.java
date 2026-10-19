@@ -14,10 +14,8 @@ public interface FireworksComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(FireworksComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.FIREWORKS.getNamespacedKey())
 					.codecList("explosion", FireworksComponent::hasExplosions, FireworksComponent::getExplosions, FireworkExplosion.NBT_CODEC)
 					.byteField("flight_duration", FireworksComponent::getFlightDuration, FireworksComponent::setFlightDuration, (byte) 1)
-					.endComponent()
 					.build();
 	
 	@NotNull
@@ -26,7 +24,7 @@ public interface FireworksComponent extends ItemComponent {
 					.builder(FireworksComponent.class)
 					.include(ItemComponent.STREAM_CODEC)
 					.varInt(FireworksComponent::getFlightDuration, FireworksComponent::setFlightDuration)
-					.listCodec(FireworksComponent::hasExplosions, FireworksComponent::getExplosions, FireworkExplosion.STREAM_CODEC)
+					.codecList(FireworksComponent::hasExplosions, FireworksComponent::getExplosions, FireworkExplosion.STREAM_CODEC)
 					.build();
 	
 	List<FireworkExplosion> getExplosions();

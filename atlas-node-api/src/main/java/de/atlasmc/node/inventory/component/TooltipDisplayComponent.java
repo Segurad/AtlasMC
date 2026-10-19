@@ -13,10 +13,8 @@ public interface TooltipDisplayComponent extends ItemComponent {
 	NBT_CODEC = NBTCodec
 					.builder(TooltipDisplayComponent.class)
 					.include(ItemComponent.NBT_CODEC)
-					.beginComponent(ComponentType.TOOLTIP_DISPLAY.getNamespacedKey())
 					.boolField("hide_tooltip", TooltipDisplayComponent::isHideTooltip, TooltipDisplayComponent::setHideTooltip, false)
 					.codecList("hidden_components", TooltipDisplayComponent::hasHiddenComponents, TooltipDisplayComponent::getHiddenComponents, Registries.registryValueNBTCodec(ComponentType.REGISTRY_KEY))
-					.endComponent()
 					.build();
 	
 	boolean isHideTooltip();

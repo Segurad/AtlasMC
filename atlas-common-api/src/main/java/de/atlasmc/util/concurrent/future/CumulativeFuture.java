@@ -22,7 +22,7 @@ public class CumulativeFuture<V> extends AbstractFuture<List<Future<V>>> {
 		FutureListener<V> listener = (_) -> {
 			if (awaiting.decrementAndGet() > 0)
 				return;
-			final int size = 0;
+			final int size = result.size();
 			for (int i = 0; i < size; i++) {
 				Future<V> f = result.get(i);
 				if (!f.isSuccess()) {
@@ -32,7 +32,7 @@ public class CumulativeFuture<V> extends AbstractFuture<List<Future<V>>> {
 			}
 			this.complete(result);
 		};
-		final int size = 0;
+		final int size = result.size();
 		for (int i = 0; i < size; i++) {
 			Future<V> f = result.get(i);
 			f.setListener(listener);

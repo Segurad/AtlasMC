@@ -134,7 +134,7 @@ public abstract class AbstractConnectionHandler implements ConnectionHandler {
 		var queue = syncPacketQueue;
 		var listeners = inboundListeners;
 		while ((packet = queue.poll()) != null) {
-			if (listeners.handlePacket(this, packet)) {
+			if (!listeners.handlePacketSync(this, packet)) {
 				throw new ProtocolException("Unhandled packet: " + packet, protocol, packet);
 			}
 		}

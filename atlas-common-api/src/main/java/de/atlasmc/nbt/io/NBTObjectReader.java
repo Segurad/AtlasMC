@@ -51,7 +51,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 		ensureTag(TagType.BYTE_ARRAY);
 		byte[] data = (byte[]) current.getData();
 		int length = Math.min(buf.length, arrayRestPayload);
-		System.arraycopy(data, data.length-arrayRestPayload, buf, 0, buf.length);
+		System.arraycopy(data, data.length-arrayRestPayload, buf, 0, length);
 		arrayRestPayload -= length;
 		if (arrayRestPayload <= 0)
 			tagConsumed();
@@ -117,7 +117,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 		ensureTag(TagType.INT_ARRAY);
 		int[] data = (int[]) current.getData();
 		int length = Math.min(buf.length, arrayRestPayload);
-		System.arraycopy(data, data.length-arrayRestPayload, buf, 0, buf.length);
+		System.arraycopy(data, data.length-arrayRestPayload, buf, 0, length);
 		arrayRestPayload -= length;
 		if (arrayRestPayload <= 0)
 			tagConsumed();
@@ -162,7 +162,7 @@ public class NBTObjectReader extends AbstractNBTReader {
 		ensureTag(TagType.LONG_ARRAY);
 		long[] data = (long[]) current.getData();
 		int length = Math.min(buf.length, arrayRestPayload);
-		System.arraycopy(data, data.length-arrayRestPayload, buf, 0, buf.length);
+		System.arraycopy(data, data.length-arrayRestPayload, buf, 0, length);
 		arrayRestPayload -= length;
 		if (arrayRestPayload <= 0)
 			tagConsumed();

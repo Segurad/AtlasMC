@@ -40,6 +40,13 @@ public interface NBTWriter extends Closeable {
 	
 	void writeByteArrayTag(CharSequence name, byte[] data, int offset, int length) throws IOException;
 	
+	/**
+	 * Writes a string tag.
+	 * @param name
+	 * @param value
+	 * @throws IOException
+	 * @throws {@link IllegalArgumentException} if the string length is greater than 65535
+	 */
 	void writeStringTag(CharSequence name, String value) throws IOException;
 	
 	default void writeNamespacedKey(CharSequence name, NamespacedKey key) throws IOException {

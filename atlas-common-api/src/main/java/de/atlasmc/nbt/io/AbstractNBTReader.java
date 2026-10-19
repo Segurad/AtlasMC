@@ -122,12 +122,17 @@ public abstract class AbstractNBTReader implements NBTReader {
 	
 	@Override
 	public boolean search(CharSequence key, TagType stype, boolean slist) throws IOException {
+		if (key == null && stype == null)
+			throw new IllegalArgumentException("Key and type can not be null at the same time!");
 		final int depth = getDepth();
 		while (depth <= getDepth()) {
 			TagType type = getType();
 			// check if current tag is the result
-			if ((key == null || getFieldName().equals(key)) && (stype == null || !slist ? stype == type : type == TagType.LIST && stype == getListType())) 
-				return true; // result found
+			if ((key == null || getFieldName().equals(key))
+			        && (stype == null || (slist
+			            ? type == TagType.LIST && stype == getListType()
+			            : stype == type)))
+			    return true; // result found
 			// --- Skip to next ---
 			// Handle Compound, List(Compound) and List(List)
 			if (type == TagType.COMPOUND || (type == TagType.LIST && (getListType() == TagType.COMPOUND || getListType() == TagType.LIST))) {
@@ -146,8 +151,8 @@ public abstract class AbstractNBTReader implements NBTReader {
 			int[] values = readIntArrayTag();
 			if (values.length != 4) // must be 4 int values to combine as 2 longs
 				throw new NBTException("Invalid UUID data length: " + values.length);
-			long most = (values[0] << 32) | values[1];
-			long least = (values[2] << 32) | values[3];
+			long most = ((long) values[0] << 32) | (values[1] & 0xFFFFFFFFL);
+			long least = ((long) values[2] << 32) | (values[3] & 0xFFFFFFFFL);
 			return new UUID(most, least);
 		}
 		case STRING: {

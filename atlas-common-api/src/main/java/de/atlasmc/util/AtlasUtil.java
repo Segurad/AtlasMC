@@ -65,22 +65,14 @@ public class AtlasUtil {
 	public static UUID uuidFromBytes(@NotNull byte[] bytes, int offset) {
 		if (bytes.length - offset < 16)
 			throw new IllegalArgumentException("Need at least 16 readable bytes: " + (bytes.length - offset));
-		long most = bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		long least = bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
-		most = (most << 8) | bytes[offset++] & 0xFF;
+		long most = 0;
+		for (int i = 0; i < 8; i++) {
+			most = (most << 8) | (bytes[offset++] & 0xFF);
+		}
+		long least = 0;
+		for (int i = 0; i < 8; i++) {
+			least = (least << 8) | (bytes[offset++] & 0xFF);
+		}
 		return new UUID(most, least);
 	}
 	
@@ -124,8 +116,9 @@ public class AtlasUtil {
 	@Nullable
 	public static <T> T fastRemove(@NotNull List<T> list, int index) {
 		int last = list.size() - 1;
-		T removed = list.set(index, list.get(last));
-		list.set(last, null);
+		if (index == last)
+			return list.remove(index);
+		T removed = list.set(index, list.remove(last));
 		return removed;
 	}
 	
@@ -145,6 +138,17 @@ public class AtlasUtil {
 		T removed = list.set(index, list.get(last));
 		list.set(last, null);
 		return removed != null;
+	}
+	
+	/**
+	 * Requires that the given child class is assignable from the parent class
+	 * @param parent
+	 * @param child
+	 * @throws IllegalArgumentException if not assignable
+	 */
+	public static void requireAssignable(Class<?> parent, Class<?> child) {
+		if (!parent.isAssignableFrom(child))
+			throw new IllegalArgumentException("Given class " + child + " is not assignable from: " + parent);
 	}
 	
 	public static <T> T getSingleton(Class<T> clazz) {

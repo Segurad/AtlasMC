@@ -5,7 +5,7 @@ public class ConfigurationSettings  {
 	private boolean preserveComments = true;
 	private boolean beautify = true;
 	private boolean autoSerialize = false;
-	private ClassLoader laoder;
+	private ClassLoader loader;
 	
 	public boolean isPreserveComments() {
 		return preserveComments;
@@ -31,16 +31,16 @@ public class ConfigurationSettings  {
 		this.autoSerialize = autoSerialize;
 	}
 	
-	public void setLaoder(ClassLoader laoder) {
-		this.laoder = laoder;
+	public void setLoader(ClassLoader laoder) {
+		this.loader = laoder;
 	}
 	
-	public ClassLoader getLaoder() {
-		return laoder;
+	public ClassLoader getLoader() {
+		return loader;
 	}
 	
 	public ClassLoader getEffectiveLoader() {
-		var loader = this.laoder;
+		var loader = this.loader;
 		return loader == null ? ClassLoader.getSystemClassLoader() : loader;
 	}
 	

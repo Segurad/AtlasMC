@@ -69,7 +69,7 @@ public class HandlerList {
 	 * @param log the logger error should be send to
 	 */
 	protected void fireDefaultExecutor(EventExecutor executor, Event event) {
-		if (defaultExecutor == null || event.isHandled && !executor.ignoreHandled)
+		if (executor == null || event.isHandled && !executor.ignoreHandled)
 			return;
 		try {
 			executor.fireEvent(event);
@@ -97,7 +97,12 @@ public class HandlerList {
 	
 	public void registerExecutor(@NotNull EventExecutor executor) {
 		Objects.requireNonNull(executor, "executor");
-		this.globalExecutors = register(globalExecutors, executor);
+		modLock.lock();
+		try {
+			this.globalExecutors = register(globalExecutors, executor);
+		} finally {
+			modLock.unlock();
+		}
 	}
 	
 	public void registerExecutor(@NotNull EventExecutor executor, Object... context) {
@@ -146,6 +151,7 @@ public class HandlerList {
 			final EventExecutor[] executors = contextExecutors.get(context);
 			if (executors == null || executors.length == 0) {
 				contextExecutors.put(context, new EventExecutor[] { executor });
+				return;
 			}
 			final EventExecutor[] newExecutors = register(executors, executor);
 			if (executors != newExecutors)
@@ -210,13 +216,13 @@ public class HandlerList {
 	protected void fireExecutors(final Event event, final EventExecutor[] executors, final EventExecutor defaultHandler) {
 		boolean defaultHandlerFired = false;
 		final boolean cancellable = event instanceof Cancellable;
-		for (EventExecutor exe : globalExecutors){
+		for (EventExecutor exe : executors){
 			if (exe.priority == EventPriority.MONITOR && !defaultHandlerFired) {
 				defaultHandlerFired = true;
 				fireDefaultExecutor(defaultHandler, event);
 			}
 			if ((event.isHandled && !exe.ignoreHandled) || 
-					(!exe.ignoreCancelled && (!cancellable && ((Cancellable) event).isCancelled())))
+					(!exe.ignoreCancelled && (cancellable && ((Cancellable) event).isCancelled())))
 				continue;
 			try {
 				exe.fireEvent(event);
@@ -224,6 +230,8 @@ public class HandlerList {
 				exe.plugin.getLogger().error("Error while event handling for: " + event.getName(), ex);
 			}
 		}
+		if (!defaultHandlerFired) // no monitor executors present
+			fireDefaultExecutor(defaultHandler, event);
 	}
 	
 	/**
@@ -245,7 +253,7 @@ public class HandlerList {
 			if (exe.priority.ordinal() > priority) 
 				return i;
 			if ((event.isHandled && !exe.ignoreHandled) || 
-					(!exe.ignoreCancelled && (!cancellable && ((Cancellable) event).isCancelled())))
+					(!exe.ignoreCancelled && (cancellable && ((Cancellable) event).isCancelled())))
 				continue;
 			try {
 				exe.fireEvent(event);
@@ -382,7 +390,7 @@ public class HandlerList {
 				continue;
 			newExes[j++] = exe;
 		}
-		return executors;
+		return newExes;
 	}
 	
 	protected static void internalUnregister(final Listener listener, final Map<?, EventExecutor[]> contextExecutors) {
@@ -527,7 +535,12 @@ public class HandlerList {
 				continue;
 			}
 			var executors = MethodEventExecutor.getExecutors(plugin, listener);
-			final var isDefault = clazz.getDeclaredAnnotation(ListenerAutoregister.class).isDefault();
+			var annotation = clazz.getDeclaredAnnotation(ListenerAutoregister.class);
+			if (annotation == null) {
+				log.error("Class is not marked with ListenerAutoregister annotation: " + clazz);
+				continue;
+			}
+			final var isDefault = annotation.isDefault();
 			for (var exe : executors) {
 				Class<? extends Event> eventClazz = exe.eventClass;
 				HandlerList handlers = HandlerList.getHandlerListOf(eventClazz);

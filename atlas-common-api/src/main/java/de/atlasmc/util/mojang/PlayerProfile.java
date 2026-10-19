@@ -7,6 +7,7 @@ import java.util.UUID;
 import de.atlasmc.nbt.codec.NBTCodec;
 import de.atlasmc.nbt.codec.NBTCodecs;
 import de.atlasmc.nbt.codec.NBTSerializable;
+import de.atlasmc.nbt.codec.StringToObjectCodec;
 import de.atlasmc.util.CloneException;
 import de.atlasmc.util.OpenCloneable;
 import de.atlasmc.util.annotation.NotNull;
@@ -23,7 +24,7 @@ public class PlayerProfile implements NBTSerializable, OpenCloneable {
 					.codecList("properties", PlayerProfile::hasProperties, PlayerProfile::getProperties, ProfileProperty.NBT_CODEC)
 					.build();
 	
-	public static final NBTCodec<PlayerProfile> NAME_NBT_CODEC = NBTCodec.stringToObject(PlayerProfile.class, PlayerProfile::new, PlayerProfile::getName);
+	public static final NBTCodec<PlayerProfile> NAME_NBT_CODEC = new StringToObjectCodec<>(PlayerProfile.class, PlayerProfile::new, PlayerProfile::getName);
 	
 	private String name;
 	private UUID uuid;

@@ -82,12 +82,12 @@ public class CommandArg {
 
 	@NotNull
 	public CommandArg setArg(CommandArg arg) {
-		if (arg == null)
-			throw new IllegalArgumentException("Argument can not be null!");
+		Objects.requireNonNull(arg, "arg");
+		CommandArg old;
 		if (arg instanceof LiteralCommandArg literal) {
 			if (literalArgs == null)
 				literalArgs = new HashMap<>(1);
-			literalArgs.put(literal.getName(), literal);
+			old = literalArgs.put(literal.getName(), literal);
 			if (literal.hasAliases()) {
 				if (literalArgAliases == null)
 					literalArgAliases = new HashMap<>(1);
@@ -95,16 +95,23 @@ public class CommandArg {
 					literalArgAliases.putIfAbsent(alias, literal);
 				}
 			}
+			if (old != null && ((LiteralCommandArg)old).hasAliases()) {
+				for (String alias : ((LiteralCommandArg) old).getAliases()) {
+					literalArgAliases.remove(alias, old);
+				}
+			}
 		} else if (arg instanceof VarCommandArg varArg) {
 			if (varArgs == null)
 				varArgs = new HashMap<>(1);
-			varArgs.put(varArg.getName(), varArg);
+			old = varArgs.put(varArg.getName(), varArg);
 		} else {
 			throw new IllegalArgumentException("Argument must be a instance of VarCommandArg or LiteralCommandArg: " + arg.getClass().getName());
 		}
 		if (args == null) 
 			args = new CopyOnWriteArrayList<>();
 		args.add(arg);
+		if (old != null)
+			args.remove(old);
 		return this;
 	}
 	
@@ -138,7 +145,7 @@ public class CommandArg {
 	
 	@Nullable
 	public VarCommandArg getVarArg(@NotNull String name) {
-		if (args == null)
+		if (varArgs == null)
 			return null;
 		return varArgs.get(name);
 	}

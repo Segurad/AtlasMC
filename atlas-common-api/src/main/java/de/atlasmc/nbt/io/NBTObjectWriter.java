@@ -2,7 +2,8 @@ package de.atlasmc.nbt.io;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
 import java.util.function.LongSupplier;
 
@@ -12,9 +13,15 @@ import de.atlasmc.nbt.tag.CompoundTag;
 import de.atlasmc.nbt.tag.ListTag;
 import de.atlasmc.nbt.tag.NBT;
 
+/**
+ * {@link NBTWriter} that builds {@link NBT} objects.
+ * Follows the same contract as the stream writers: 
+ * elements of a {@link TagType#COMPOUND} list are opened with {@link #writeCompoundTag()} and closed with {@link #writeEndTag()},
+ * lists are closed automatically once the given payload size is reached.
+ */
 public class NBTObjectWriter extends AbstractNBTWriter implements NBTWriter {
 	
-	private LinkedList<NBT> containers;
+	private final Deque<NBT> containers = new ArrayDeque<>();
 	private NBT highestContainer;
 	private NBT masterContainer;
 	
@@ -39,14 +46,37 @@ public class NBTObjectWriter extends AbstractNBTWriter implements NBTWriter {
 		ensureOpen();
 		if (highestContainer == masterContainer) 
 			throw new NBTException("No NBT to close available!");
-		highestContainer = containers.poll();
-		if (highestContainer.getType() != TagType.LIST)
-			return;
-		ListTag list = (ListTag) highestContainer;
-		if (list.getExspectedPayloadSize() > list.getPayloadSize()) 
-			writeCompoundTag();
-		else
-			writeEndTag();
+		if (highestContainer.getType() == TagType.LIST)
+			throw new NBTException("Can not write EndTag to List");
+		highestContainer = containers.pop();
+		closeCompletedLists();
+	}
+	
+	/**
+	 * Adds the given tag to the current container and closes all lists that reached their payload size
+	 * @param tag
+	 */
+	private void addTag(NBT tag) {
+		if (highestContainer instanceof ListTag list && list.getPayloadSize() >= list.getExspectedPayloadSize())
+			throw new NBTException("Max list payload reached!");
+		highestContainer.setData(tag);
+		closeCompletedLists();
+	}
+	
+	private void closeCompletedLists() {
+		while (highestContainer != masterContainer 
+				&& highestContainer instanceof ListTag list 
+				&& list.getPayloadSize() >= list.getExspectedPayloadSize()) {
+			highestContainer = containers.pop();
+		}
+	}
+	
+	private void openContainer(NBT tag) {
+		if (highestContainer instanceof ListTag list && list.getPayloadSize() >= list.getExspectedPayloadSize())
+			throw new NBTException("Max list payload reached!");
+		highestContainer.setData(tag);
+		containers.push(highestContainer);
+		highestContainer = tag;
 	}
 
 	private String getNameValue(CharSequence name) {
@@ -58,88 +88,85 @@ public class NBTObjectWriter extends AbstractNBTWriter implements NBTWriter {
 	@Override
 	public void writeByteTag(CharSequence name, int value) throws IOException {
 		ensureOpen();
-		highestContainer.setData(NBT.createByteTag(getNameValue(name), value));
+		addTag(NBT.createByteTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeShortTag(CharSequence name, int value) throws IOException {
 		ensureOpen();
-		highestContainer.setData(NBT.createShortTag(getNameValue(name), value));
+		addTag(NBT.createShortTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeIntTag(CharSequence name, int value) throws IOException {
 		ensureOpen();
-		highestContainer.setData(NBT.createIntTag(getNameValue(name), value));
+		addTag(NBT.createIntTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeLongTag(CharSequence name, long value) throws IOException {
 		ensureOpen();
-		highestContainer.setData(NBT.createLongTag(getNameValue(name), value));
+		addTag(NBT.createLongTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeFloatTag(CharSequence name, float value) throws IOException {
 		ensureOpen();
-		highestContainer.setData(NBT.createFloatTag(getNameValue(name), value));
+		addTag(NBT.createFloatTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeDoubleTag(CharSequence name, double value) throws IOException {
 		ensureOpen();
-		highestContainer.setData(NBT.createDoubleTag(getNameValue(name), value));
+		addTag(NBT.createDoubleTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeByteArrayTag(CharSequence name, byte[] data, int offset, int length) throws IOException {
 		ensureOpen();
 		Objects.requireNonNull(data, "data");
-		highestContainer.setData(NBT.createByteArrayTag(getNameValue(name), Arrays.copyOfRange(data, offset, offset + length)));
+		addTag(NBT.createByteArrayTag(getNameValue(name), Arrays.copyOfRange(data, offset, offset + length)));
 	}
 
 	@Override
 	public void writeStringTag(CharSequence name, String value) throws IOException {
 		ensureOpen();
-		highestContainer.setData(NBT.createStringTag(getNameValue(name), value));
+		Objects.requireNonNull(value, "value");
+		ensureStringLength(value);
+		addTag(NBT.createStringTag(getNameValue(name), value));
 	}
 
 	@Override
 	public void writeListTag(CharSequence name, TagType payload, int payloadsize) throws IOException {
 		ensureOpen();
+		Objects.requireNonNull(payload, "payload");
 		NBT tag = NBT.createListTag(getNameValue(name), payload, payloadsize);
-		if (containers == null)
-			containers = new LinkedList<>();
-		containers.add(highestContainer);
-		highestContainer.setData(tag);
-		highestContainer = tag;
-		if (payload == TagType.COMPOUND)
-			writeCompoundTag();
+		if (payloadsize <= 0) {
+			addTag(tag);
+		} else {
+			openContainer(tag);
+		}
 	}
 
 	@Override
 	public void writeCompoundTag(CharSequence name) throws IOException {
 		ensureOpen();
 		NBT tag = NBT.createCompoundTag(getNameValue(name));
-		if (containers == null)
-			containers = new LinkedList<>();
-		containers.add(highestContainer);
-		highestContainer.setData(tag);
-		highestContainer = tag;
+		openContainer(tag);
 	}
 	
 	@Override
 	public void writeIntArrayTag(CharSequence name, int[] data, int offset, int length) throws IOException {
 		ensureOpen();
 		Objects.requireNonNull(data, "data");
-		highestContainer.setData(NBT.createIntArrayTag(getNameValue(name), Arrays.copyOfRange(data, offset, offset + length)));
+		addTag(NBT.createIntArrayTag(getNameValue(name), Arrays.copyOfRange(data, offset, offset + length)));
 	}
 	
 	@Override
 	public void writeLongArrayTag(CharSequence name, long[] data, int offset, int length) throws IOException {
 		ensureOpen();
 		Objects.requireNonNull(data, "data");
-		highestContainer.setData(NBT.createLongArrayTag(getNameValue(name), Arrays.copyOfRange(data, offset, offset + length)));
+		addTag(NBT.createLongArrayTag(getNameValue(name), Arrays.copyOfRange(data, offset, offset + length)));
 	}
 	
 	@Override
@@ -149,13 +176,13 @@ public class NBTObjectWriter extends AbstractNBTWriter implements NBTWriter {
 		long[] data = new long[length];
 		for (int i = 0; i < length; i++)
 			data[i] = supplier.getAsLong();
-		highestContainer.setData(NBT.createLongArrayTag(getNameValue(name), data));
+		addTag(NBT.createLongArrayTag(getNameValue(name), data));
 	}
 
 	@Override
 	public void writeNBT(NBT nbt) throws IOException {
 		ensureOpen();
-		highestContainer.setData(nbt.clone());
+		addTag(nbt.clone());
 	}
 	
 	@Override
@@ -163,7 +190,7 @@ public class NBTObjectWriter extends AbstractNBTWriter implements NBTWriter {
 		ensureOpen();
 		NBT copy = nbt.clone();
 		copy.setName(name != null ? name.toString() : null);
-		highestContainer.setData(copy);
+		addTag(copy);
 	}
 
 	public NBT toNBT() {
@@ -173,7 +200,7 @@ public class NBTObjectWriter extends AbstractNBTWriter implements NBTWriter {
 	@Override
 	public void close() throws IOException {
 		super.close();
-		containers = null;
+		containers.clear();
 		highestContainer = null;
 		masterContainer = null;
 	}

@@ -10,7 +10,7 @@ import de.atlasmc.registry.RegistryValue;
 import de.atlasmc.util.configuration.ConfigurationSection;
 import io.netty.buffer.ByteBuf;
 
-@RegistryValue(registry="atlas:command/var_arg_parser", key="birgadier:float")
+@RegistryValue(registry="atlas:command/var_arg_parser", key="brigadier:float")
 public class FloatParser implements VarArgParser<Float> {
 
 	public static final int ID = 1;
@@ -21,13 +21,15 @@ public class FloatParser implements VarArgParser<Float> {
 	private final float max;
 	
 	public FloatParser(float min, float max) {
+		if (min > max)
+	        throw new IllegalArgumentException("Min can not be greater than max: " + min + " > " + max);
 		this.min = min;
 		this.max = max;
 	}
 	
 	public FloatParser(ConfigurationSection config) {
-		this.min = config.getFloat("min", Float.MIN_VALUE);
-		this.max = config.getFloat("max", Float.MAX_VALUE);
+		this(config.getFloat("min", -Float.MAX_VALUE),
+				config.getFloat("max", Float.MAX_VALUE));
 	}
 	
 	@Override
@@ -57,12 +59,12 @@ public class FloatParser implements VarArgParser<Float> {
 		int index = buf.writerIndex();
 		buf.writeByte(0);
 		int flags = 0;
-		if (min != Float.MIN_VALUE) {
-			flags &= 0x1;
+		if (min != -Float.MAX_VALUE) {
+			flags |= 0x1;
 			buf.writeFloat(min);
 		}
 		if (max != Float.MAX_VALUE) {
-			flags &= 0x2;
+			flags |= 0x2;
 			buf.writeFloat(max);
 		}
 		int next = buf.writerIndex();
@@ -78,9 +80,9 @@ public class FloatParser implements VarArgParser<Float> {
 	
 	@Override
 	public <T extends ConfigurationSection> T toConfiguration(T configuration) {
-		if (min != Double.MIN_VALUE)
+		if (min != -Float.MAX_VALUE)
 			configuration.set("min", min);
-		if (max != Double.MAX_VALUE)
+		if (max != Float.MAX_VALUE)
 			configuration.set("max", max);
 		return configuration;
 	} 

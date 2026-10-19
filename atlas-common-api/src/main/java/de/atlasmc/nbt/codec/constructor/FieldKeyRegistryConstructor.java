@@ -3,6 +3,7 @@ package de.atlasmc.nbt.codec.constructor;
 import java.io.IOException;
 import java.util.function.Function;
 
+import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
 import de.atlasmc.registry.RegistryKey;
@@ -18,6 +19,8 @@ public class FieldKeyRegistryConstructor<T, K> extends AbstractRegistryConstruct
 	public T construct(NBTReader reader, CodecContext context) throws IOException {
 		CharSequence key = reader.getFieldName();
 		K regValue = registry.getValue(key);
+		if (regValue == null)
+			throw new NBTException("Unknown value " + key + " in registry " + registry.getNamespacedKey());
 		return constructor.apply(regValue);
 	}
 

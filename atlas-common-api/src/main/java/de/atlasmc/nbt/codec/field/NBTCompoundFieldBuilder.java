@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.codec.AbstractNBTCompoundFieldBuilder;
@@ -23,6 +24,7 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 	private final List<Map<CharKey, NBTField<T>>> typeFields = new ArrayList<>(AbstractNBTCompoundFieldBuilder.TYPE_COUNT);
 	private final Object2IntMap<NBTField<T>> refCounts = new Object2IntLinkedOpenCustomHashMap<>(IdentityStrategy.getInstance());
 	public ToBooleanFunction<T> has;
+	public boolean allowNoData = true;
 	public final NBTCompoundFieldBuilder<T> parent;
 	private boolean buildPrepared = true;
 	
@@ -61,10 +63,17 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 		buildPrepared = false;
 		int refCount = refCounts.getOrDefault(newField, -1);
 		if (refCount == -1) {
-			if (field == null) {
+			if (field == null) { // no field to replace add as last
 				fieldOrder.add(newField);
-			} else {
+			} else { // find existing field
 				final int size = fieldOrder.size();
+				for (TagType type : field.types) {
+					int id = type.getID() - 1;
+					Map<CharKey, NBTField<T>> typeMap = typeFields.get(id);
+					if (typeMap != null)
+						typeMap.remove(field.key, field);
+				}
+				refCounts.removeInt(field); // the replaced field is no longer referenced
 				for (int i = 0; i < size; i++) {
 					if (fieldOrder.get(i) == field) {
 						fieldOrder.set(i, newField);
@@ -92,7 +101,7 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 				}
 			}
 		}
-		refCounts.put(field, refCount);
+		refCounts.put(newField, refCount);
 	}
 	
 	@Override
@@ -100,15 +109,20 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 		return CodecTags.COMPOUND;
 	}
 	
+	@Override
 	public ToBooleanFunction<T> getHasData() {
 		return has;
 	}
 	
+	@Override
 	public NBTCompoundFieldBuilder<T> setHasData(ToBooleanFunction<T> hasData) {
 		this.has = hasData;
 		return this;
 	}
 
+	/**
+	 * Cleanup before build.
+	 */
 	private void prepareBuild() {
 		if (buildPrepared)
 			return;
@@ -120,12 +134,13 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 				NBTField<T> field = entry.getKey();
 				if (!(field instanceof Builder rawBuilder))
 					continue;
+				// build buildable fields
 				@SuppressWarnings("unchecked")
 				Builder<NBTField<T>> builder = rawBuilder;
 				if (remap == null)
 					remap = new HashMap<>();
 				remap.put(field, builder.build());
-			} else {
+			} else { // remove unreferenced fields
 				var refField = entry.getKey();
 				final int size = fieldOrder.size();
 				for (int i = 0; i < size; i++) {
@@ -141,10 +156,13 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 		remapBuildCompoundFields(remap);
 	}
 	
+	/**
+	 * Replaces fields of {@link TagType#COMPOUND}
+	 * @param remap
+	 */
 	private void remapBuildCompoundFields(Map<NBTField<T>, NBTField<T>> remap) {
 		if (remap == null || remap.isEmpty())
 			return;
-		final Map<CharKey, NBTField<T>> compoundMap = typeFields.get(TagType.COMPOUND.getID() - 1);
 		for (Map.Entry<NBTField<T>, NBTField<T>> entry : remap.entrySet()) {
 			NBTField<T> oldKey = entry.getKey();
 			NBTField<T> key = entry.getValue();
@@ -158,8 +176,7 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 					break;
 				}
 			}
-			compoundMap.remove(oldKey.key, oldKey);
-			addField(key);
+			replaceField(oldKey, key);
 		}
 	}
 	
@@ -215,8 +232,7 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 	
 	@Override
 	public NBTCompoundFieldBuilder<T> addField(NBTField<T> field) {
-		if (field == null)
-			throw new IllegalArgumentException("Field can not be null!");
+		Objects.requireNonNull(field, "field");
 		replaceField(null, field);
 		return this;
 	}
@@ -264,6 +280,17 @@ public class NBTCompoundFieldBuilder<T> extends NBTFieldBuilder<T, NBTCompoundFi
 	@Override
 	public NBTCompoundFieldBuilder<T> getThis() {
 		return this;
+	}
+
+	@Override
+	public NBTCompoundFieldBuilder<T> setAllowNoData(boolean allow) {
+		this.allowNoData = allow;
+		return this;
+	}
+
+	@Override
+	public boolean isAllowNoData() {
+		return allowNoData;
 	}
 
 }

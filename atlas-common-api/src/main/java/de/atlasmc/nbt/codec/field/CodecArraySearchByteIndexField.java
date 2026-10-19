@@ -39,7 +39,7 @@ public class CodecArraySearchByteIndexField<T, V> extends AbstractCollectionFiel
 				continue;
 			writer.writeCompoundTag();
 			writer.writeByteTag(indexKey, i);
-			fieldType.serialize(entry, writer, context);
+			fieldType.serializePartial(entry, writer, context);
 			writer.writeEndTag();
 		}
 		return true;
@@ -54,7 +54,7 @@ public class CodecArraySearchByteIndexField<T, V> extends AbstractCollectionFiel
 			return;
 		}
 		if (listType != TagType.COMPOUND)
-			throw new NBTException("Expected float tag but was: " + listType);
+			throw new NBTException("Expected list of type COMPOUND but was: " + listType);
 		final V[] array = getter.apply(value);
 		reader.readNextEntry();
 		while (reader.getRestPayload() > 0) {
@@ -69,9 +69,11 @@ public class CodecArraySearchByteIndexField<T, V> extends AbstractCollectionFiel
 			} else {
 				index = reader.readByteTag() & 0xFF; // index is unsigned
 			}
-			V entry = fieldType.deserialize(reader, context);
+			if (index >= array.length)
+				throw new NBTException("Index out of bounds: " + index + " (length: " + array.length + ")");
+			// consumes the end of the element compound
+			V entry = fieldType.deserializePartial(null, reader, context);
 			array[index] = entry;
-			reader.readNextEntry();
 		}
 		reader.readNextEntry();
 	}

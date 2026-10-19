@@ -1,6 +1,7 @@
 package de.atlasmc.core.chat;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import de.atlasmc.Color;
 import de.atlasmc.ColorValue;
@@ -15,32 +16,31 @@ import de.atlasmc.nbt.NBTException;
 import de.atlasmc.nbt.TagType;
 import de.atlasmc.nbt.io.NBTReader;
 import de.atlasmc.nbt.io.NBTWriter;
-import de.atlasmc.nbt.io.SNBTReader;
+import de.atlasmc.nbt.io.SNBTStringReader;
 
 public class CoreChatFactory implements ChatFactory {
 
 	@Override
-	public Chat asChat(CharSequence json, CharSequence legacy) {
-		return new CoreChat(json != null ? json.toString() : null, legacy != null ? legacy.toString() : null);
+	public Chat asChat(CharSequence snbt, CharSequence legacy) {
+		return new CoreChat(snbt != null ? snbt.toString() : null, legacy != null ? legacy.toString() : null);
 	}
 
 	@Override
-	public String legacyToJson(CharSequence text, char formatPrefix) {
-		return legacyToComponent(text, formatPrefix).toJsonText();
+	public String legacyToSNBT(CharSequence text, char formatPrefix) {
+		return legacyToComponent(text, formatPrefix).toSNBTText();
 	}
 
 	@Override
-	public String jsonToLegacy(CharSequence json, char formatPrefix) {
-		if (json.charAt(0) != '{')
-			return json.toString();
-		return componentToLegacy(jsonToComponent(json), formatPrefix);
+	public String snbtToLegacy(CharSequence snbt, char formatPrefix) {
+		if (snbt.charAt(0) != '{')
+			return snbt.toString();
+		return componentToLegacy(snbtToComponent(snbt), formatPrefix);
 	}
 
 	@Override
-	public ChatComponent jsonToComponent(CharSequence json) {
-		if (json == null)
-			throw new IllegalArgumentException("Json can not be null!");
-		try (SNBTReader reader = new SNBTReader(json)) {
+	public ChatComponent snbtToComponent(CharSequence nsbt) {
+		Objects.requireNonNull(nsbt, "snbt");
+		try (var reader = new SNBTStringReader(nsbt)) {
 			return ChatComponent.NBT_CODEC.deserialize(reader);
 		} catch (IOException e) {
 			throw new NBTException("Error while parsing chat!", e);
@@ -49,8 +49,7 @@ public class CoreChatFactory implements ChatFactory {
 
 	@Override
 	public String componentToLegacy(ChatComponent component, char formatPrefix) {
-		if (component == null)
-			throw new IllegalArgumentException("Component can not be null!");
+		Objects.requireNonNull(component, "component");
 		StringBuilder builder = new StringBuilder();
 		buildLegacy(builder, component, formatPrefix);
 		return builder.toString();
@@ -137,8 +136,8 @@ public class CoreChatFactory implements ChatFactory {
 	}
 
 	@Override
-	public String jsonToRawText(String json) {
-		ChatComponent comp = jsonToComponent(json);
+	public String snbtToRawText(String snbt) {
+		ChatComponent comp = snbtToComponent(snbt);
 		return componentToRawText(comp);
 	}
 
@@ -189,8 +188,8 @@ public class CoreChatFactory implements ChatFactory {
 			return ChatComponent.empty();
 		if (chat instanceof ChatComponent comp)
 			return comp;
-		if (chat.hasJson())
-			return jsonToComponent(chat.toJsonText());
+		if (chat.hasSNBT())
+			return snbtToComponent(chat.toSNBTText());
 		if (chat.hasLegacy())
 			return legacyToComponent(chat.toLegacyText(), ChatUtil.DEFAULT_CHAT_FORMAT_PREFIX);
 		return ChatComponent.empty();
@@ -253,7 +252,7 @@ public class CoreChatFactory implements ChatFactory {
 			ChatComponent comp = new BaseComponent();
 			while (reader.getRestPayload() > 0) {
 				String raw = reader.readStringTag();
-				comp.addExtra(jsonToComponent(raw));
+				comp.addExtra(snbtToComponent(raw));
 			}
 			return comp;
 		} else if (type == TagType.COMPOUND) {

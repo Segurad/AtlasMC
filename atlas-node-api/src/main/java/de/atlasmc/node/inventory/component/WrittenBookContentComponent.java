@@ -16,7 +16,6 @@ public interface WrittenBookContentComponent extends BookContentComponent<Chat> 
 	NBT_CODEC = NBTCodec
 					.builder(WrittenBookContentComponent.class)
 					.include(BookContentComponent.NBT_CODEC)
-					.beginComponent(ComponentType.WRITTEN_BOOK_CONTENT.getNamespacedKey())
 					.codecList("pages", WrittenBookContentComponent::hasPages, WrittenBookContentComponent::getPages, Filterable.filterableCodec(Chat.NBT_CODEC))
 					.beginComponent("title")
 					.codec("raw", WrittenBookContentComponent::getTitle, WrittenBookContentComponent::setTitle, NBTCodecs.STRING)
@@ -24,7 +23,6 @@ public interface WrittenBookContentComponent extends BookContentComponent<Chat> 
 					.codec("author", WrittenBookContentComponent::getAuthor, WrittenBookContentComponent::setAuthor, NBTCodecs.STRING)
 					.codec("generation", WrittenBookContentComponent::getGeneration, WrittenBookContentComponent::setGeneration, EnumUtil.enumIntNBTCodec(Generation.class), Generation.ORGINAL)
 					.boolField("resolved", WrittenBookContentComponent::isResolved, WrittenBookContentComponent::setResolved, false)
-					.endComponent()
 					.build();
 	
 	@Nullable

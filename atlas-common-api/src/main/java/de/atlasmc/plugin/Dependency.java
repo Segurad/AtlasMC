@@ -11,8 +11,8 @@ import de.atlasmc.util.annotation.ThreadSafe;
 @ThreadSafe
 public final class Dependency {
 	
-	// ^(?P<order>[\+\-\~])?(?P<type>[!\?\*])?(?: ?(?P<name>[a-zA-Z0-9-_]+))(?: (?P<operation>\>|\<|\=\=|\>\=|\<\=) (?P<version>v?[0-9a-zA-Z-.\+]+))?(?: (?P<from>v?[0-9a-zA-Z-.\+]+) - (?P<to>v?[0-9a-zA-Z-.\+]+))?$
-	public static final Pattern PATTERN = Pattern.compile("^(?P<order>[\\+\\-\\~])?(?P<type>[!\\?\\*])?(?: ?(?P<name>[a-zA-Z0-9-_]+))(?: (?P<operation>\\>|\\<|\\=\\=|\\>\\=|\\<\\=) (?P<version>v?[0-9a-zA-Z-.\\+]+))?(?: (?P<from>v?[0-9a-zA-Z-.\\+]+) - (?P<to>v?[0-9a-zA-Z-.\\+]+))?$");
+	// ^(?<order>[\+\-\~])?(?<type>[!\?\*])?(?: ?(?<name>[a-zA-Z0-9-_]+))(?: (?<operation>\>|\<|\=\=|\>\=|\<\=) (?<version>v?[0-9a-zA-Z-.\+]+))?(?: (?<from>v?[0-9a-zA-Z-.\+]+) - (?<to>v?[0-9a-zA-Z-.\+]+))?$
+	public static final Pattern PATTERN = Pattern.compile("^(?<order>[\\+\\-\\~])?(?<type>[!\\?\\*])?(?: ?(?<name>[a-zA-Z0-9-_]+))(?: (?<operation>\\>|\\<|\\=\\=|\\>\\=|\\<\\=) (?<version>v?[0-9a-zA-Z-.\\+]+))?(?: (?<from>v?[0-9a-zA-Z-.\\+]+) - (?<to>v?[0-9a-zA-Z-.\\+]+))?$");
 	
 	@NotNull
 	public final String name;
@@ -84,6 +84,7 @@ public final class Dependency {
 		} else if (operation != MatchOperation.ANY) {
 			builder.append(' ')
 				.append(operation.identifier)
+				.append(' ')
 				.append(version.toString());
 		}
 		return builder.toString();
@@ -103,6 +104,8 @@ public final class Dependency {
 	public static Dependency of(String value) {
 		Objects.requireNonNull(value, "value");
 		Matcher matcher = PATTERN.matcher(value);
+		if (!matcher.matches())
+			throw new IllegalArgumentException("Invalid dependency String: " + value);
 		String name = matcher.group("name");
 		if (name == null)
 			throw new IllegalArgumentException("Invalid dependency String: " + value);
@@ -228,7 +231,7 @@ public final class Dependency {
 		LOWER_EQUAL("<=", 1, true),
 		EQUAL("==", 0, true),
 		GREATER_EQUAL(">=", -1, true),
-		GREATER("", -1, false),
+		GREATER(">", -1, false),
 		/**
 		 * The Version must be in range
 		 */

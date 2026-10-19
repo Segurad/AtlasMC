@@ -157,12 +157,12 @@ public class JavaPlugin implements Plugin {
 
 	@Override
 	public final boolean isLoaded() {
-		return enabled;
+		return loaded;
 	}
 
 	@Override
 	public final boolean isEnabled() {
-		return loaded;
+		return enabled;
 	}
 
 	@InternalAPI

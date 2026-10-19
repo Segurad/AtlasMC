@@ -67,6 +67,8 @@ final class DataSetNBTCodec<T extends Namespaced> implements NBTCodec<DataSet<T>
 		switch (type) {
 		case STRING: {
 			String key = reader.readStringTag();
+			if (key.isEmpty())
+				return DataSet.of();
 			if (key.charAt(0) == '#') {
 				Tag<T> tag = Tags.getTag(NamespacedKey.of(key.substring(1)));
 				return tag == null ? DataSet.of() : DataSet.of(tag);
@@ -80,7 +82,7 @@ final class DataSetNBTCodec<T extends Namespaced> implements NBTCodec<DataSet<T>
 			if (listType == TagType.TAG_END || reader.getNextPayload() == 0) {
 				reader.readNextEntry();
 				reader.readNextEntry();
-				return null;
+				return DataSet.of();
 			}
 			if (listType != TagType.STRING)
 				throw new NBTException("Expected list of type STRING but was: " + listType);
@@ -90,6 +92,8 @@ final class DataSetNBTCodec<T extends Namespaced> implements NBTCodec<DataSet<T>
 			while (reader.getRestPayload() > 0) {
 				String key = reader.readStringTag();
 				T v = registry.get(key);
+				if (v == null)
+					continue; // unknown value
 				if (types == null)
 					types = new ArrayList<>();
 				types.add(v);
